@@ -11,7 +11,7 @@ class Launcher:
 
     def run(self):
         p = multiprocessing.Process(target=start.run,
-                                    args=(self.updateEvent,)
+                                    args=(self.updateEvent,),
                                     kwargs=self.extraArgs)
         p.start()
         p.join()
