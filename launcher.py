@@ -1,14 +1,14 @@
 import requests
 import multiprocessing
-import src.run
-from exceptions import *
+from .src import start
+from .exceptions import *
 
 class Launcher:
     def __init__(self, url):
         self.url=url
 
     def run(self):
-        p = multiprocessing.Process(target=src.run.run())
+        p = multiprocessing.Process(target=start.run())
         p.start()
         p.join()
 
