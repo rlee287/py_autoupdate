@@ -3,4 +3,4 @@ python:
   - "3.4"
   - "3.5"
 script: 
-  - py.test -v testing
+  - py.test -v ./testing
