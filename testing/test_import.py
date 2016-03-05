@@ -1,7 +1,7 @@
 import sys
 
 class TestImportModules:
-    def import_module(module_name):
+    def import_module(self,module_name):
         try:
             print("Importing {}".format(module_name))
             __import__(module_name)
@@ -9,7 +9,7 @@ class TestImportModules:
         except:
             raise AssertionError("Unable to import {}".format(module_name))
 
-    def import_all():
+    def test_import_all(self):
         module_name='py_autoupdate'
         submodules=[''];
         modulelist=list();
