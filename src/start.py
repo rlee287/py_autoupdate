@@ -3,7 +3,7 @@
 
 import time
 
-def run():
+def run(UpdateEvent):
     print("Start")
     time.sleep(3)
     print("End")

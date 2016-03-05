@@ -6,9 +6,10 @@ from .exceptions import *
 class Launcher:
     def __init__(self, url):
         self.url=url
+        self.updateEvent=multiprocessing.Event()
 
     def run(self):
-        p = multiprocessing.Process(target=start.run())
+        p = multiprocessing.Process(target=start.run, args=self.updateEvent)
         p.start()
         p.join()
 

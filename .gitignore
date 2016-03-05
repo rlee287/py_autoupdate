@@ -1,3 +1,7 @@
+# Actual code to be run
+# This is so that local users can make their own modifications for testing
+src/
+
 # Caches
 testing/.cache/
 
