@@ -4,7 +4,7 @@ import src.run
 from exceptions import *
 
 class Launcher:
-    def __init__(self, url)
+    def __init__(self, url):
         self.url=url
 
     def run(self):
