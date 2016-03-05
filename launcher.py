@@ -9,7 +9,8 @@ class Launcher:
         self.updateEvent=multiprocessing.Event()
 
     def run(self):
-        p = multiprocessing.Process(target=start.run, args=self.updateEvent)
+        p = multiprocessing.Process(target=start.run,
+                                    args=(self.updateEvent,))
         p.start()
         p.join()
 
