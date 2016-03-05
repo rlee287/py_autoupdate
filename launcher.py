@@ -1,3 +1,5 @@
+from __future__ import absolute_import
+
 import requests
 import multiprocessing
 from .src import start
