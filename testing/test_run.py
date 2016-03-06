@@ -18,5 +18,5 @@ class TestRunProgram:
         return create_test_file
     
     def test_run(self):
-        l = Launcher("")
+        l = Launcher(os.path.join('..','test_code.py'),'')
         l.run()
