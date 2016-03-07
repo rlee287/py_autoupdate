@@ -15,9 +15,10 @@ class Launcher:
         try:
             with open(self.filepath, mode='r') as file:
                 code=file.read()
-                def code_func(updateEvent,**kwargs): pass
-                code_func.__code__=code
-                code_func(self.updateEvent,**self.extraArgs)
+                def code_func(): pass
+                code_func.__code__=compile(code,self.filepath,mode='exec')
+                #code_func(self.updateEvent,**self.extraArgs)
+                code_func()
         except IOError:
             print('Unable to open file to run code', file=sys.stderr)
     
