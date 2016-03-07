@@ -10,4 +10,7 @@ notifications:
 install:
   - pip install requests
 script: 
-  - py.test -v ./testing
+  - echo $PWD
+  - touch pytestlog.log
+  - py.test -v --result-log=pytestlog.log ./testing
+  - cat pytestlog.log
