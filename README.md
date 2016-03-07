@@ -6,5 +6,6 @@ Interface to allow python programs to automatically update
 This is the main program that is run. It functions as a wrapper around the actual program to be run.
 
 ## Dependencies
+ * Python 3.3 or later
  * requests
  * pytest (for testing)
