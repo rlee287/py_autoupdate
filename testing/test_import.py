@@ -3,14 +3,6 @@ from __future__ import absolute_import, print_function
 import sys
 
 class TestImportModules:
-    def import_module(self,module_name):
-        try:
-            print("Importing {}".format(module_name))
-            __import__(module_name)
-            print("Imported {}".format(module_name))
-        except:
-            raise AssertionError("Unable to import {}".format(module_name))
-
     def test_import_all(self):
         module_name='py_autoupdate'
         submodules=['launcher']
