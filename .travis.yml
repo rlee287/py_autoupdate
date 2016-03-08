@@ -17,5 +17,5 @@ install:
   - pip install pytest-cov
 script: 
   - touch pytestlog.log
-  - py.test -vlr --cov=py_autoupdate --cov-report=term --result-log=pytestlog.log ./testing
+  - py.test -vl -r a --cov=py_autoupdate --cov-report=term --result-log=pytestlog.log ./testing
   - cat pytestlog.log
