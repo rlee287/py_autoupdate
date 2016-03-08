@@ -1,11 +1,11 @@
 # py\_autoupdate
-Interface to allow python programs to automatically update
+`py_autoupdate` is a python wrapper that allows the wrapped code to automatically update.
 
 [![Build Status](https://travis-ci.org/rlee287/py_autoupdate.svg?branch=develop)](https://travis-ci.org/rlee287/py_autoupdate)
 
-This is the main program that is run. It functions as a wrapper around the actual program to be run.
+## Advantages
+ * This module is written in pure python. **This means that there is no need to have a C compiler to build this module.**
 
 ## Dependencies
- * Python 3.3 or later
- * requests
- * pytest (for testing)
+ * `requests`
+ * `pytest` (for running the tests)
