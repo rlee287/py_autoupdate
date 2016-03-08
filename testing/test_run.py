@@ -13,15 +13,13 @@ class TestRunProgram:
         filetext=filebase+'.txt'
         code='with open("'+filetext+'", mode="w") as file:\n'+\
         '    l=[i**2 for i in range(20)]\n'+\
-        '    file.write(str(l))\n'
+        '    file.write(str(l))\n'+\
+        'print(updateEvent)'
         with open(filecode, mode='w') as file:
             file.write(code)
         def teardown():
-            try:
-                os.remove(filecode)
-                os.remove(filetext)
-            except (FileNotFoundError, OSError):
-                raise AssertionError # fail test here
+            os.remove(filecode)
+            os.remove(filetext)
         request.addfinalizer(teardown)
         return self.create_test_file
     
