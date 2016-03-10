@@ -10,25 +10,17 @@ class TestRunProgram:
     def create_test_file(self, request):
         filebase='test_run_base'
         filecode=filebase+'.py'
-        filetext=filebase+'.txt'
-        code='with open("'+filetext+'", mode="w") as file:\n'+\
-        '    l=[i**2 for i in range(20)]\n'+\
-        '    file.write(str(l))\n'+\
-        'print(updateEvent)'
+        code='import os\n'+'a=os.getpid()\n'+'b=os.getppid()\n'+\
+             'c=os.getpid()\n'+'assert a==b\n'+'assert a!=c\n'
         with open(filecode, mode='w') as file:
             file.write(code)
         def teardown():
             os.remove(filecode)
-            os.remove(filetext)
         request.addfinalizer(teardown)
         return self.create_test_file
     
     def test_run(self,create_test_file):
-        filebase='test_run_base'
+        filebase='codetemp'
         filecode=filebase+'.py'
-        filetext=filebase+'.txt'
         l = Launcher(filecode,'')
         l.run()
-        with open(filetext,mode="r") as file:
-            s=file.read()
-            assert s==str([i**2 for i in range(20)])
