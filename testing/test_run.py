@@ -14,7 +14,7 @@ class TestRunProgram:
         code='with open("'+filetext+'", mode="w") as file:\n'+\
         '    l=[i**2 for i in range(20)]\n'+\
         '    file.write(str(l))\n'+\
-        'print(update)'
+        'print(locals())'
         with open(filecode, mode='w') as file:
             file.write(code)
         def teardown():

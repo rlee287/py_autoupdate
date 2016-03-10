@@ -2,6 +2,7 @@ from __future__ import absolute_import, print_function
 
 import requests
 import multiprocessing
+import os
 import sys
 
 class Launcher:
@@ -9,6 +10,7 @@ class Launcher:
         self.url=url
         self.filepath=filepath
         self.update=multiprocessing.Event()
+        self.pid=os.getpid()
         self.args=args
         self.kwargs=kwargs
 
