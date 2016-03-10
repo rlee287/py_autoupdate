@@ -5,11 +5,12 @@ import multiprocessing
 import sys
 
 class Launcher:
-    def __init__(self, filepath, url, **kwargs):
+    def __init__(self, filepath, url, *args, **kwargs):
         self.url=url
         self.filepath=filepath
         self.update=multiprocessing.Event()
-        self.extraArgs=kwargs
+        self.args=args
+        self.kwargs=kwargs
 
     def call_code(self):
         try:
