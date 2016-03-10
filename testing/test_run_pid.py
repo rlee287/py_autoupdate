@@ -20,7 +20,7 @@ class TestRunProgram:
         return self.create_test_file
     
     def test_run(self,create_test_file):
-        filebase='codetemp'
+        filebase='test_run_base'
         filecode=filebase+'.py'
         l = Launcher(filecode,'')
         l.run()
