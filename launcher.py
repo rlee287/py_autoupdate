@@ -15,8 +15,7 @@ class Launcher:
         try:
             with open(self.filepath, mode='r') as file:
                 code=file.read()
-                exec(code,globals(),
-                     {'updateEvent':self.update,'kwargs':self.extraArgs})
+                exec(code,globals(),vars(self))
         except IOError:
             print('Unable to open file to run code', file=sys.stderr)
     
