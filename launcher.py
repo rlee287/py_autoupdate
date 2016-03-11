@@ -35,16 +35,17 @@ class Launcher:
         #Make update directory if it doesn't exist
         if not os.path.isdir(self.updatedir):
             os.makedirs(self.updatedir)
-        #Remove old contents
-        for files in os.listdir(self.updatedir):
-            file_path = os.path.join(self.updatedir, files)
-            try:
-                if os.path.isfile(file_path):
-                    os.unlink(file_path)
-                elif os.path.isdir(file_path):
-                    shutil.rmtree(file_path)
-            except Exception as e:
-                print (e)
+        else:
+            #Remove old contents
+            for files in os.listdir(self.updatedir):
+                file_path = os.path.join(self.updatedir, files)
+                try:
+                    if os.path.isfile(file_path):
+                        os.unlink(file_path)
+                    elif os.path.isdir(file_path):
+                        shutil.rmtree(file_path)
+                except Exception as e:
+                    print (e)
         #get new files
         r = requests.get(self.url, stream=True, allow_redirects=True)
         with open(file_location, 'wb') as f:
