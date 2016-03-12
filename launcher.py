@@ -16,7 +16,7 @@ class Launcher:
         self.args=args
         self.kwargs=kwargs
 
-    def __call_code(self):
+    def _call_code(self):
         try:
             with open(self.filepath, mode='r') as file:
                 code=file.read()
@@ -25,11 +25,11 @@ class Launcher:
             print('Unable to open file to run code', file=sys.stderr)
     
     def run(self):
-        p = multiprocessing.Process(target=self.__call_code)
+        p = multiprocessing.Process(target=self._call_code)
         p.start()
         p.join()
 
-    def __get_new(self):
+    def _get_new(self):
         local_filename = self.url.split('/')[-1]
         file_location=self.updatedir+local_filename
         #Make update directory if it doesn't exist
