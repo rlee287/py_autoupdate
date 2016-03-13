@@ -29,10 +29,7 @@ class Launcher:
         p.start()
         p.join()
 
-    def _get_new(self):
-        local_filename = self.url.split('/')[-1]
-        file_location=self.updatedir+local_filename
-        #Make update directory if it doesn't exist
+    def _reset_update_dir(self):
         if not os.path.isdir(self.updatedir):
             os.makedirs(self.updatedir)
         else:
@@ -45,7 +42,11 @@ class Launcher:
                     elif os.path.isdir(file_path):
                         shutil.rmtree(file_path)
                 except Exception as e:
-                    print (e)
+                    print(e, file=sys.stderr)
+
+    def _get_new(self):
+        local_filename = self.url.split('/')[-1]
+        file_location=self.updatedir+local_filename
         #get new files
         r = requests.get(self.url, stream=True, allow_redirects=True)
         with open(file_location, 'wb') as f:
@@ -55,5 +56,5 @@ class Launcher:
         return local_filename
 
     def update(self):
-        pass
+        self._reset_update_dir()
 
