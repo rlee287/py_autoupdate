@@ -9,7 +9,7 @@ class TestRunProgram:
     @pytest.fixture(scope='class')
     def create_update_dir(self, request):
         files=['tesfeo','fjfesf','fihghg']
-        filedir=[os.path.join('downloads',files[n]) for n in len(files)]
+        filedir=[os.path.join('downloads',fi) for fi in files]
         for each_file in filedir:
             with open(each_file, mode='w') as file:
                 file.write('')
