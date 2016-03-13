@@ -24,7 +24,7 @@ class TestRunProgram:
                 except Exception as e:
                     print(e, file=sys.stderr)
             try:
-                if os.path.is_dir('downloads')
+                if os.path.is_dir('downloads'):
                     os.rmdir('downloads')
                 except Exception as e:
                     print(e, file=sys.stderr)
