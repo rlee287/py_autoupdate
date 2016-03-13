@@ -2,6 +2,7 @@ from __future__ import absolute_import, print_function
 
 import pytest
 import os
+import sys
 from ..launcher import Launcher
 
 class TestRunProgram:
@@ -25,6 +26,6 @@ class TestRunProgram:
         request.addfinalizer(teardown)
         return self.create_update_dir
     
-    def test_run(self,create_update_dir):
+    def test_rm_dirs(self,create_update_dir):
         l = Launcher('','')
         l._reset_update_dir()
