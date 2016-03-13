@@ -26,8 +26,8 @@ class TestRunProgram:
             try:
                 if os.path.is_dir('downloads'):
                     os.rmdir('downloads')
-                except Exception as e:
-                    print(e, file=sys.stderr)
+            except Exception as e:
+                print(e, file=sys.stderr)
         request.addfinalizer(teardown)
         return self.create_update_dir
     
