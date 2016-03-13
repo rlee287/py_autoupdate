@@ -1,6 +1,10 @@
 # Caches (so that py.test can be run from main dir or testing dir)
 testing/.cache/*
 .cache/*
+
+# Vim temp files
+*.swp
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
