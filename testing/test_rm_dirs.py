@@ -12,6 +12,8 @@ class TestRunProgram:
         os.mkdir('downloads')
         files=['tesfeo','fjfesf','fihghg']
         filedir=[os.path.join('downloads',fi) for fi in files]
+        os.mkdir(os.path.join('downloads','subfolder'))
+        filedir.append(os.path.join('downloads','subfolder','oweigjoewig'))
         for each_file in filedir:
             with open(each_file, mode='w') as file:
                 file.write('')
@@ -21,7 +23,7 @@ class TestRunProgram:
                     if os.path.isfile(file_path):
                         os.unlink(file_path)
                         raise AssertionError#fail test if files exist
-                except Exception as e:
+                except OSError as e:
                     print(e, file=sys.stderr)
             try:
                 if os.path.isdir('downloads'):
