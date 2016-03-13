@@ -23,6 +23,11 @@ class TestRunProgram:
                         raise AssertionError#fail test if files exist
                 except Exception as e:
                     print(e, file=sys.stderr)
+            try:
+                if os.path.is_dir('downloads')
+                    os.rmdir('downloads')
+                except Exception as e:
+                    print(e, file=sys.stderr)
         request.addfinalizer(teardown)
         return self.create_update_dir
     
