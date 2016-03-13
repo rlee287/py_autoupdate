@@ -16,7 +16,7 @@ class TestRunProgram:
             with open(each_file, mode='w') as file:
                 file.write('')
         def teardown():
-            for files in filedir:
+            for file_path in filedir:
                 try:
                     if os.path.isfile(file_path):
                         os.unlink(file_path)
@@ -24,7 +24,7 @@ class TestRunProgram:
                 except Exception as e:
                     print(e, file=sys.stderr)
             try:
-                if os.path.is_dir('downloads'):
+                if os.path.isdir('downloads'):
                     os.rmdir('downloads')
             except Exception as e:
                 print(e, file=sys.stderr)
