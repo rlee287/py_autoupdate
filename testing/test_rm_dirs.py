@@ -8,6 +8,7 @@ class TestRunProgram:
     
     @pytest.fixture(scope='class')
     def create_update_dir(self, request):
+        os.mkdir('downloads')
         files=['tesfeo','fjfesf','fihghg']
         filedir=[os.path.join('downloads',fi) for fi in files]
         for each_file in filedir:
