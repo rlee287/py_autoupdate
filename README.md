@@ -3,6 +3,8 @@
 
 [![Build Status](https://travis-ci.org/rlee287/py_autoupdate.svg?branch=develop)](https://travis-ci.org/rlee287/py_autoupdate)
 
+**Note: This is pre-alpha code. The update functionality does not work yet.**
+
 ## Advantages
  * This module is written in pure python. **This means that there is no need to have a C compiler to use this module.**
  * py\_autoupdate works with both python 2 and 3
