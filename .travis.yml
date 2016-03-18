@@ -7,23 +7,13 @@ python:
   - "3.5"
   - "pypy"
   - "pypy3"
-env:
-  - Req_ver=2.1.0
-  - Req_ver=2.2.0
-  - Req_ver=2.3.0
-  - Req_ver=2.4.0
-  - Req_ver=2.5.0
-  - Req_ver=2.6.0
-  - Req_ver=2.7.0
-  - Req_ver=2.8.0
-  - Req_ver=2.9.0
 cache: pip
 notifications:
   email:
     on_success: change
     on_failure: change
 install:
-  - pip install requests==$Req_ver
+  - pip install requests
   - pip install pytest-cov
 script: 
   - . testing/scripts/run_linux.sh
