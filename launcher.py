@@ -39,7 +39,6 @@ class Launcher:
                 shutil.rmtree(self.updatedir)
             except:
                 print(e, file=sys.stderr)
-                
 
     def _get_new(self):
         local_filename = self.url.split('/')[-1]
