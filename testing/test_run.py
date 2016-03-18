@@ -35,7 +35,8 @@ class TestRunProgram:
         filecode=filebase+'.py'
         filetext=filebase+'.txt'
         l = Launcher(filecode,'')
-        l.run()
+        excode=l.run()
+        assert excode==0        
         with open(filetext,mode="r") as file:
             s=file.read()
             assert s==str([i**2 for i in range(20)])
@@ -44,5 +45,6 @@ class TestRunProgram:
         filebase='test_run_base_pid'
         filecode=filebase+'.py'
         l = Launcher(filecode,'')
-        l.run()
+        excode=l.run()
+        assert excode==0
 
