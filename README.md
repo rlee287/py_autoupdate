@@ -16,3 +16,6 @@
  * `requests` for retrieving updated versions
  * `pytest` for running the tests
    - `pytest_cov`
+
+## License
+LGPL 2.1
