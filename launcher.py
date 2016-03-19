@@ -17,17 +17,21 @@ class Launcher:
         self.kwargs=kwargs
 
     def _call_code(self):
+        #open code file
         try:
             with open(self.filepath, mode='r') as file:
                 code=file.read()
+                #Local variable for called file=class fields
                 exec(code,globals(),vars(self))
         except IOError:
             print('Unable to open file to run code', file=sys.stderr)
     
     def run(self):
+        #Call code through wrapper
         p = multiprocessing.Process(target=self._call_code)
         p.start()
         p.join()
+        #Exit code can be used by program that calls the launcher
         return p.exitcode
 
     def _reset_update_dir(self):
