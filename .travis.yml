@@ -9,9 +9,7 @@ python:
   - "pypy3"
 cache: pip
 notifications:
-  email:
-    on_success: change
-    on_failure: change
+  email: false
 install:
   - pip install requests
   - pip install pytest-cov

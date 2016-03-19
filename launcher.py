@@ -28,6 +28,7 @@ class Launcher:
         p = multiprocessing.Process(target=self._call_code)
         p.start()
         p.join()
+        return p.exitcode
 
     def _reset_update_dir(self):
         if not os.path.isdir(self.updatedir):
@@ -38,7 +39,6 @@ class Launcher:
                 shutil.rmtree(self.updatedir)
             except:
                 print(e, file=sys.stderr)
-                
 
     def _get_new(self):
         local_filename = self.url.split('/')[-1]
