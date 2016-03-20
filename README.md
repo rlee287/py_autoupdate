@@ -1,4 +1,5 @@
-# py\_autoupdate
+![py_autoupdate_logo](https://cloud.githubusercontent.com/assets/14067959/13902076/25e8305e-edf7-11e5-873c-8a4e0fc2780f.png)
+
 `py_autoupdate` is a python wrapper that allows the wrapped code to automatically update.
 
 [![Build Status](https://travis-ci.org/rlee287/py_autoupdate.svg?branch=develop)](https://travis-ci.org/rlee287/py_autoupdate)
