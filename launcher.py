@@ -60,21 +60,19 @@ class Launcher:
         return local_filename
     
     def _check_new(self):
-        oldpath=os.path.join(self.updatedir,self.vdoc+'.old')
-        newpath=os.path.join(self.updatedir,self.vdoc)
+        oldpath=self.vdoc+'.old'
+        newpath=self.vdoc
         os.rename(newpath,oldpath)
-        local_filename=self.vdoc
-        file_location=os.path.join(self.updatedir,local_filename)
         versionurl=self.url+self.vdoc
         #get new files
         r=requests.get(versionurl, stream=True, allow_redirects=True)
-        with open(file_location, 'wb') as f:
+        with open(newpath, 'wb') as f:
             for chunk in r.iter_content(chunk_size=128):
                 if chunk:
                     f.write(chunk)
         with open(oldpath, 'r') as f:
             oldver=f.read()
-        with open(file_location) as f:
+        with open(newpath) as f:
             newver=f.read()
         os.remove(oldpath)
         return parse_version(newver)>parse_version(oldver)

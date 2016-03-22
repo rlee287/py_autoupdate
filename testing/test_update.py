@@ -11,16 +11,13 @@ class TestRunProgram:
     def create_update_dir(self, request):
         def teardown():
             try:
-                if os.path.isfile(os.path.join('downloads','version.txt.old')):
-                    os.remove(os.path.join('downloads','version.txt.old'))
-                if os.path.isdir('downloads'):
-                    os.rmdir('downloads')
+                if os.path.isfile('version.txt.old'):
+                    os.remove('version.txt.old')
             except Exception as e:
                 print(e, file=sys.stderr)
                 raise AssertionError
         request.addfinalizer(teardown)
-        os.mkdir('downloads')
-        with open(os.path.join('downloads','version.txt'), mode='w') as file:
+        with open('version.txt', mode='w') as file:
             file.write("0.0.1")
         return self.create_update_dir
     
