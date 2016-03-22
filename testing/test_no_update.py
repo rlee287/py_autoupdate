@@ -18,10 +18,10 @@ class TestRunProgram:
                 raise AssertionError
         request.addfinalizer(teardown)
         with open('version.txt', mode='w') as file:
-            file.write("0.0.1")
+            file.write("0.2.0")
         return self.create_update_dir
     
-    def test_check_vers_update(self,create_update_dir):
+    def test_check_vers_noupdate(self,create_update_dir):
         l = Launcher('',r'http://rlee287.github.io/py_autoupdate/testing/')
         isnew=l._check_new()
-        assert isnew
+        assert not isnew
