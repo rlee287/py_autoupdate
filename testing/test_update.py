@@ -22,6 +22,6 @@ class TestRunProgram:
         return self.create_update_dir
     
     def test_check_vers_update(self,create_update_dir):
-        l = Launcher('',r'http://rlee287.github.io/py_autoupdate/testing/')
+        l = Launcher('',r'http://rlee287.github.io/pyautoupdate/testing/')
         isnew=l._check_new()
         assert isnew
