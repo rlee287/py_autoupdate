@@ -57,6 +57,7 @@ class Launcher:
             for chunk in r.iter_content(chunk_size=1024*50):
                 if chunk:
                     f.write(chunk)
+        r.raise_for_status()
         return local_filename
     
     def _check_new(self):
@@ -70,6 +71,7 @@ class Launcher:
             for chunk in r.iter_content(chunk_size=128):
                 if chunk:
                     f.write(chunk)
+        r.raise_for_status()
         with open(oldpath, 'r') as f:
             oldver=f.read()
         with open(newpath) as f:
@@ -79,4 +81,3 @@ class Launcher:
 
     def update(self):
         self._reset_update_dir()
-
