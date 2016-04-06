@@ -80,4 +80,9 @@ class Launcher:
         return parse_version(newver)>parse_version(oldver)
 
     def update(self):
-        self._reset_update_dir()
+        if self._check_new():
+            pass #self._get_new()
+            self._reset_update_dir()
+        else:
+            print("Already up to date")
+
