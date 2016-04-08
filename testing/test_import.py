@@ -4,7 +4,7 @@ import sys
 
 class TestImportModules:
     def test_import_all(self):
-        module_name='py_autoupdate'
+        module_name='pyautoupdate'
         submodules=['launcher']
         modulelist=[module_name]
         for submodule in submodules:

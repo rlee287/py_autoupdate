@@ -13,6 +13,8 @@ class TestRunProgram:
             try:
                 if os.path.isfile('version.txt.old'):
                     os.remove('version.txt.old')
+                if os.path.isfile('version.txt'):
+                    os.remove('version.txt')
             except Exception as e:
                 print(e, file=sys.stderr)
                 raise AssertionError

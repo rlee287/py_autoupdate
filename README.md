@@ -2,7 +2,7 @@
 
 `py_autoupdate` is a python wrapper that allows the wrapped code to automatically update.
 
-[![Build Status](https://travis-ci.org/rlee287/py_autoupdate.svg?branch=develop)](https://travis-ci.org/rlee287/py_autoupdate)
+[![Build Status](https://travis-ci.org/rlee287/pyautoupdate.svg?branch=develop)](https://travis-ci.org/rlee287/py_autoupdate)
 
 **Note: This is pre-alpha code. The update functionality does not work yet.**
 
@@ -16,7 +16,7 @@
  * For python 3, python 3.3 or later is required
  * `requests` for retrieving updated versions
  * `pytest` for running the tests
-   - `pytest_cov`
+   - `pytest_cov` to measure coverage
 
 ## License
 LGPL 2.1
