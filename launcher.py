@@ -21,6 +21,8 @@ class Launcher:
         self.kwargs=kwargs
 
     def _call_code(self):
+        '''Method that executes the wrapped code.
+           Internally used as target of multiprocessing.Process instance'''
         #open code file
         try:
             file=open(self.filepath, mode='r')
@@ -32,6 +34,8 @@ class Launcher:
             exec(code,globals(),vars(self))
     
     def run(self):
+        '''Method used to run code
+           Returns the exit code of the executed code'''
         #Call code through wrapper
         p = multiprocessing.Process(target=self._call_code)
         p.start()
@@ -40,6 +44,8 @@ class Launcher:
         return p.exitcode
 
     def _reset_update_dir(self):
+        '''Resets the update directory to its default state
+           Also creates a new update directory if it doesn't exist'''
         if not os.path.isdir(self.updatedir):
             os.makedirs(self.updatedir)
         else:
@@ -62,6 +68,8 @@ class Launcher:
         return local_filename
     
     def _check_new(self):
+        '''Retrieves the latest version number from the remote host
+           Internally uses setuptool's parse_version to compare versions'''
         oldpath=self.vdoc+'.old'
         newpath=self.vdoc
         os.rename(newpath,oldpath)
