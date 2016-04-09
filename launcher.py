@@ -23,12 +23,13 @@ class Launcher:
     def _call_code(self):
         #open code file
         try:
-            with open(self.filepath, mode='r') as file:
-                code=file.read()
-                #Local variable for called file=class fields
-                exec(code,globals(),vars(self))
+            file=open(self.filepath, mode='r')
+            code=file.read()
         except IOError:
             print('Unable to open file to run code', file=sys.stderr)
+        finally:
+            #Local variable for called file=class fields
+            exec(code,globals(),vars(self))
     
     def run(self):
         #Call code through wrapper
@@ -81,7 +82,7 @@ class Launcher:
 
     def update(self):
         if self._check_new():
-            pass #self._get_new()
+            #self._get_new()
             self._reset_update_dir()
         else:
             print("Already up to date")
