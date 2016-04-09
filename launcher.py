@@ -75,11 +75,9 @@ class Launcher:
         os.rename(newpath,oldpath)
         versionurl=self.url+self.vdoc
         #get new files
-        r=requests.get(versionurl, stream=True, allow_redirects=True)
+        r=requests.get(versionurl, allow_redirects=True)
         with open(newpath, 'wb') as f:
-            for chunk in r.iter_content(chunk_size=128):
-                if chunk:
-                    f.write(chunk)
+            f.write(r.text)
         r.raise_for_status()
         with open(oldpath, 'r') as f:
             oldver=f.read()
