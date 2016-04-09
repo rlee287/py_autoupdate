@@ -1,8 +1,10 @@
 from __future__ import absolute_import, print_function
 
 import sys
+import pytest
 
 class TestImportModules:
+    @pytest.mark.tryfirst
     def test_import_all(self):
         module_name='pyautoupdate'
         submodules=['launcher']
