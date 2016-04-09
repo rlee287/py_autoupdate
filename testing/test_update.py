@@ -12,14 +12,10 @@ class TestRunProgram:
     @pytest.fixture(scope='class')
     def create_update_dir(self, request):
         def teardown():
-            try:
-                if os.path.isfile('version.txt.old'):
-                    os.remove('version.txt.old')
-                if os.path.isfile('version.txt'):
-                    os.remove('version.txt')
-            except Exception as e:
-                print(e, file=sys.stderr)
-                raise AssertionError
+            if os.path.isfile('version.txt.old'):
+                os.remove('version.txt.old')
+            if os.path.isfile('version.txt'):
+                os.remove('version.txt')
         request.addfinalizer(teardown)
         with open('version.txt', mode='w') as file:
             file.write("0.0.1")
