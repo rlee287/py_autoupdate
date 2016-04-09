@@ -3,6 +3,7 @@ from __future__ import absolute_import, print_function
 import pytest
 import os
 import sys
+from requests import HTTPError
 from ..launcher import Launcher
 
 from .pytest_skipif import needinternet
@@ -27,6 +28,7 @@ class TestRunProgram:
     
     @needinternet
     def test_check_vers_noupdate(self,create_update_dir):
-        l = Launcher('',r'http://rlee287.github.io/pyautoupdate/testing/')
-        isnew=l._check_new()
-        assert not isnew
+        with pytest.raises(HTTPError):
+            #No version.txt at the following url
+            l = Launcher('',r'http://rlee287.github.io/pyautoupdate/')
+            isnew=l._check_new()
