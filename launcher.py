@@ -76,7 +76,7 @@ class Launcher:
         versionurl=self.url+self.vdoc
         #get new files
         r=requests.get(versionurl, allow_redirects=True)
-        with open(newpath, 'wb') as f:
+        with open(newpath, 'w') as f:
             f.write(r.text)
         r.raise_for_status()
         with open(oldpath, 'r') as f:
