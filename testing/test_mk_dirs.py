@@ -10,12 +10,8 @@ class TestRunProgram:
     @pytest.fixture(scope='class')
     def create_update_dir(self, request):
         def teardown():
-            try:
-                if os.path.isdir('downloads'):
-                    os.rmdir('downloads')
-            except Exception as e:
-                print(e, file=sys.stderr)
-                raise AssertionError
+            if os.path.isdir('downloads'):
+                os.rmdir('downloads')
         request.addfinalizer(teardown)
         return self.create_update_dir
     
