@@ -50,10 +50,7 @@ class Launcher:
             os.makedirs(self.updatedir)
         else:
             #Remove old contents
-            try:
-                shutil.rmtree(self.updatedir)
-            except Exception as e:
-                print(e, file=sys.stderr)
+            shutil.rmtree(self.updatedir)
 
     def _get_new(self):
         local_filename=self.url.split('/')[-1]
