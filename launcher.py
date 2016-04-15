@@ -52,7 +52,7 @@ class Launcher:
             #Remove old contents
             try:
                 shutil.rmtree(self.updatedir)
-            except:
+            except Exception as e:
                 print(e, file=sys.stderr)
 
     def _get_new(self):
@@ -86,7 +86,7 @@ class Launcher:
         os.remove(oldpath)
         return parse_version(newver)>parse_version(oldver)
 
-    def update(self):
+    def update_code(self):
         if self._check_new():
             #self._get_new()
             self._reset_update_dir()

@@ -2,7 +2,6 @@ from __future__ import absolute_import, print_function
 
 import pytest
 import os
-import sys
 from ..launcher import Launcher
 from .pytest_skipif import needinternet
 
