@@ -21,7 +21,7 @@ class TestRunProgram:
         return self.create_update_dir
     
     @needinternet
-    def test_check_vers_noupdate(self,create_update_dir):
+    def test_check_vers_nourl(self,create_update_dir):
         with pytest.raises(HTTPError):
             #No version.txt at the following url
             launch = Launcher('',r'http://rlee287.github.io/pyautoupdate/')
