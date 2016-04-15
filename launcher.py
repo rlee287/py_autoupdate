@@ -1,11 +1,12 @@
 from __future__ import absolute_import, print_function
 
 from pkg_resources import parse_version
-import requests
 import multiprocessing
 import os
 import sys
 import shutil
+
+import requests
 
 class Launcher:
     def __init__(self, filepath, url,

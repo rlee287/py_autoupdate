@@ -1,13 +1,12 @@
 from __future__ import absolute_import, print_function
 
-import pytest
-import os
 from ..launcher import Launcher
+import os
+import pytest
 
 from .pytest_skipif import needinternet
 
 class TestRunProgram:
-    
     @pytest.fixture(scope='class')
     def create_update_dir(self, request):
         def teardown():

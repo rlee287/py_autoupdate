@@ -1,8 +1,8 @@
 from __future__ import absolute_import, print_function
 
-import pytest
-import os
 from ..launcher import Launcher
+import os
+import pytest
 
 class TestRunProgram:
     

@@ -11,7 +11,6 @@ class TestImportModules:
         for submodule in submodules:
             modulelist.append(module_name+'.'+submodule)
         for module in modulelist:
-            # No need to raise error here
-            # It is already raised in the import_module function
+            #Attempt to import all modules
             __import__(module)
 

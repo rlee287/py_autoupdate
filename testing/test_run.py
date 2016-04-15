@@ -1,7 +1,7 @@
 from __future__ import absolute_import, print_function
 
-import pytest
 import os
+import pytest
 from ..launcher import Launcher
 
 class TestRunProgram:
@@ -39,24 +39,24 @@ class TestRunProgram:
         filebase='test_run_base'
         filecode=filebase+'.py'
         filetext=filebase+'.txt'
-        l = Launcher(filecode,'')
-        excode=l.run()
+        launch = Launcher(filecode,'')
+        excode=launch.run()
         assert excode==0
         with open(filetext,mode="r") as file:
-            s=file.read()
-            assert s==str([i**2 for i in range(20)])
+            nums=file.read()
+            assert nums==str([i**2 for i in range(20)])
     
     def test_run_pid(self,create_test_file):
         filebase='test_run_base_pid'
         filecode=filebase+'.py'
-        l = Launcher(filecode,'')
-        excode=l.run()
+        launch = Launcher(filecode,'')
+        excode=launch.run()
         assert excode==0
 
     def test_run_fail(self,create_test_file):
         filebase='test_run_base_fail'
         filecode=filebase+'.py'
-        l = Launcher(filecode,'')
-        excode=l.run()
+        launch = Launcher(filecode,'')
+        excode=launch.run()
         assert excode!=0
 
