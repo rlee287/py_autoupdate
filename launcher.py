@@ -37,11 +37,11 @@ class Launcher:
         '''Method used to run code
            Returns the exit code of the executed code'''
         #Call code through wrapper
-        p = multiprocessing.Process(target=self._call_code)
-        p.start()
-        p.join()
+        run_code = multiprocessing.Process(target=self._call_code)
+        run_code.start()
+        run_code.join()
         #Exit code can be used by program that calls the launcher
-        return p.exitcode
+        return run_code.exitcode
 
     def _reset_update_dir(self):
         '''Resets the update directory to its default state
