@@ -1,15 +1,13 @@
 from __future__ import absolute_import, print_function
 
-import pytest
 import os
-import sys
+import pytest
 from requests import HTTPError
 from ..launcher import Launcher
 
 from .pytest_skipif import needinternet
 
 class TestRunProgram:
-    
     @pytest.fixture(scope='class')
     def create_update_dir(self, request):
         def teardown():
@@ -23,8 +21,8 @@ class TestRunProgram:
         return self.create_update_dir
     
     @needinternet
-    def test_check_vers_noupdate(self,create_update_dir):
+    def test_check_vers_nourl(self,create_update_dir):
         with pytest.raises(HTTPError):
             #No version.txt at the following url
-            l = Launcher('',r'http://rlee287.github.io/pyautoupdate/')
-            isnew=l._check_new()
+            launch = Launcher('',r'http://rlee287.github.io/pyautoupdate/')
+            launch._check_new()

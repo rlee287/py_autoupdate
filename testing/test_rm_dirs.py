@@ -23,16 +23,16 @@ class TestRunProgram:
                     if os.path.isfile(file_path):
                         os.unlink(file_path)
                         raise AssertionError#fail test if files exist
-                except OSError as e:
-                    print(e, file=sys.stderr)
+                except OSError as error:
+                    print(error, file=sys.stderr)
             try:
                 if os.path.isdir('downloads'):
                     os.rmdir('downloads')
-            except Exception as e:
-                print(e, file=sys.stderr)
+            except Exception as error:
+                print(error, file=sys.stderr)
         request.addfinalizer(teardown)
         return self.create_update_dir
     
     def test_rm_dirs(self,create_update_dir):
-        l = Launcher('','')
-        l._reset_update_dir()
+        launch = Launcher('','')
+        launch._reset_update_dir()

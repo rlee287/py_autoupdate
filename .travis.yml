@@ -13,5 +13,8 @@ notifications:
 install:
   - pip install requests
   - pip install pytest-cov
+  - pip install pylint
 script: 
   - . testing/scripts/run_linux.sh
+after_success:
+  - pylint -f colorized pyautoupdate
