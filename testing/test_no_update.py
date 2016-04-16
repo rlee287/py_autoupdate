@@ -22,5 +22,5 @@ class TestRunProgram:
     @needinternet
     def test_check_vers_noupdate(self,create_update_dir):
         launch = Launcher('',r'http://rlee287.github.io/pyautoupdate/testing/')
-        isnew=launch._check_new()
+        isnew=launch.check_new()
         assert not isnew

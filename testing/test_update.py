@@ -24,5 +24,5 @@ class TestRunProgram:
     def test_check_vers_update(self,create_update_dir):
         print(needinternet)
         launch = Launcher('',r'http://rlee287.github.io/pyautoupdate/testing/')
-        isnew=launch._check_new()
+        isnew=launch.check_new()
         assert isnew

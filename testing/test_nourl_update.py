@@ -25,4 +25,4 @@ class TestRunProgram:
         with pytest.raises(HTTPError):
             #No version.txt at the following url
             launch = Launcher('',r'http://rlee287.github.io/pyautoupdate/')
-            launch._check_new()
+            launch.check_new()
