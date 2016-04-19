@@ -3,10 +3,9 @@ from __future__ import absolute_import, print_function
 import pytest
 import os
 import sys
-from ..launcher import Launcher
+from ..pyautoupdate.launcher import Launcher
 
 class TestRunProgram:
-    
     @pytest.fixture(scope='class')
     def create_update_dir(self, request):
         os.mkdir('downloads')
