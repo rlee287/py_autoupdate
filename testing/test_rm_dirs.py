@@ -3,7 +3,7 @@ from __future__ import absolute_import, print_function
 import os
 import sys
 import pytest
-from ..launcher import Launcher
+from ..pyautoupdate.launcher import Launcher
 
 @pytest.fixture(scope='function')
 def create_update_dir(request):

@@ -3,7 +3,7 @@ from __future__ import absolute_import, print_function
 import os
 import pytest
 from requests import HTTPError
-from ..launcher import Launcher
+from ..pyautoupdate.launcher import Launcher
 
 from .pytest_skipif import needinternet
 

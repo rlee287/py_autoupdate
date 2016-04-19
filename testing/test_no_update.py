@@ -1,6 +1,6 @@
 from __future__ import absolute_import, print_function
 
-from ..launcher import Launcher
+from ..pyautoupdate.launcher import Launcher
 import os
 import pytest
 

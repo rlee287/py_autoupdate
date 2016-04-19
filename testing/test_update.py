@@ -2,7 +2,7 @@ from __future__ import absolute_import, print_function
 
 import os
 import pytest
-from ..launcher import Launcher
+from ..pyautoupdate.launcher import Launcher
 from .pytest_skipif import needinternet
 
 @pytest.fixture(scope='function')
