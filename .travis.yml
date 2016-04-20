@@ -17,4 +17,4 @@ install:
 script: 
   - . testing/scripts/run_linux.sh
 after_success:
-  - pylint -f colorized pyautoupdate
+  - cd .. && pylint -f colorized pyautoupdate
