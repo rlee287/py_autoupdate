@@ -1,3 +1,5 @@
+'''Fixture to skip tests that require internet access'''
+
 import requests
 import pytest
 
@@ -9,4 +11,5 @@ def has_internet():
     except requests.ConnectionError:
         return False
 
-needinternet=pytest.mark.skipif(not has_internet(), reason="This test needs internet")
+needinternet=pytest.mark.skipif(not has_internet(), 
+                                reason="This test needs internet")

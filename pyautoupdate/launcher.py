@@ -65,7 +65,7 @@ class Launcher:
         r.raise_for_status()
         return local_filename
     
-    def _check_new(self):
+    def check_new(self):
         '''Retrieves the latest version number from the remote host
            Internally uses setuptool's parse_version to compare versions'''
         oldpath=self.vdoc+'.old'
@@ -85,7 +85,7 @@ class Launcher:
         return parse_version(newver)>parse_version(oldver)
 
     def update_code(self):
-        if self._check_new():
+        if self.check_new():
             #self._get_new()
             self._reset_update_dir()
         else:
