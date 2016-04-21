@@ -1,7 +1,6 @@
 ##Description of tests
 
  * `pytest_skipif`: fixture to skip tests that require internet access
- * `test_import`: ensure all files are importable
  * `test_mk_dirs`: test that the update mechanism can create a downloads folder
  * `test_rm_dirs`: test that the update mechanism can clean up a downloads folder
  * `test_update`: Check that it can recognize when to update code
