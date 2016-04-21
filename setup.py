@@ -1,4 +1,4 @@
-from setuptools import *
+from setuptools import setup, find_packages
 
 with open("README.md", mode='r') as file:
     text=file.read()
@@ -12,7 +12,6 @@ setup(
     url='https://github.com/rlee287/pyautoupdate',
     install_requires=['requests>=2.6'],
     package_data={
-       '':['*.txt','*.ini','*.md'],
-       'testing':['*.md']},
+        'testing':['*.md']},
     license="LGPL 2.1"
 )
