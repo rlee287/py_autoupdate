@@ -1,9 +1,6 @@
 from __future__ import absolute_import, print_function
 
-import os
-import pytest
 from ..pyautoupdate.launcher import Launcher
-
 from .pytest_skipif import needinternet
 from .pytest_makevers import fixture_update_dir
 
