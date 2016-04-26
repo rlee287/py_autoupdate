@@ -26,8 +26,8 @@ class Launcher:
            Internally used as target of multiprocessing.Process instance'''
         #open code file
         try:
-            file=open(self.filepath, mode='r')
-            code=file.read()
+            code_file=open(self.filepath, mode='r')
+            code=code_file.read()
         except IOError:
             print('Unable to open file to run code', file=sys.stderr)
         finally:

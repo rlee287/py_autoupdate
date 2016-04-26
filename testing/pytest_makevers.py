@@ -10,8 +10,8 @@ def fixture_update_dir(request):
             if os.path.isfile('version.txt'):
                 os.remove('version.txt')
         request.addfinalizer(teardown)
-        with open('version.txt', mode='w') as file:
-            file.write(version)
+        with open('version.txt', mode='w') as version_file:
+            version_file.write(version)
         return fixture_update_dir
     return create_update_dir
 
