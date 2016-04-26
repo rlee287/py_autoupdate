@@ -13,8 +13,8 @@ def create_update_dir(request):
     os.mkdir(os.path.join('downloads','subfolder'))
     filedir.append(os.path.join('downloads','subfolder','oweigjoewig'))
     for each_file in filedir:
-        with open(each_file, mode='w') as file:
-            file.write('')
+        with open(each_file, mode='w') as new_file:
+            new_file.write('')
     def teardown():
         for file_path in filedir:
             try:

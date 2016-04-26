@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 
-with open("README.md", mode='r') as file:
-    text=file.read()
+with open("README.md", mode='r') as readme_file:
+    text=readme_file.read()
 
 setup(
     name='pyautoupdate',
