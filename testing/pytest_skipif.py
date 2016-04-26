@@ -11,5 +11,5 @@ def has_internet():
     except requests.ConnectionError:
         return False
 
-needinternet=pytest.mark.skipif(not has_internet(), 
+needinternet=pytest.mark.skipif(not has_internet(),
                                 reason="This test needs internet")
