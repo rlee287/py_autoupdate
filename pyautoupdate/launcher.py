@@ -47,11 +47,11 @@ class Launcher:
     def _reset_update_dir(self):
         '''Resets the update directory to its default state
            Also creates a new update directory if it doesn't exist'''
-        if not os.path.isdir(self.updatedir):
-            os.makedirs(self.updatedir)
-        else:
+        if os.path.isdir(self.updatedir):
             #Remove old contents
             shutil.rmtree(self.updatedir)
+        #Make new directory (one shouldn't exist)
+        os.makedirs(self.updatedir)
 
     def _get_new(self):
         local_filename = self.url.split('/')[-1]
