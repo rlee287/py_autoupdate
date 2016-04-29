@@ -29,7 +29,8 @@ class Launcher:
             code_file = open(self.filepath, mode='r')
             code = code_file.read()
         except IOError:
-            print('Unable to open file to run code', file=sys.stderr)
+            print('Unable to open file {} to run code'.format(self.filepath)
+                  , file=sys.stderr)
         finally:
             #Local variable for called file=class fields
             exec(code,globals(),vars(self))
