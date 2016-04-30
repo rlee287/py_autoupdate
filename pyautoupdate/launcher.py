@@ -28,7 +28,7 @@ class Launcher:
         try:
             code_file = open(self.filepath, mode='r')
             code = code_file.read()
-        except OSError:
+        except (FileNotFoundError, IOError):
             print('Unable to open file {} to run code'.format(self.filepath)
                   , file=sys.stderr)
             print('The full traceback is below:', file=sys.stderr)
