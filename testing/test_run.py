@@ -36,27 +36,26 @@ class TestRunProgram:
         return self.create_test_file
     
     def test_run(self,create_test_file):
-        filebase='test_run_base'
-        filecode=filebase+'.py'
-        filetext=filebase+'.txt'
+        filebase = 'test_run_base'
+        filecode = filebase+'.py'
+        filetext = filebase+'.txt'
         launch = Launcher(filecode,'')
-        excode=launch.run()
-        assert excode==0
+        excode = launch.run()
+        assert excode == 0
         with open(filetext,mode="r") as number_file:
-            nums=number_file.read()
-            assert nums==str([i**2 for i in range(20)])
+            nums = number_file.read()
+            assert nums == str([i**2 for i in range(20)])
     
     def test_run_pid(self,create_test_file):
-        filebase='test_run_base_pid'
-        filecode=filebase+'.py'
+        filebase = 'test_run_base_pid'
+        filecode = filebase+'.py'
         launch = Launcher(filecode,'')
-        excode=launch.run()
+        excode = launch.run()
         assert excode==0
 
     def test_run_fail(self,create_test_file):
-        filebase='test_run_base_fail'
-        filecode=filebase+'.py'
+        filebase = 'test_run_base_fail'
+        filecode = filebase+'.py'
         launch = Launcher(filecode,'')
-        excode=launch.run()
-        assert excode!=0
-
+        excode = launch.run()
+        assert excode != 0
