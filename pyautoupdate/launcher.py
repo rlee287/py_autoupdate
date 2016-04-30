@@ -28,10 +28,12 @@ class Launcher:
         try:
             code_file = open(self.filepath, mode='r')
             code = code_file.read()
-        except IOError:
+        except OSError:
             print('Unable to open file {} to run code'.format(self.filepath)
                   , file=sys.stderr)
-        finally:
+            print('The full traceback is below:', file=sys.stderr)
+            raise
+        else:
             #Local variable for called file=class fields
             exec(code,globals(),vars(self))
     
