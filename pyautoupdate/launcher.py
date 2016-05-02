@@ -12,25 +12,28 @@ class Launcher:
     def __init__(self, filepath, url,
                  updatedir='downloads', vdoc='version.txt',
                  *args, **kwargs):
-        self.url=url
-        self.filepath=filepath
-        self.updatedir=updatedir
-        self.vdoc=vdoc
-        self.update=multiprocessing.Event()
-        self.pid=os.getpid()
-        self.args=args
-        self.kwargs=kwargs
+        self.url = url
+        self.filepath = filepath
+        self.updatedir = updatedir
+        self.vdoc = vdoc
+        self.update = multiprocessing.Event()
+        self.pid = os.getpid()
+        self.args = args
+        self.kwargs = kwargs
 
     def _call_code(self):
         '''Method that executes the wrapped code.
            Internally used as target of multiprocessing.Process instance'''
         #open code file
         try:
-            code_file=open(self.filepath, mode='r')
-            code=code_file.read()
-        except IOError:
-            print('Unable to open file to run code', file=sys.stderr)
-        finally:
+            code_file = open(self.filepath, mode='r')
+            code = code_file.read()
+        except (FileNotFoundError, IOError):
+            print('Unable to open file {} to run code'.format(self.filepath)
+                  , file=sys.stderr)
+            print('The full traceback is below:', file=sys.stderr)
+            raise
+        else:
             #Local variable for called file=class fields
             exec(code,globals(),vars(self))
     
@@ -47,22 +50,22 @@ class Launcher:
     def _reset_update_dir(self):
         '''Resets the update directory to its default state
            Also creates a new update directory if it doesn't exist'''
-        if not os.path.isdir(self.updatedir):
-            os.makedirs(self.updatedir)
-        else:
+        if os.path.isdir(self.updatedir):
             #Remove old contents
             shutil.rmtree(self.updatedir)
+        #Make new directory (one shouldn't exist)
+        os.makedirs(self.updatedir)
 
     def _get_new(self):
-        local_filename=self.url.split('/')[-1]
-        file_location=self.updatedir+local_filename
+        local_filename = self.url.split('/')[-1]
+        file_location = self.updatedir+local_filename
         #get new files
-        r=requests.get(self.url, stream=True, allow_redirects=True)
+        http_get = requests.get(self.url, stream=True, allow_redirects=True)
         with open(file_location, 'wb') as f:
-            for chunk in r.iter_content(chunk_size=1024*50):
+            for chunk in http_get.iter_content(chunk_size=1024*50):
                 if chunk:
                     f.write(chunk)
-        r.raise_for_status()
+        http_get.raise_for_status()
         return local_filename
     
     def check_new(self):
@@ -74,13 +77,13 @@ class Launcher:
         versionurl=self.url+self.vdoc
         #get new files
         r=requests.get(versionurl, allow_redirects=True)
-        with open(newpath, 'w') as f:
-            f.write(r.text)
+        with open(newpath, 'w') as new_version:
+            new_version.write(r.text)
         r.raise_for_status()
         with open(oldpath, 'r') as f:
             oldver=f.read()
-        with open(newpath) as f:
-            newver=f.read()
+        with open(newpath) as new_version:
+            newver=new_version.read()
         os.remove(oldpath)
         return parse_version(newver)>parse_version(oldver)
 
