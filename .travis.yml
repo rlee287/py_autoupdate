@@ -7,7 +7,9 @@ python:
   - "3.5"
   - "pypy"
   - "pypy3"
-cache: pip
+cache: 
+  pip: true
+  directories: $HOME/.pylint.d
 notifications:
   email: false
 install:
@@ -15,6 +17,6 @@ install:
   - pip install pytest-cov
   - pip install pylint
 script: 
-  - . testing/scripts/run_linux.sh
+  - testing/scripts/run_linux.sh
 after_success:
-  - cd .. && pylint -f colorized pyautoupdate
+  - testing/scripts/lint_linux.sh
