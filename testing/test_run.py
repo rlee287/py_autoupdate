@@ -16,7 +16,11 @@ class TestRunProgram:
         codebasic='with open("'+filetext+'", mode="w") as number_file:\n'+\
         '    l=[i**2 for i in range(20)]\n'+\
         '    number_file.write(str(l))\n'+\
-        'print(locals())'
+        'print(update)\n'+\
+        'update.set()\n'+\
+        'print(update.is_set())\n'+\
+        'update.clear()\n'+\
+        'print(update.is_set())'
         codepid='import os\n'+'a=os.getpid()\n'+'b=os.getppid()\n'+\
              'c=pid\n'+'print("pid", a)\n'+'print("ppid",b)\n'+\
              'print("LauncherPid",c)\n'+'assert b==c\n'+'assert a!=c\n'

@@ -18,8 +18,7 @@ class Launcher:
         self.vdoc = vdoc
         self.update = multiprocessing.Event()
         self.pid = os.getpid()
-        self.args = args
-        self.kwargs = kwargs
+        self.arguments = (args, kwargs)
 
     def _call_code(self):
         '''Method that executes the wrapped code.
@@ -35,7 +34,9 @@ class Launcher:
             raise
         else:
             #Local variable for called file=class fields
-            exec(code,globals(),vars(self))
+            localvar = vars(self).copy()
+            localvar["check_new"] = self.check_new
+            exec(code,globals(),localvar)
     
     def run(self):
         '''Method used to run code
