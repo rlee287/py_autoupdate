@@ -81,8 +81,8 @@ class Launcher:
         with open(newpath, 'w') as new_version:
             new_version.write(r.text)
         r.raise_for_status()
-        with open(oldpath, 'r') as f:
-            oldver=f.read()
+        with open(oldpath, 'r') as old_version:
+            oldver=old_version.read()
         with open(newpath) as new_version:
             newver=new_version.read()
         os.remove(oldpath)
