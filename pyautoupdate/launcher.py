@@ -9,9 +9,19 @@ import shutil
 import requests
 
 class Launcher:
+'''Launcher for python code that provides update abilities'''
+
     def __init__(self, filepath, url,
                  updatedir='downloads', vdoc='version.txt',
                  *args, **kwargs):
+        '''Creates a :class:`Launcher <Launcher>` object.
+        
+        :param url: Base URL from which to download new versions
+        :param filepath: Path to file to execute
+        :param updatedir: Directory in which new versions are downloaded into
+        :param vdoc: Name of document containing version number
+        :param args and kwargs: ``args`` and ``kwargs`` passed to the launched code
+        :return: :class:`Launcher <Launcher>` object'''
         self.url = url
         self.filepath = filepath
         self.updatedir = updatedir
