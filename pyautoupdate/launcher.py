@@ -9,7 +9,7 @@ import shutil
 import requests
 
 class Launcher:
-'''Launcher for python code that provides update abilities'''
+    '''Launcher for python code that provides update abilities'''
 
     def __init__(self, filepath, url,
                  updatedir='downloads', vdoc='version.txt',
