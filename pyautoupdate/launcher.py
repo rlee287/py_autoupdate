@@ -11,11 +11,18 @@ import requests
 class Launcher:
     '''Creates a :class:`Launcher <Launcher>` object.
     
-    :param filepath: Path to file to execute
-    :param url: Base URL from which to download new versions
-    :param updatedir: Directory in which new versions are downloaded into
-    :param vdoc: Name of document containing version number
-    :param args: ``args`` and ``kwargs`` passed to the launched code'''
+    :param str filepath: Path to file to execute
+    :param str url: Base URL from which to download new versions
+    :param str updatedir: Directory in which new versions are downloaded into
+    :param str vdoc: Name of document containing version number
+    :param args: ``args`` passed to the launched code
+    :param kwargs: ``kwargs`` passed to the launched code
+    
+    .. warning::
+       
+       The :class:`Launcher <Launcher>` uses ``multiprocessing.Process`` to run the code.
+       
+       Please ensure that all ``args`` and ``kwargs`` can be pickled.'''
 
     def __init__(self, filepath, url,
                  updatedir='downloads', vdoc='version.txt',
@@ -30,7 +37,12 @@ class Launcher:
 
     def _call_code(self):
         '''Method that executes the wrapped code.
-           Internally used as target of multiprocessing.Process instance'''
+
+           Internally used as target of ``multiprocessing.Process`` instance
+           
+           .. warning::
+              
+              End users should never call this directly. Please use the ``run()`` method instead.'''
         #open code file
         try:
             code_file = open(self.filepath, mode='r')
@@ -47,7 +59,7 @@ class Launcher:
             exec(code,globals(),localvar)
     
     def run(self):
-        '''Method used to run code
+        '''Method used to run code.
            
            :return: the exit code of the executed code'''
         #Call code through wrapper
@@ -80,11 +92,14 @@ class Launcher:
         return local_filename
     
     def check_new(self):
-        '''Retrieves the latest version number from the remote host
+        '''Retrieves the latest version number from the remote host.
            
            :return: Whether a newer version is available
 
-           .. note:: Internally uses setuptool's parse_version to compare versions'''
+           .. note:: 
+              This function internally uses setuptool's ``parse_version`` to compare versions.
+
+              Anything parsable by setuptools can be used here as well.'''
         oldpath=self.vdoc+'.old'
         newpath=self.vdoc
         os.rename(newpath,oldpath)

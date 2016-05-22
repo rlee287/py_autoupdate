@@ -11,10 +11,3 @@ pyautoupdate.Launcher class
     :members:
     :private-members:
 
-Module contents
----------------
-
-.. OBSOLETE automodule:: pyautoupdate
-    :members:
-    :undoc-members:
-    :show-inheritance:
