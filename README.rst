@@ -23,8 +23,8 @@ Dependencies
 -  For python 3, python 3.3 or later is required
 -  ``requests`` for retrieving updated versions
 -  ``pytest`` for running the tests
-    -  ``pytest_cov`` to measure coverage
-    -  ``pylint`` for code style checks
+-  ``pytest_cov`` to measure coverage
+-  ``pylint`` for code style checks
 
 License
 -------
