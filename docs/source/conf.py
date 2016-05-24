@@ -32,8 +32,8 @@ sys.path.insert(0, os.path.abspath('../..'))
 # ones.
 extensions = [
     'sphinx.ext.autodoc',
+    'sphinx.ext.intersphinx',
     'sphinx.ext.todo',
-    'sphinx.ext.ifconfig',
     'sphinx.ext.viewcode',
     'sphinx.ext.githubpages',
 ]
@@ -107,10 +107,12 @@ pygments_style = 'sphinx'
 
 # If true, keep warnings as "system message" paragraphs in the built documents.
 #keep_warnings = False
- 
+
 # If true, `todo` and `todoList` produce output, else they produce nothing.
 todo_include_todos = True
 
+# Intersphinx mapping
+intersphinx_mapping = {'python': ('https://docs.python.org/3', None)}
 
 # -- Options for HTML output ----------------------------------------------
 
