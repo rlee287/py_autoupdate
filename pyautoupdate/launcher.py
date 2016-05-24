@@ -9,7 +9,7 @@ import shutil
 import requests
 
 class Launcher:
-    '''Creates a :class:`Launcher <Launcher>` object.
+    '''Creates a :class:`Launcher` object.
     
     :param str filepath: Path to file to execute
     :param str url: Base URL from which to download new versions
@@ -20,17 +20,19 @@ class Launcher:
     
     .. warning::
        
-       The :class:`Launcher <Launcher>` uses ``multiprocessing.Process`` to run the code.
+       The :class:`Launcher` uses :class:`multiprocessing.Process` to run the code.
        
        Please ensure that all ``args`` and ``kwargs`` can be pickled.'''
 
     def __init__(self, filepath, url,
-                 updatedir='downloads', vdoc='version.txt',
+                 updatedir='downloads', 
+                 vdoc='version.txt', newfiles='project.zip',
                  *args, **kwargs):
         self.url = url
         self.filepath = filepath
         self.updatedir = updatedir
         self.vdoc = vdoc
+        self.newfiles = newfiles
         self.update = multiprocessing.Event()
         self.pid = os.getpid()
         self.arguments = (args, kwargs)
@@ -38,11 +40,11 @@ class Launcher:
     def _call_code(self):
         '''Method that executes the wrapped code.
 
-           Internally used as target of ``multiprocessing.Process`` instance
+           Internally used as target of :py:class:`multiprocessing.Process` instance
            
            .. warning::
               
-              End users should never call this directly. Please use the ``run()`` method instead.'''
+              End users should never call this directly. Please use the :meth:`run` method instead.'''
         #open code file
         try:
             code_file = open(self.filepath, mode='r')
@@ -70,7 +72,7 @@ class Launcher:
         return run_code.exitcode
 
     def _reset_update_dir(self):
-        '''Resets the update directory to its default state
+        '''Resets the update directory to its default state.
 
            Also creates a new update directory if it doesn't exist'''
         if os.path.isdir(self.updatedir):
@@ -80,16 +82,18 @@ class Launcher:
         os.makedirs(self.updatedir)
 
     def _get_new(self):
-        local_filename = self.url.split('/')[-1]
-        file_location = self.updatedir+local_filename
+        file_location = self.updatedir+self.newfiles
+        if os.isfile(file_location):
+            os.remove(file_location)
+        new = self.url+file_location
         #get new files
-        http_get = requests.get(self.url, stream=True, allow_redirects=True)
-        with open(file_location, 'wb') as f:
+        http_get = requests.get(new, stream=True, allow_redirects=True)
+        with open(file_location, 'wb') as filehandle:
             for chunk in http_get.iter_content(chunk_size=1024*50):
                 if chunk:
-                    f.write(chunk)
+                    filehandle.write(chunk)
         http_get.raise_for_status()
-        return local_filename
+        shutil.unpack_archive(os.abspath(file_location),self.updatedir)
     
     def check_new(self):
         '''Retrieves the latest version number from the remote host.
@@ -118,8 +122,8 @@ class Launcher:
 
     def update_code(self):
         if self.check_new():
-            #self._get_new()
             self._reset_update_dir()
+            self._get_new()
         else:
             print("Already up to date")
 
