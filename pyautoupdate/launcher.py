@@ -103,7 +103,7 @@ class Launcher:
            .. note:: 
               This function internally uses setuptool's ``parse_version`` to compare versions.
 
-              Anything parsable by setuptools can be used here as well.'''
+              Any versioning scheme described in :pep:`440` can be used.'''
         oldpath=self.vdoc+'.old'
         newpath=self.vdoc
         os.rename(newpath,oldpath)
