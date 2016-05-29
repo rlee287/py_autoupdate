@@ -63,7 +63,8 @@ class Launcher:
     def run(self):
         '''Method used to run code.
            
-           :return: the exit code of the executed code'''
+           :return: the exit code of the executed codei
+           :rtype: int'''
         #Call code through wrapper
         run_code = multiprocessing.Process(target=self._call_code)
         run_code.start()
@@ -99,6 +100,7 @@ class Launcher:
         '''Retrieves the latest version number from the remote host.
            
            :return: Whether a newer version is available
+           :rtype: bool
 
            .. note:: 
               This function internally uses setuptool's ``parse_version`` to compare versions.

@@ -10,4 +10,5 @@ pyautoupdate.Launcher class
     :inherited-members:
     :members:
     :private-members:
+    :undoc-members:
 
