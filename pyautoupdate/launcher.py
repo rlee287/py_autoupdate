@@ -94,7 +94,7 @@ class Launcher:
                 if chunk:
                     filehandle.write(chunk)
         http_get.raise_for_status()
-        shutil.unpack_archive(os.abspath(file_location),self.updatedir)
+        shutil.unpack_archive(os.path.abspath(file_location),self.updatedir)
     
     def check_new(self):
         '''Retrieves the latest version number from the remote host.
