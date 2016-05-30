@@ -20,7 +20,8 @@ class Launcher:
     
     .. warning::
        
-       The :class:`Launcher` uses :class:`multiprocessing.Process` to run the code.
+       The :class:`Launcher` uses :class:`multiprocessing.Process` 
+       to run the code.
        
        Please ensure that all ``args`` and ``kwargs`` can be pickled.'''
 
@@ -40,11 +41,13 @@ class Launcher:
     def _call_code(self):
         '''Method that executes the wrapped code.
 
-           Internally used as target of :py:class:`multiprocessing.Process` instance
+           Internally used as target of :py:class:`multiprocessing.Process` 
+           instance
            
            .. warning::
               
-              End users should never call this directly. Please use the :meth:`run` method instead.'''
+              End users should never call this directly. 
+              Please use the :meth:`run` method instead.'''
         #open code file
         try:
             code_file = open(self.filepath, mode='r')
@@ -103,7 +106,8 @@ class Launcher:
            :rtype: bool
 
            .. note:: 
-              This function internally uses setuptool's ``parse_version`` to compare versions.
+              This function internally uses setuptool's ``parse_version`` 
+              to compare versions.
 
               Any versioning scheme described in :pep:`440` can be used.'''
         oldpath=self.vdoc+'.old'
