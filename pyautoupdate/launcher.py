@@ -108,7 +108,7 @@ class Launcher:
               Any versioning scheme described in :pep:`440` can be used.'''
         oldpath=self.vdoc+'.old'
         newpath=self.vdoc
-        if os.path.isfile(oldpath)
+        if os.path.isfile(oldpath):
             os.remove(oldpath)
         os.rename(newpath,oldpath)
         versionurl=self.url+self.vdoc
