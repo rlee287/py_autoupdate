@@ -112,15 +112,16 @@ class Launcher:
               Any versioning scheme described in :pep:`440` can be used.'''
         oldpath=self.vdoc+'.old'
         newpath=self.vdoc
+        versionurl=self.url+self.vdoc
+        #get new files
+        get_new=requests.get(versionurl, allow_redirects=True)
+        get_new.raise_for_status()
+        #move to new file only when connection succeeds
         if os.path.isfile(oldpath):
             os.remove(oldpath)
         os.rename(newpath,oldpath)
-        versionurl=self.url+self.vdoc
-        #get new files
-        r=requests.get(versionurl, allow_redirects=True)
         with open(newpath, 'w') as new_version:
-            new_version.write(r.text)
-        r.raise_for_status()
+            new_version.write(get_new.text)
         with open(oldpath, 'r') as old_version:
             oldver=old_version.read()
         with open(newpath) as new_version:
