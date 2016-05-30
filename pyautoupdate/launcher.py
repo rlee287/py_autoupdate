@@ -84,7 +84,7 @@ class Launcher:
 
     def _get_new(self):
         file_location = self.updatedir+self.newfiles
-        if os.isfile(file_location):
+        if os.path.isfile(file_location):
             os.remove(file_location)
         new = self.url+file_location
         #get new files
@@ -108,6 +108,8 @@ class Launcher:
               Any versioning scheme described in :pep:`440` can be used.'''
         oldpath=self.vdoc+'.old'
         newpath=self.vdoc
+        if os.path.isfile(oldpath)
+            os.remove(oldpath)
         os.rename(newpath,oldpath)
         versionurl=self.url+self.vdoc
         #get new files
@@ -119,7 +121,6 @@ class Launcher:
             oldver=old_version.read()
         with open(newpath) as new_version:
             newver=new_version.read()
-        os.remove(oldpath)
         return parse_version(newver)>parse_version(oldver)
 
     def update_code(self):
