@@ -66,7 +66,7 @@ class Launcher:
     def run(self):
         '''Method used to run code.
            
-           :return: the exit code of the executed codei
+           :return: the exit code of the executed code
            :rtype: int'''
         #Call code through wrapper
         run_code = multiprocessing.Process(target=self._call_code)
