@@ -124,8 +124,7 @@ class Launcher:
             new_version.write(get_new.text)
         with open(oldpath, 'r') as old_version:
             oldver=old_version.read()
-        with open(newpath) as new_version:
-            newver=new_version.read()
+        newver=get_new.text
         return parse_version(newver)>parse_version(oldver)
 
     def update_code(self):
