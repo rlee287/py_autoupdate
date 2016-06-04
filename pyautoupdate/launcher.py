@@ -92,11 +92,11 @@ class Launcher:
         new = self.url+file_location
         #get new files
         http_get = requests.get(new, stream=True, allow_redirects=True)
+        http_get.raise_for_status()
         with open(file_location, 'wb') as filehandle:
             for chunk in http_get.iter_content(chunk_size=1024*50):
                 if chunk:
                     filehandle.write(chunk)
-        http_get.raise_for_status()
         shutil.unpack_archive(os.path.abspath(file_location),self.updatedir)
     
     def check_new(self):
