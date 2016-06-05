@@ -98,6 +98,8 @@ class Launcher:
                 if chunk:
                     filehandle.write(chunk)
         shutil.unpack_archive(os.path.abspath(file_location),self.updatedir)
+        if os.path.isfile(file_location):
+            os.remove(file_location)
     
     def check_new(self):
         '''Retrieves the latest version number from the remote host.
