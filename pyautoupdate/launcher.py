@@ -86,20 +86,20 @@ class Launcher:
         os.makedirs(self.updatedir)
 
     def _get_new(self):
-        file_location = self.updatedir+self.newfiles
-        if os.path.isfile(file_location):
-            os.remove(file_location)
-        new = self.url+file_location
+        #file_location = os.path.join(self.updatedir, self.newfiles)
+        if os.path.isfile(self.newfiles):
+            os.remove(self.newfiles)
+        newurl = self.url+self.newfiles
         #get new files
-        http_get = requests.get(new, stream=True, allow_redirects=True)
+        http_get = requests.get(newurl, stream=True, allow_redirects=True)
         http_get.raise_for_status()
-        with open(file_location, 'wb') as filehandle:
+        with open(self.newfiles, 'wb') as filehandle:
             for chunk in http_get.iter_content(chunk_size=1024*50):
                 if chunk:
                     filehandle.write(chunk)
-        shutil.unpack_archive(os.path.abspath(file_location),self.updatedir)
-        if os.path.isfile(file_location):
-            os.remove(file_location)
+        shutil.unpack_archive(self.newfiles, self.updatedir)
+        if os.path.isfile(self.newfiles):
+            os.remove(self.newfiles)
     
     def check_new(self):
         '''Retrieves the latest version number from the remote host.
