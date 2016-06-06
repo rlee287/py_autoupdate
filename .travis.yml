@@ -20,4 +20,6 @@ script:
   - py.test --cov-report xml ./testing
 after_success:
   - . testing/scripts/lint_linux.sh
-  - bash <(curl -s https://codecov.io/bash)
+  - pip install codecov
+  - PY_VERSION=python -c 'import sys;print(sys.version_info[0]+"."+sys.version_info[1])'
+  - codecov --env $PY_VERSION
