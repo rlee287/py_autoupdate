@@ -6,6 +6,7 @@ import os
 import sys
 import shutil
 
+from setuptools.archive_util import unpack_archive
 import requests
 
 class Launcher:
@@ -97,7 +98,7 @@ class Launcher:
             for chunk in http_get.iter_content(chunk_size=1024*50):
                 if chunk:
                     filehandle.write(chunk)
-        shutil.unpack_archive(self.newfiles, self.updatedir)
+        unpack_archive(self.newfiles, self.updatedir)
         if os.path.isfile(self.newfiles):
             os.remove(self.newfiles)
     
