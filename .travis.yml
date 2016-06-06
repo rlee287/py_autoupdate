@@ -21,5 +21,6 @@ script:
 after_success:
   - . testing/scripts/lint_linux.sh
   - pip install codecov
-  - PY_VERSION=python -c 'import sys;print(sys.version_info[0]+"."+sys.version_info[1])'
-  - codecov --env $PY_VERSION
+  - python -c 'import sys;print(str(sys.version_info[0])+"."+str(sys.version_info[1]))' > version.txt
+  - cat version.txt | xargs codecov --env
+  - rm version.txt
