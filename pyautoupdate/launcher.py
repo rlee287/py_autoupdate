@@ -52,7 +52,7 @@ class Launcher:
     .. warning::
 
        The :class:`Launcher` uses :class:`multiprocessing.Process`
-        to run the code.
+       to run the code.
 
        Please ensure that all ``args`` and ``kwargs`` can be pickled.'''
 
@@ -60,14 +60,18 @@ class Launcher:
                  updatedir='downloads',
                  vdoc='version.txt',
                  *args, **kwargs):
-        self.url = url
         self.filepath = filepath
+        if url.endswith("/"):
+            self.url = url
+        else:
+            self.url = url + "/"
         self.updatedir = updatedir
         self.vdoc = vdoc
         self.newfiles = newfiles
         self.update = multiprocessing.Event()
         self.pid = os.getpid()
-        self.arguments = (args, kwargs)
+        self.args = args
+        self.kwargs = kwargs
 
     def _call_code(self):
         '''Method that executes the wrapped code.
