@@ -4,8 +4,11 @@ from ..pyautoupdate.launcher import Launcher
 from .pytest_skipif import needinternet
 from .pytest_makevers import fixture_update_dir
 
+import pytest
+
 import os
 
+@pytest.mark.trylast
 @needinternet
 def test_check_vers_update(fixture_update_dir):
     package=fixture_update_dir("0.0.1")
