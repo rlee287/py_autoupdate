@@ -73,6 +73,8 @@ class Launcher:
         self.args = args
         self.kwargs = kwargs
 
+########################### Code execution methods ###########################
+
     def _call_code(self):
         '''Method that executes the wrapped code.
 
@@ -110,30 +112,7 @@ class Launcher:
         #Exit code can be used by program that calls the launcher
         return run_code.exitcode
 
-    def _reset_update_dir(self):
-        '''Resets the update directory to its default state.
-
-           Also creates a new update directory if it doesn't exist.'''
-        if os.path.isdir(self.updatedir):
-            #Remove old contents
-            shutil.rmtree(self.updatedir)
-        #Make new directory (one shouldn't exist)
-        os.makedirs(self.updatedir)
-
-    def _get_new(self):
-        if os.path.isfile(self.newfiles):
-            os.remove(self.newfiles)
-        newurl = self.url+self.newfiles
-        #get new files
-        http_get = requests.get(newurl, stream=True, allow_redirects=True)
-        http_get.raise_for_status()
-        with open(self.newfiles, 'wb') as filehandle:
-            for chunk in http_get.iter_content(chunk_size=1024*50):
-                if chunk:
-                    filehandle.write(chunk)
-        unpack_archive(self.newfiles, self.updatedir)
-        if os.path.isfile(self.newfiles):
-            os.remove(self.newfiles)
+######################### New code retrieval methods #########################
 
     def check_new(self):
         '''Retrieves the latest version number from the remote host.
@@ -162,6 +141,34 @@ class Launcher:
             oldver=old_version.read()
         newver=get_new.text
         return parse_version(newver)>parse_version(oldver)
+
+
+    def _reset_update_dir(self):
+        '''Resets the update directory to its default state.
+
+           Also creates a new update directory if it doesn't exist.'''
+        if os.path.isdir(self.updatedir):
+            #Remove old contents
+            shutil.rmtree(self.updatedir)
+        #Make new directory (one shouldn't exist)
+        os.makedirs(self.updatedir)
+
+    def _get_new(self):
+        '''Retrieves the new archive and extracts it to the downloads
+           directory.'''
+        if os.path.isfile(self.newfiles):
+            os.remove(self.newfiles)
+        newurl = self.url+self.newfiles
+        #get new files
+        http_get = requests.get(newurl, stream=True, allow_redirects=True)
+        http_get.raise_for_status()
+        with open(self.newfiles, 'wb') as filehandle:
+            for chunk in http_get.iter_content(chunk_size=1024*50):
+                if chunk:
+                    filehandle.write(chunk)
+        unpack_archive(self.newfiles, self.updatedir)
+        if os.path.isfile(self.newfiles):
+            os.remove(self.newfiles)
 
     def update_code(self):
         if self.check_new():
