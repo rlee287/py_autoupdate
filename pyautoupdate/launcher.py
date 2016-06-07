@@ -6,24 +6,84 @@ import os
 import sys
 import shutil
 
+from setuptools.archive_util import unpack_archive
 import requests
 
 class Launcher:
-    def __init__(self, filepath, url,
-                 updatedir='downloads', vdoc='version.txt',
+    '''Creates a :class:`Launcher` object.
+
+    :param str filepath: Path to file to execute
+    :param str url: Base URL from which to download new versions
+    :param str newfiles: Name of archive with new versions to download from
+     site
+    :param str updatedir: Directory in which new versions are downloaded into
+    :param str vdoc: Name of document containing version number
+    :param list args: ``args`` passed to the launched code
+    :param dict kwargs: ``kwargs`` passed to the launched code
+
+    .. note::
+
+       The archive can be a ``.zip``, ``.tar.gz``, or a ``.tar.bz2`` file.
+
+    When the code is launched, certain variables are already defined as
+    follows:
+
+    +-------------+-------------------------------------------------+
+    |Variable Name|Value Description                                |
+    +=============+=================================================+
+    |``filepath`` |Path to the file that was initially launched     |
+    +-------------+-------------------------------------------------+
+    |``url``      |Base url to check and download new versions      |
+    +-------------+-------------------------------------------------+
+    |``updatedir``|Directory into which the new archive is extracted|
+    +-------------+-------------------------------------------------+
+    |``newfiles`` |Name of the archive containing the new files     |
+    +-------------+-------------------------------------------------+
+    |``update``   |:py:class:`multiprocessing.Event` that can be    |
+    |             |set to signal an update event                    |
+    +-------------+-------------------------------------------------+
+    |``pid``      |PID of parent process that spawns the code       |
+    +-------------+-------------------------------------------------+
+    |``args``     |``args`` for the spawned code                    |
+    +-------------+-------------------------------------------------+
+    |``kwargs``   |``kwargs`` for the spawned code                  |
+    +-------------+-------------------------------------------------+
+
+    .. warning::
+
+       The :class:`Launcher` uses :class:`multiprocessing.Process`
+       to run the code.
+
+       Please ensure that all ``args`` and ``kwargs`` can be pickled.'''
+
+    def __init__(self, filepath, url, newfiles='project.zip',
+                 updatedir='downloads',
+                 vdoc='version.txt',
                  *args, **kwargs):
-        self.url = url
         self.filepath = filepath
+        if url.endswith("/"):
+            self.url = url
+        else:
+            self.url = url + "/"
         self.updatedir = updatedir
         self.vdoc = vdoc
+        self.newfiles = newfiles
         self.update = multiprocessing.Event()
         self.pid = os.getpid()
-        self.arguments = (args, kwargs)
+        self.args = args
+        self.kwargs = kwargs
 
     def _call_code(self):
         '''Method that executes the wrapped code.
-           Internally used as target of multiprocessing.Process instance'''
-        #open code file
+
+           Internally used as target of :py:class:`multiprocessing.Process`
+           instance
+
+           .. warning::
+
+              End users should never call this directly.
+              Please use the :meth:`run` method instead.'''
+        #Open code file
         try:
             code_file = open(self.filepath, mode='r')
             code = code_file.read()
@@ -33,14 +93,16 @@ class Launcher:
             print('The full traceback is below:', file=sys.stderr)
             raise
         else:
-            #Local variable for called file=class fields
+            #Only attempt to run when file has been opened
             localvar = vars(self).copy()
             localvar["check_new"] = self.check_new
-            exec(code,globals(),localvar)
-    
+            exec(code, globals(), localvar)
+
     def run(self):
-        '''Method used to run code
-           Returns the exit code of the executed code'''
+        '''Method used to run code.
+
+           :return: the exit code of the executed code
+           :rtype: int'''
         #Call code through wrapper
         run_code = multiprocessing.Process(target=self._call_code)
         run_code.start()
@@ -49,8 +111,9 @@ class Launcher:
         return run_code.exitcode
 
     def _reset_update_dir(self):
-        '''Resets the update directory to its default state
-           Also creates a new update directory if it doesn't exist'''
+        '''Resets the update directory to its default state.
+
+           Also creates a new update directory if it doesn't exist.'''
         if os.path.isdir(self.updatedir):
             #Remove old contents
             shutil.rmtree(self.updatedir)
@@ -58,40 +121,51 @@ class Launcher:
         os.makedirs(self.updatedir)
 
     def _get_new(self):
-        local_filename = self.url.split('/')[-1]
-        file_location = self.updatedir+local_filename
+        if os.path.isfile(self.newfiles):
+            os.remove(self.newfiles)
+        newurl = self.url+self.newfiles
         #get new files
-        http_get = requests.get(self.url, stream=True, allow_redirects=True)
-        with open(file_location, 'wb') as f:
+        http_get = requests.get(newurl, stream=True, allow_redirects=True)
+        http_get.raise_for_status()
+        with open(self.newfiles, 'wb') as filehandle:
             for chunk in http_get.iter_content(chunk_size=1024*50):
                 if chunk:
-                    f.write(chunk)
-        http_get.raise_for_status()
-        return local_filename
-    
+                    filehandle.write(chunk)
+        unpack_archive(self.newfiles, self.updatedir)
+        if os.path.isfile(self.newfiles):
+            os.remove(self.newfiles)
+
     def check_new(self):
-        '''Retrieves the latest version number from the remote host
-           Internally uses setuptool's parse_version to compare versions'''
+        '''Retrieves the latest version number from the remote host.
+
+           :return: Whether a newer version is available
+           :rtype: bool
+
+           .. note::
+              This function internally uses setuptool's ``parse_version``
+              to compare versions.
+
+              Any versioning scheme described in :pep:`440` can be used.'''
         oldpath=self.vdoc+'.old'
         newpath=self.vdoc
-        os.rename(newpath,oldpath)
         versionurl=self.url+self.vdoc
         #get new files
-        r=requests.get(versionurl, allow_redirects=True)
+        get_new=requests.get(versionurl, allow_redirects=True)
+        get_new.raise_for_status()
+        #move to new file only when connection succeeds
+        if os.path.isfile(oldpath):
+            os.remove(oldpath)
+        os.rename(newpath,oldpath)
         with open(newpath, 'w') as new_version:
-            new_version.write(r.text)
-        r.raise_for_status()
+            new_version.write(get_new.text)
         with open(oldpath, 'r') as old_version:
             oldver=old_version.read()
-        with open(newpath) as new_version:
-            newver=new_version.read()
-        os.remove(oldpath)
+        newver=get_new.text
         return parse_version(newver)>parse_version(oldver)
 
     def update_code(self):
         if self.check_new():
-            #self._get_new()
             self._reset_update_dir()
+            self._get_new()
         else:
             print("Already up to date")
-

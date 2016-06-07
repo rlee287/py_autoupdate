@@ -17,6 +17,10 @@ install:
   - pip install pytest-cov
   - pip install pylint
 script: 
-  - . testing/scripts/run_linux.sh
+  - py.test --cov-report xml ./testing
 after_success:
   - . testing/scripts/lint_linux.sh
+  - pip install codecov
+  - python -c 'import sys;print(str(sys.version_info[0])+"."+str(sys.version_info[1]))' > version.txt
+  - cat version.txt | xargs codecov --env
+  - rm version.txt
