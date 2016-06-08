@@ -1,11 +1,11 @@
 from __future__ import absolute_import, print_function
 
-from pkg_resources import parse_version
 import multiprocessing
 import os
 import sys
 import shutil
 
+from pkg_resources import parse_version
 from setuptools.archive_util import unpack_archive
 import requests
 
