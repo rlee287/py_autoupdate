@@ -4,6 +4,7 @@ import multiprocessing
 import os
 import sys
 import shutil
+import tempfile
 
 from pkg_resources import parse_version
 from setuptools.archive_util import unpack_archive
@@ -170,9 +171,30 @@ class Launcher:
         if os.path.isfile(self.newfiles):
             os.remove(self.newfiles)
 
+    def _replace_files(self):
+        contain_dir=os.path.dirname(os.path.abspath(self.filepath))
+        for dirpath, dirnames, filenames in os.walk(contain_dir):
+            # Avoid removing download directory
+            if dirpath != self.updatedir:
+                for filename in filenames:
+                    if not (dirpath == contain_dir):
+                        # Avoid removing version file
+                        if self.vdoc != filename:
+                            os.unlink(filename)
+        with tempfile.TemporaryDirectory() as tempdir:
+            # Copy version.txt and downloads here as shutil.copytree
+            # Cannot copy into existing directory
+            shutil.copytree(contain_dir, tempdir, True)
+            shutil.rmtree(contain_dir)
+            shutil.copytree(os.path.join(tempdir, self.updatedir),
+                            contain_dir, True)
+            # tempfile takes care of the tempdir automatically
+            # No need to remove it manually
+
     def update_code(self):
         if self.check_new():
             self._reset_update_dir()
             self._get_new()
+            self._replace_files()
         else:
             print("Already up to date")
