@@ -6,6 +6,7 @@ from .pytest_skipif import needinternet
 import pytest
 
 import os
+import shutil
 
 @pytest.fixture(scope='function')
 def fixture_update_dir(request):
@@ -14,6 +15,8 @@ def fixture_update_dir(request):
             os.remove('version.txt.old')
         if os.path.isfile('version.txt'):
             os.remove('version.txt')
+        if os.path.isdir("extradir"):
+            shutil.rmtree("extradir")
     request.addfinalizer(teardown)
     with open('version.txt', mode='w') as version_file:
         version_file.write("0.0.1")

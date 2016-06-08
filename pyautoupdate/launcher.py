@@ -73,6 +73,7 @@ class Launcher:
         self.pid = os.getpid()
         self.args = args
         self.kwargs = kwargs
+        os.chdir(os.path.dirname(os.path.abspath(self.filepath)))
 
 ########################### Code execution methods ###########################
 
