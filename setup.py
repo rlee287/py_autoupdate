@@ -12,6 +12,6 @@ setup(
     url='https://github.com/rlee287/pyautoupdate',
     install_requires=['requests>=2.6'],
     package_data={
-        'testing':['*.md']},
+        'testing':['*.rst']},
     license="LGPL 2.1"
 )
