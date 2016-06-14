@@ -49,7 +49,7 @@ class TestRunProgram:
         with open(filetext,mode="r") as number_file:
             nums = number_file.read()
             assert nums == str([i**2 for i in range(20)])
-    
+
     def test_run_pid(self,create_test_file):
         filebase = 'test_run_base_pid'
         filecode = filebase+'.py'
