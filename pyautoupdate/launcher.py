@@ -61,7 +61,12 @@ class Launcher:
                  updatedir='downloads',
                  vdoc='version.txt',
                  *args, **kwargs):
-        self.filepath = filepath
+        if len(filepath) != 0:
+            self.filepath = filepath
+        else:
+            raise ValueError("Filepath must not be empty")
+        if len(url) == 0:
+            raise ValueError("URL must not be empty")
         if url.endswith("/"):
             self.url = url
         else:
