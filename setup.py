@@ -1,6 +1,6 @@
 from setuptools import setup, find_packages
 
-with open("README.md", mode='r') as readme_file:
+with open("README.rst", mode='r') as readme_file:
     text=readme_file.read()
 
 setup(
@@ -12,6 +12,6 @@ setup(
     url='https://github.com/rlee287/pyautoupdate',
     install_requires=['requests>=2.6'],
     package_data={
-        'testing':['*.md']},
+        'testing':['*.rst']},
     license="LGPL 2.1"
 )

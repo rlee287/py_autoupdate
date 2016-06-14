@@ -30,8 +30,8 @@ def create_update_dir(request):
             print(error, file=sys.stderr)
     request.addfinalizer(teardown)
     return create_update_dir
-    
+
 def test_rm_dirs(create_update_dir):
-    launch = Launcher('','')
+    launch = Launcher('all work and no play...','all play and no work...')
     launch._reset_update_dir()
     assert os.path.isdir('downloads')

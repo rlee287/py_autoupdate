@@ -12,5 +12,6 @@ def test_check_vers_nourl(fixture_update_dir):
     package=fixture_update_dir("0.2.0")
     with pytest.raises(HTTPError):
         #No version.txt at the following url
-        launch = Launcher('',r'http://rlee287.github.io/pyautoupdate/')
+        launch = Launcher('ANNOYING',
+                          r'http://rlee287.github.io/pyautoupdate/')
         launch.check_new()

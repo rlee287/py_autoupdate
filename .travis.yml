@@ -17,7 +17,7 @@ install:
   - pip install pytest-cov
   - pip install pylint
 script: 
-  - py.test --cov-report xml ./testing
+  - cd testing && py.test --cov-report xml . ; cd ..
 after_success:
   - . testing/scripts/lint_linux.sh
   - pip install codecov

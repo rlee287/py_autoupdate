@@ -61,7 +61,12 @@ class Launcher:
                  updatedir='downloads',
                  vdoc='version.txt',
                  *args, **kwargs):
-        self.filepath = filepath
+        if len(filepath) != 0:
+            self.filepath = filepath
+        else:
+            raise ValueError("Filepath must not be empty")
+        if len(url) == 0:
+            raise ValueError("URL must not be empty")
         if url.endswith("/"):
             self.url = url
         else:
@@ -73,7 +78,8 @@ class Launcher:
         self.pid = os.getpid()
         self.args = args
         self.kwargs = kwargs
-        os.chdir(os.path.dirname(os.path.abspath(self.filepath)))
+        self.oldcwd=os.getcwd()
+        self.cwd=os.path.abspath(os.path.join(".",self.filepath))
 
 ########################### Code execution methods ###########################
 
@@ -174,20 +180,32 @@ class Launcher:
 
     def _replace_files(self):
         contain_dir=os.path.dirname(os.path.abspath(self.filepath))
+        print("contain_dir", contain_dir)
+        print("abs self.filepath", os.path.abspath(self.filepath))
         for dirpath, dirnames, filenames in os.walk(contain_dir):
+            for filename in filenames:
+                print("dir:",os.path.abspath(dirpath))
+                print("file:",os.path.join(dirpath,filename))
             # Avoid removing download directory
             if dirpath != self.updatedir:
                 for filename in filenames:
-                    if not (dirpath == contain_dir):
+                    rm_path=os.path.abspath(os.path.join(dirpath,filename))
+                    if dirpath == contain_dir:
                         # Avoid removing version file
                         if self.vdoc != filename:
-                            os.unlink(filename)
+                            os.unlink(rm_path)
+                            print("Remove",rm_path)
+                    else:
+                        os.unlink(rm_path)
+                        print("Remove",rm_path)
         with tempfile.TemporaryDirectory() as tempdir:
             # Copy version.txt and downloads here as shutil.copytree
             # Cannot copy into existing directory
-            shutil.copytree(contain_dir, tempdir, True)
+            tempdir_inside=os.path.join(tempdir, "pyautoupdate_temp")
+            shutil.copytree(os.path.join(contain_dir,".."), tempdir_inside, True)
+            print(os.listdir(tempdir_inside))
             shutil.rmtree(contain_dir)
-            shutil.copytree(os.path.join(tempdir, self.updatedir),
+            shutil.copytree(os.path.join(tempdir_inside, self.updatedir),
                             contain_dir, True)
             # tempfile takes care of the tempdir automatically
             # No need to remove it manually

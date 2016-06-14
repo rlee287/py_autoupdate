@@ -1,2 +1,6 @@
 @echo off
-py.test .\testing
+cd testing
+if errorlevel 0 (
+    py.test .
+    cd ..
+)
