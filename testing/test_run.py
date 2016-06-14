@@ -38,12 +38,12 @@ class TestRunProgram:
             os.remove(filefail)
         request.addfinalizer(teardown)
         return self.create_test_file
-    
+
     def test_run(self,create_test_file):
         filebase = 'test_run_base'
         filecode = filebase+'.py'
         filetext = filebase+'.txt'
-        launch = Launcher(filecode,'')
+        launch = Launcher(filecode,'Must')
         excode = launch.run()
         assert excode == 0
         with open(filetext,mode="r") as number_file:
@@ -53,19 +53,19 @@ class TestRunProgram:
     def test_run_pid(self,create_test_file):
         filebase = 'test_run_base_pid'
         filecode = filebase+'.py'
-        launch = Launcher(filecode,'')
+        launch = Launcher(filecode,'have')
         excode = launch.run()
         assert excode==0
 
     def test_run_fail(self,create_test_file):
         filebase = 'test_run_base_fail'
         filecode = filebase+'.py'
-        launch = Launcher(filecode,'')
+        launch = Launcher(filecode,'URL')
         excode = launch.run()
         assert excode != 0
 
     def test_nofile(self):
-        launch = Launcher('does_not_exist_404j958458ryeiu.py','')
+        launch = Launcher('does_not_exist_404j958458ryeiu.py','(in)sanity')
         excode = launch.run()
         assert excode != 0
 
