@@ -5,7 +5,7 @@ import pytest
 from ..pyautoupdate.launcher import Launcher
 
 class TestRunProgram:
-    
+
     @pytest.fixture(scope='class')
     def create_test_file(self, request):
         filebase='test_run_base'
