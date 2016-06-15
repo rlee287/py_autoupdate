@@ -35,4 +35,4 @@ LGPL 2.1
 .. |Build_Status| image:: https://travis-ci.org/rlee287/pyautoupdate.svg?branch=develop
    :target: https://travis-ci.org/rlee287/pyautoupdate
 .. |Codecov_Status| image:: http://codecov.io/github/rlee287/pyautoupdate/coverage.svg?branch=develop
-   :target: http://codecov.io/github/rlee287/pyautoupdate?branch=master
+   :target: http://codecov.io/github/rlee287/pyautoupdate?branch=develop
