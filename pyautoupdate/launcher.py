@@ -206,7 +206,9 @@ class Launcher:
             print("tempdir_inside",tempdir_inside)
             print("Copying",os.path.join(contain_dir,".."),"to tempdir")
             shutil.copytree(os.path.join(contain_dir,".."), tempdir_inside, True)
-            print("Contents inside tempdir_inside",os.listdir(tempdir_inside))
+            print("Contents inside tempdir_inside:")
+            import pprint
+            pprint.pprint(os.listdir(tempdir_inside))
             print("Removing",contain_dir)
             shutil.rmtree(contain_dir)
             print("Copying",os.path.join(tempdir_inside, self.updatedir),"to",contain_dir)
