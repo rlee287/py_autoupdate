@@ -6,6 +6,7 @@ from .pytest_skipif import needinternet
 import pytest
 
 import os
+import pprint
 import shutil
 
 @pytest.fixture(scope='function')
@@ -39,6 +40,12 @@ def test_check_vers_update(fixture_update_dir):
     print("os.getcwd:",os.getcwd())
     print("launch.cwd:",launch.cwd)
     launch.update_code()
-    with open(os.path.abspath("downloads/extradir/blah.py"), "r") as file_code:
+    print("Files copied back:")
+    for dirpath, dirnames, filenames in os.walk("."):
+        print("dir:",os.path.abspath(dirpath))
+        for filename in filenames:
+            print("file:",os.path.join(dirpath,filename))
+    assert os.path.isfile("extradir/blah.py")
+    with open(os.path.abspath("extradir/blah.py"), "r") as file_code:
         file_text=file_code.read()
     assert "new version" in file_text
