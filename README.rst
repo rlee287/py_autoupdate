@@ -1,6 +1,6 @@
 |pyautoupdate_logo|
 
-``py_autoupdate`` is a python wrapper that allows the wrapped code to
+``pyautoupdate`` is a python wrapper that allows the wrapped code to
 automatically update.
 
 |Build_Status| |Codecov_Status|
