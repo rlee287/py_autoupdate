@@ -17,7 +17,7 @@ install:
   - pip install pytest-cov
   - pip install pylint
 script: 
-  - cd testing && py.test --cov-report xml . ; cd ..
+  - . .travis_scripts/run_travis.sh
 after_success:
   - . testing/scripts/lint_linux.sh
   - pip install codecov
