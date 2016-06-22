@@ -5,4 +5,4 @@ if [ $? -eq 0 ]; then
     exit_status=$?
     cd ..
 fi
-exit exit_status
+exit $exit_status
