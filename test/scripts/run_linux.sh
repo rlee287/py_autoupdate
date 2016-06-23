@@ -1,5 +1,5 @@
 #!/bin/sh
-cd testing
+cd 'test'
 if [ $? -eq 0 ]; then
     py.test .
     exit_status=$?

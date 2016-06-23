@@ -1,5 +1,5 @@
 # Caches (so that py.test can be run from main dir or testing dir)
-testing/.cache/*
+test/.cache/*
 .cache/*
 
 # Vim temp files
