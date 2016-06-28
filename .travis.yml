@@ -18,6 +18,9 @@ install:
   - pip install pylint
 script: 
   - . .travis_scripts/run_travis.sh
+  - python setup.py develop
+  - python -c "import pyautoupdate"
+  - python setup.py develop --uninstall
 after_success:
   - . testing/scripts/lint_linux.sh
   - pip install codecov
