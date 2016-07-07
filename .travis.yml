@@ -14,13 +14,15 @@ notifications:
   email: false
 install:
   - pip install requests
-  - pip install pytest-cov
+  - pip install coverage
   - pip install pylint
 script: 
   - . .travis_scripts/run_travis.sh
 after_success:
-  - . testing/scripts/lint_linux.sh
+  - coverage report
   - pip install codecov
+  - coverage xml
+  - . testing/scripts/lint_linux.sh
   - python -c 'import sys;print(str(sys.version_info[0])+"."+str(sys.version_info[1]))' > version.txt
   - cat version.txt | xargs codecov --env
   - rm version.txt
