@@ -9,7 +9,7 @@ python setup.py develop || exit 1
 python -c "import pyautoupdate"
 install_exit=$?
 python setup.py develop --uninstall
-if [ $test_exit = 0 ] && [ $install_exit = 0]; then
+if [ $test_exit = 0 ] && [ $install_exit = 0 ]; then
     exit 0
 else
     exit 1
