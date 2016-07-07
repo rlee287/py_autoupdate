@@ -16,7 +16,7 @@ python -c "import pyautoupdate" && echo -e "\e[0;32mInstallation successful\e[0m
 install_exit=$?
 echo -e "\e[0;35mCleaning up...\e[0m"
 python setup.py develop --uninstall
-if [ $test_exit = 0 ] && [ $install_exit = 0]; then
+if [ $test_exit = 0 ] && [ $install_exit = 0 ]; then
     exit 0
 else
     exit 1
