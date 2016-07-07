@@ -31,7 +31,7 @@ def fixture_update_dir(request):
         code.write("print('This is the old version')")
     return fixture_update_dir
 
-@pytest.mark.trylast
+@pytest.mark.xfail
 @needinternet
 def test_check_vers_update(fixture_update_dir):
     launch = Launcher('extradir/blah.py',
