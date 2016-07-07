@@ -12,7 +12,7 @@ echo -e "\e[0;35mInstalling package...\e[0m"
 python setup.py develop || exit 1
 echo -e "\e[0;35mDone installing\e[0m"
 echo -e "\e[0;35mAttempting to import package from python...\e[0m"
-python -c "import pyautoupdate" && echo -e "\e[0;32mInstallation successful\e0m]"
+python -c "import pyautoupdate" && echo -e "\e[0;32mInstallation successful\e[0m"
 install_exit=$?
 echo -e "\e[0;35mCleaning up...\e[0m"
 python setup.py develop --uninstall
