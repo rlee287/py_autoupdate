@@ -19,7 +19,6 @@ install:
 script: 
   - . .travis_scripts/run_travis.sh
 after_success:
-  - coverage report
   - pip install codecov
   - coverage xml
   - . testing/scripts/lint_linux.sh
