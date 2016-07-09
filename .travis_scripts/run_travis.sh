@@ -5,6 +5,8 @@ cd 'test' || exit 1
 coverage run --source .,../pyautoupdate -m pytest
 test_exit=$?
 coverage report -m
+coverage xml -i
+mv coverage.xml ../coverage.xml
 cd ..
 echo -e "\e[0;34mDone running tests\e[0m"
 # Ensure that package installs properly

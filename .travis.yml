@@ -20,7 +20,6 @@ script:
   - bash .travis_scripts/run_travis.sh
 after_success:
   - pip install codecov
-  - coverage xml -i
   - ls -al && find / -name '.coverage*' -or -name 'coverage.xml'
   - python -c 'import sys;print(str(sys.version_info[0])+"."+str(sys.version_info[1]))' > version.txt
   - cat version.txt | xargs codecov --env
