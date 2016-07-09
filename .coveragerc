@@ -1,0 +1,7 @@
+[run]
+branch = true
+concurrency = multiprocessing
+
+[report]
+omit = __init__
+show_missing = true

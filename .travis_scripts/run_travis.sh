@@ -2,7 +2,7 @@
 # Run tests
 echo -e "\e[0;34mRunning test suite...\e[0m"
 cd 'test' || exit 1
-coverage run --branch --concurrency=multiprocessing --source .,../pyautoupdate -m pytest
+coverage run --source .,../pyautoupdate -m pytest
 test_exit=$?
 coverage report -m
 cd ..
