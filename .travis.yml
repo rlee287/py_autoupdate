@@ -20,6 +20,8 @@ script:
   - . .travis_scripts/run_travis.sh
 after_success:
   - . testing/scripts/lint_linux.sh
+  - ls -al
+  - find . -name '.coverage*' -or -name 'coverage.xml'
   - pip install codecov
   - python -c 'import sys;print(str(sys.version_info[0])+"."+str(sys.version_info[1]))' > version.txt
   - cat version.txt | xargs codecov --env
