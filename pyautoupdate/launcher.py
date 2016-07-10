@@ -175,8 +175,7 @@ class Launcher:
                 if chunk:
                     filehandle.write(chunk)
         unpack_archive(self.newfiles, self.updatedir)
-        if os.path.isfile(self.newfiles):
-            os.remove(self.newfiles)
+        os.remove(self.newfiles)
 
     def _replace_files(self):
         contain_dir=os.path.dirname(os.path.abspath(self.filepath))
