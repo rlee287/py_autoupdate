@@ -17,17 +17,11 @@ def create_update_dir(request):
             new_file.write('')
     def teardown():
         for file_path in filedir:
-            try:
-                if os.path.isfile(file_path):
-                    os.unlink(file_path)
-                    raise AssertionError#fail test if files exist
-            except OSError as error:
-                print(error, file=sys.stderr)
-        try:
-            if os.path.isdir('downloads'):
-                os.rmdir('downloads')
-        except OSError as error:
-            print(error, file=sys.stderr)
+            if os.path.isfile(file_path):
+                os.unlink(file_path)
+                raise AssertionError#fail test if files exist
+        if os.path.isdir('downloads'):
+            os.rmdir('downloads')
     request.addfinalizer(teardown)
     return create_update_dir
 
