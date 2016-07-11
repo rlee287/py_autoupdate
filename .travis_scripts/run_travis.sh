@@ -2,7 +2,7 @@
 # Run tests
 echo -e "\e[0;34mRunning test suite...\e[0m"
 cd 'test' || exit 1
-coverage run --debug config,trace --source .,../pyautoupdate -m pytest
+coverage run --debug config --source .,../pyautoupdate -m pytest
 test_exit=$?
 coverage report -m
 coverage xml -i
