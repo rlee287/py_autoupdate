@@ -2,8 +2,6 @@ from __future__ import absolute_import, print_function
 
 from ..pyautoupdate.launcher import Launcher
 
-import os
-
 import pytest
 
 def test_check_urlslash():
@@ -15,8 +13,8 @@ def test_check_urlslash():
 
 def test_check_emptyfilepath():
     with pytest.raises(ValueError):
-        launch = Launcher('','a url')
+        Launcher('','a url')
 
 def test_check_emptyURL():
     with pytest.raises(ValueError):
-        launch = Launcher('a filepath','')
+        Launcher('a filepath','')

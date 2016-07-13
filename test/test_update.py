@@ -6,7 +6,6 @@ from .pytest_skipif import needinternet
 import pytest
 
 import os
-import pprint
 import shutil
 
 @pytest.fixture(scope='function')

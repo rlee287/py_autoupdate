@@ -187,7 +187,7 @@ class Launcher:
                     rm_path=os.path.abspath(os.path.join(dirpath,filename))
                     if dirpath == contain_dir:
                         # Avoid removing version file
-                        if "version.txt" != filename:
+                        if filename != "version.txt":
                             os.unlink(rm_path)
                             print("Remove",rm_path)
                     else:
