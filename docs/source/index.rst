@@ -6,6 +6,24 @@
 Welcome to pyautoupdate's documentation!
 ========================================
 
+``pyautoupdate`` is a module that allows code to automatically update.
+Developers can focus on developing their application and use 
+``pyautoupdate`` to easily ensure that the copy of the code on the end
+user's computer remains updated.
+
+Example code using ``pyautoupdate``:
+
+.. code-block:: python
+
+   import pyautoupdate
+
+   # Run code
+   launch=Launcher("~/example/application_init.py","https://update-url")
+   excode=launch.run()
+
+   # Update files
+   launch.update()
+
 Contents:
 
 .. toctree::
