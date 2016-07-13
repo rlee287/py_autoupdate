@@ -59,7 +59,6 @@ class Launcher:
 
     def __init__(self, filepath, url, newfiles='project.zip',
                  updatedir='downloads',
-                 vdoc='version.txt',
                  *args, **kwargs):
         if len(filepath) != 0:
             self.filepath = filepath
@@ -72,7 +71,6 @@ class Launcher:
         else:
             self.url = url + "/"
         self.updatedir = updatedir
-        self.vdoc = vdoc
         self.newfiles = newfiles
         self.update = multiprocessing.Event()
         self.pid = os.getpid()
@@ -133,19 +131,17 @@ class Launcher:
               to compare versions.
 
               Any versioning scheme described in :pep:`440` can be used.'''
-        oldpath=self.vdoc+'.old'
-        newpath=self.vdoc
-        versionurl=self.url+self.vdoc
+        versionurl=self.url+"version.txt"
         #get new files
         get_new=requests.get(versionurl, allow_redirects=True)
         get_new.raise_for_status()
         #move to new file only when connection succeeds
-        if os.path.isfile(oldpath):
-            os.remove(oldpath)
-        os.rename(newpath,oldpath)
-        with open(newpath, 'w') as new_version:
+        if os.path.isfile("version.txt.old"):
+            os.remove("version.txt.old")
+        os.rename("version.txt","version.txt.old")
+        with open("version.txt", 'w') as new_version:
             new_version.write(get_new.text)
-        with open(oldpath, 'r') as old_version:
+        with open("version.txt.old", 'r') as old_version:
             oldver=old_version.read()
         newver=get_new.text
         return parse_version(newver)>parse_version(oldver)
@@ -191,7 +187,7 @@ class Launcher:
                     rm_path=os.path.abspath(os.path.join(dirpath,filename))
                     if dirpath == contain_dir:
                         # Avoid removing version file
-                        if self.vdoc != filename:
+                        if "version.txt" != filename:
                             os.unlink(rm_path)
                             print("Remove",rm_path)
                     else:
