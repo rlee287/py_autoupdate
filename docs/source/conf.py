@@ -15,6 +15,7 @@
 import sys
 import os
 import re
+import datetime
 
 # If extensions (or modules to document with autodoc) are in another directory,
 # add these directories to sys.path here. If the directory is relative to the
@@ -55,8 +56,9 @@ master_doc = 'index'
 
 # General information about the project.
 project = 'pyautoupdate'
-copyright = '2016, Ryan Lee'
 author = 'Ryan Lee'
+copyright = '{0} by {1}'.format(datetime.datetime.now().year, author)
+
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
@@ -135,8 +137,22 @@ html_theme_options = {
     'github_user': 'rlee287',
     'github_repo': 'pyautoupdate',
     'github_banner': True,
+    'travis_button': True,
+    'codecov_button': True,
+    'show_powered_by': True,
+    'logo': 'images/pyautoupdate_logo_square.png',
+    'logo_name': True,
+    'description': "A module that allows code to automatically update"
 }
 
+html_sidebars = {
+    '**': [
+        'about.html',
+        'navigation.html',
+        'sourcelink.html',
+        'searchbox.html',
+    ]
+}
 # Add any paths that contain custom themes here, relative to this directory.
 #html_theme_path = []
 
@@ -149,12 +165,12 @@ html_theme_options = {
 
 # The name of an image file (relative to this directory) to place at the top
 # of the sidebar.
-html_logo = "pyautoupdate_logo_square.png"
+#html_logo = "_static/images/pyautoupdate_logo_square.png"
 
 # The name of an image file (relative to this directory) to use as a favicon of
 # the docs.  This file should be a Windows icon file (.ico) being 16x16 or 32x32
 # pixels large.
-html_favicon = "pyautoupdate_logo_square.ico"
+html_favicon = "_static/images/pyautoupdate_logo_square.ico"
 
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
@@ -173,7 +189,7 @@ html_static_path = ['_static']
 
 # If true, SmartyPants will be used to convert quotes and dashes to
 # typographically correct entities.
-#html_use_smartypants = True
+html_use_smartypants = True
 
 # Custom sidebar templates, maps document names to template names.
 #html_sidebars = {}
