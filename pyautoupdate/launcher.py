@@ -18,7 +18,6 @@ class Launcher:
     :param str newfiles: Name of archive with new versions to download from
      site
     :param str updatedir: Directory in which new versions are downloaded into
-    :param str vdoc: Name of document containing version number
     :param list args: ``args`` passed to the launched code
     :param dict kwargs: ``kwargs`` passed to the launched code
 
@@ -40,8 +39,8 @@ class Launcher:
     +-------------+-------------------------------------------------+
     |``newfiles`` |Name of the archive containing the new files     |
     +-------------+-------------------------------------------------+
-    |``update``   |:py:class:`multiprocessing.Event` that can be    |
-    |             |set to signal an update event                    |
+    |``update``   |:class:`multiprocessing.Event` that can be set to|
+    |             |signal an update event                           |
     +-------------+-------------------------------------------------+
     |``pid``      |PID of parent process that spawns the code       |
     +-------------+-------------------------------------------------+
