@@ -72,7 +72,7 @@ class TestRunProgram:
     def test_background(self):
         filebase = 'test_run_base'
         fileback = filebase+'_back'+'.py'
-        launch = Launcher(filecode,'URL')
+        launch = Launcher(fileback,'URL')
         process_handle = launch.run(True)
         time.sleep(1)
         assert process_handle.is_alive()
