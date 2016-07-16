@@ -106,17 +106,26 @@ class Launcher:
             localvar["check_new"] = self.check_new
             exec(code, globals(), localvar)
 
-    def run(self):
+    def run(self, background=False):
         '''Method used to run code.
 
-           :return: the exit code of the executed code
-           :rtype: int'''
+           If background is ``True``, returns a handle to the Process object.
+
+           Otherwise, it returns the Process's exitcode.
+
+           :param bool background: Whether to run code in background
+
+           :return: the exit code of the executed code or the Process
+           :rtype: int or multiprocessing.Process'''
         #Call code through wrapper
         run_code = multiprocessing.Process(target=self._call_code)
         run_code.start()
-        run_code.join()
-        #Exit code can be used by program that calls the launcher
-        return run_code.exitcode
+        if not background:
+            run_code.join()
+            #Exit code can be used by program that calls the launcher
+            return run_code.exitcode
+        else:
+            return run_code
 
 ######################### New code retrieval methods #########################
 

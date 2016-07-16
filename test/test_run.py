@@ -1,6 +1,7 @@
 from __future__ import absolute_import, print_function
 
 import os
+import time
 import pytest
 from ..pyautoupdate.launcher import Launcher
 
@@ -13,6 +14,7 @@ class TestRunProgram:
         filetext=filebase+'.txt'
         filepid=filebase+'_pid'+'.py'
         filefail=filebase+'_fail'+'.py'
+        fileback=filebase+'_back'+'.py'
         codebasic='with open("'+filetext+'", mode="w") as number_file:\n'+\
         '    l=[i**2 for i in range(20)]\n'+\
         '    number_file.write(str(l))\n'+\
@@ -25,17 +27,15 @@ class TestRunProgram:
              'c=pid\n'+'print("pid", a)\n'+'print("ppid",b)\n'+\
              'print("LauncherPid",c)\n'+'assert b==c\n'+'assert a!=c\n'
         codefail='nonexistent_eiofjeoifjdoijfkldsjf'
-        with open(filecode, mode='w') as code_file:
-            code_file.write(codebasic)
-        with open(filepid, mode='w') as code_file:
-            code_file.write(codepid)
-        with open(filefail, mode='w') as code_file:
-            code_file.write(codefail)
+        codeback='import time\n'+'print("start")\n'+'time.sleep(2)\n'+\
+             'print("end")'
+        for name,code in zip([filecode, filepid, filefail, fileback],
+                             [codebasic, codepid, codefail, codeback]):
+            with open(name), mode='w') as code_file:
+                code_file.write(code)
         def teardown():
-            os.remove(filecode)
-            os.remove(filetext)
-            os.remove(filepid)
-            os.remove(filefail)
+            for name in [filecode, filetext, filepid, filefail, fileback]:
+                os.remove(name)
         request.addfinalizer(teardown)
         return self.create_test_file
 
@@ -69,3 +69,13 @@ class TestRunProgram:
         excode = launch.run()
         assert excode != 0
 
+    def test_background(self):
+        filebase = 'test_run_base'
+        fileback = filebase+'_back'+'.py'
+        launch = Launcher(filecode,'URL')
+        process_handle = launch.run(True)
+        time.sleep(1)
+        assert process_handle.is_alive()
+        time.sleep(2)
+        assert not process_handle.is_alive()
+        process_handle.join()
