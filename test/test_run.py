@@ -31,7 +31,7 @@ class TestRunProgram:
              'print("end")'
         for name,code in zip([filecode, filepid, filefail, fileback],
                              [codebasic, codepid, codefail, codeback]):
-            with open(name), mode='w') as code_file:
+            with open(name, mode='w') as code_file:
                 code_file.write(code)
         def teardown():
             for name in [filecode, filetext, filepid, filefail, fileback]:
