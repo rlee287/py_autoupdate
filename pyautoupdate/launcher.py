@@ -115,7 +115,7 @@ class Launcher:
            :param bool background: Whether to run code in background
 
            :return: the exit code of the executed code or the Process
-           :rtype: int or multiprocessing.Process'''
+           :rtype: :class:`int` or :class:`multiprocessing.Process`'''
         #Call code through wrapper
         run_code = multiprocessing.Process(target=self._call_code)
         run_code.start()
