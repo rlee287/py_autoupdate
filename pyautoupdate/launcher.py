@@ -189,7 +189,20 @@ class Launcher:
         for file_rm in filelist:
             if file_rm.split(os.path.sep)[0]!="downloads":
                 os.remove(file_rm)
-        shutil.move("downloads", ".")
+        with tempfile.TemporaryDirectory() as tempdir:
+            shutil.move("downloads", tempdir)
+            with tempfile.TemporaryFile() as filelist_backup:
+                with open("filelist.txt", "r") as file_handle:
+                    filelist_backup.write(file_handle.read())
+                os.remove("filelist.txt")
+                filelist_new=list()
+                for dirpath, dirnames, filenames in os.walk(contain_dir):
+                    filepath=os.path.normpath(os.path.join(dirpath,filename))
+                    filepath+="\n"
+                    filelist_new.append(filepath)
+                with open("filelist.txt", "w") as file_handle:
+                    file_handle.writelines(filelist_new)
+                shutil.move(tempdir,".")
 
     def update_code(self):
         if self.check_new():
