@@ -187,7 +187,7 @@ class Launcher:
             for line in file_handle:
                 filelist.append(os.path.join(".",line))
         for file_rm in filelist:
-            if file_rm.split(os.path.sep)[0]!=downloads:
+            if file_rm.split(os.path.sep)[0]!="downloads":
                 os.remove(file_rm)
         shutil.move(downloads, ".")
 
