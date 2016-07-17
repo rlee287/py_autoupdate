@@ -34,7 +34,7 @@ def fixture_update_dir(request):
         filelist.write("extradir/blah.py")
     return fixture_update_dir
 
-@pytest.mark.xfail
+@pytest.mark.trylast
 @needinternet
 def test_check_vers_update(fixture_update_dir):
     launch = Launcher('extradir/blah.py',
