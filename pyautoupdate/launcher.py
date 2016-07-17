@@ -5,6 +5,7 @@ import os
 import sys
 import shutil
 import tempfile
+import pprint
 
 from pkg_resources import parse_version
 from setuptools.archive_util import unpack_archive
@@ -185,24 +186,36 @@ class Launcher:
         filelist=list()
         with open("filelist.txt", "r") as file_handle:
             for line in file_handle:
-                filelist.append(os.path.join(".",line))
+                filelist.append(os.path.normpath(os.path.join(".",line)))
         for file_rm in filelist:
             if file_rm.split(os.path.sep)[0]!="downloads":
+                print("Removing",file_rm)
                 os.remove(file_rm)
         with tempfile.TemporaryDirectory() as tempdir:
+            print("Moving downloads to", tempdir)
             shutil.move("downloads", tempdir)
+            shutil.move(os.path.join(tempdir, "downloads"), tempdir)
             with tempfile.TemporaryFile() as filelist_backup:
-                with open("filelist.txt", "r") as file_handle:
+                with open("filelist.txt", "r+b") as file_handle:
                     filelist_backup.write(file_handle.read())
                 os.remove("filelist.txt")
                 filelist_new=list()
-                for dirpath, dirnames, filenames in os.walk(contain_dir):
-                    filepath=os.path.normpath(os.path.join(dirpath,filename))
-                    filepath+="\n"
-                    filelist_new.append(filepath)
+                for dirpath, dirnames, filenames in os.walk(tempdir):
+                    for filename in filenames:
+                        filepath=os.path.normpath(os.path.join(dirpath,
+                                                  filename))
+                        filepath+="\n"
+                        relpath_start=os.path.join(tempdir,"downloads")
+                        filepath=os.path.relpath(filepath,start=relpath_start)
+                        filelist_new.append(filepath)
+                print("new filelist")
+                pprint.pprint(filelist_new)
+                print("Writing new filelist to filelist.txt")
                 with open("filelist.txt", "w") as file_handle:
                     file_handle.writelines(filelist_new)
+                print("Move tempdir contents to current directory")
                 shutil.move(tempdir,".")
+                os.mkdir(tempdir)# Context manager expects a directory
 
     def update_code(self):
         if self.check_new():
