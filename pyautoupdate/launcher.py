@@ -196,5 +196,6 @@ class Launcher:
             self._reset_update_dir()
             self._get_new()
             self._replace_files()
+            self._reset_update_dir()
         else:
             print("Already up to date")
