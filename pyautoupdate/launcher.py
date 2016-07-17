@@ -189,7 +189,7 @@ class Launcher:
         for file_rm in filelist:
             if file_rm.split(os.path.sep)[0]!="downloads":
                 os.remove(file_rm)
-        shutil.move(downloads, ".")
+        shutil.move("downloads", ".")
 
     def update_code(self):
         if self.check_new():
