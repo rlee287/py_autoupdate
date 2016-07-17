@@ -31,7 +31,7 @@ def fixture_update_dir(request):
     with open(os.path.join("extradir", "blah.py"), mode='w') as code:
         code.write("print('This is the old version')")
     with open("filelist.txt", mode='w') as filelist:
-        filelist.write("extradir/blah.py")
+        filelist.write("extradir/blah.py\n")
     return fixture_update_dir
 
 @pytest.mark.trylast
