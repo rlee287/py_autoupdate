@@ -9,6 +9,7 @@ import pprint
 
 from pkg_resources import parse_version
 from setuptools.archive_util import unpack_archive
+from _move_glob import *
 import requests
 
 class Launcher:
@@ -193,20 +194,19 @@ class Launcher:
                 os.remove(file_rm)
         with tempfile.TemporaryDirectory() as tempdir:
             print("Moving downloads to", tempdir)
-            shutil.move("downloads", tempdir)
-            shutil.move(os.path.join(tempdir, "downloads"), tempdir)
+            move_glob(os.path.join(self.updatedir,"*"), tempdir)
             with tempfile.TemporaryFile() as filelist_backup:
                 with open("filelist.txt", "r+b") as file_handle:
-                    filelist_backup.write(file_handle.read())
+                    shutil.copyfileobj(file_handle,filelist_backup)
                 os.remove("filelist.txt")
                 filelist_new=list()
                 for dirpath, dirnames, filenames in os.walk(tempdir):
                     for filename in filenames:
                         filepath=os.path.normpath(os.path.join(dirpath,
                                                   filename))
-                        filepath+="\n"
                         relpath_start=os.path.join(tempdir,"downloads")
                         filepath=os.path.relpath(filepath,start=relpath_start)
+                        filepath+="\n"
                         filelist_new.append(filepath)
                 print("new filelist")
                 pprint.pprint(filelist_new)
@@ -214,8 +214,7 @@ class Launcher:
                 with open("filelist.txt", "w") as file_handle:
                     file_handle.writelines(filelist_new)
                 print("Move tempdir contents to current directory")
-                shutil.move(tempdir,".")
-                os.mkdir(tempdir)# Context manager expects a directory
+                copy_glob(os.path.join(tempdir,"*",".")
 
     def update_code(self):
         if self.check_new():
