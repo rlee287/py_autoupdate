@@ -212,7 +212,7 @@ class Launcher:
                 with open("filelist.txt", "w") as file_handle:
                     file_handle.writelines(filelist_new)
                 print("Move tempdir contents to current directory")
-                copy_glob(os.path.join(tempdir,"*",".")
+                copy_glob(os.path.join(tempdir,"*","."))
 
     def update_code(self):
         if self.check_new():
