@@ -9,7 +9,7 @@ import pprint
 
 from pkg_resources import parse_version
 from setuptools.archive_util import unpack_archive
-from _move_glob import *
+from ._move_glob import *
 import requests
 
 class Launcher:
