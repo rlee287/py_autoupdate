@@ -184,14 +184,12 @@ class Launcher:
         os.remove(self.newfiles)
 
     def _replace_files(self):
-        filelist=list()
         with open("filelist.txt", "r") as file_handle:
             for line in file_handle:
-                filelist.append(os.path.normpath(os.path.join(".",line)))
-        for file_rm in filelist:
-            if file_rm.split(os.path.sep)[0]!="downloads":
-                print("Removing",file_rm)
-                os.remove(file_rm)
+                file_rm=os.path.normpath(os.path.join(".",line))
+                if file_rm.split(os.path.sep)[0]!="downloads":
+                    print("Removing",file_rm)
+                    os.remove(file_rm)
         with tempfile.TemporaryDirectory() as tempdir:
             print("Moving downloads to", tempdir)
             move_glob(os.path.join(self.updatedir,"*"), tempdir)
