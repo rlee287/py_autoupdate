@@ -190,6 +190,13 @@ class Launcher:
                 if file_rm.split(os.path.sep)[0]!="downloads":
                     print("Removing",file_rm)
                     os.remove(file_rm)
+                    file_rm_dir=os.path.dirname(file_rm)
+                    if os.path.isdir(file_rm_dir):
+                        try:
+                            os.rmdir(file_rm_dir)
+                            print("Removing",file_rm_dir)
+                        except OSError:
+                            pass #Directory is not empty yet
         tempdir=tempfile.mkdtemp()
         print("Moving downloads to", tempdir)
         move_glob(os.path.join(self.updatedir,"*"), tempdir)
@@ -202,7 +209,7 @@ class Launcher:
                 for filename in filenames:
                     filepath=os.path.normpath(os.path.join(dirpath,
                                               filename))
-                    relpath_start=os.path.join(tempdir,"downloads")
+                    relpath_start=os.path.join(tempdir)
                     filepath=os.path.relpath(filepath,start=relpath_start)
                     filepath+="\n"
                     filelist_new.append(filepath)
