@@ -190,29 +190,32 @@ class Launcher:
                 if file_rm.split(os.path.sep)[0]!="downloads":
                     print("Removing",file_rm)
                     os.remove(file_rm)
-        with tempfile.TemporaryDirectory() as tempdir:
-            print("Moving downloads to", tempdir)
-            move_glob(os.path.join(self.updatedir,"*"), tempdir)
-            with tempfile.TemporaryFile() as filelist_backup:
-                with open("filelist.txt", "r+b") as file_handle:
-                    shutil.copyfileobj(file_handle,filelist_backup)
-                os.remove("filelist.txt")
-                filelist_new=list()
-                for dirpath, dirnames, filenames in os.walk(tempdir):
-                    for filename in filenames:
-                        filepath=os.path.normpath(os.path.join(dirpath,
-                                                  filename))
-                        relpath_start=os.path.join(tempdir,"downloads")
-                        filepath=os.path.relpath(filepath,start=relpath_start)
-                        filepath+="\n"
-                        filelist_new.append(filepath)
-                print("new filelist")
-                pprint.pprint(filelist_new)
-                print("Writing new filelist to filelist.txt")
-                with open("filelist.txt", "w") as file_handle:
-                    file_handle.writelines(filelist_new)
-                print("Move tempdir contents to current directory")
-                copy_glob(os.path.join(tempdir,"*"),".")
+        tempdir=tempfile.mkdtemp()
+        print("Moving downloads to", tempdir)
+        move_glob(os.path.join(self.updatedir,"*"), tempdir)
+        with tempfile.TemporaryFile() as filelist_backup:
+            with open("filelist.txt", "r+b") as file_handle:
+                shutil.copyfileobj(file_handle,filelist_backup)
+            os.remove("filelist.txt")
+            filelist_new=list()
+            for dirpath, dirnames, filenames in os.walk(tempdir):
+                for filename in filenames:
+                    filepath=os.path.normpath(os.path.join(dirpath,
+                                              filename))
+                    relpath_start=os.path.join(tempdir,"downloads")
+                    filepath=os.path.relpath(filepath,start=relpath_start)
+                    filepath+="\n"
+                    filelist_new.append(filepath)
+            print("new filelist")
+            pprint.pprint(filelist_new)
+            print("Writing new filelist to filelist.txt")
+            with open("filelist.txt", "w") as file_handle:
+                file_handle.writelines(filelist_new)
+            print("Move tempdir contents to current directory")
+            move_glob(os.path.join(tempdir,"*"),".")
+            #Ensure tempdir no longer exists: shouldn't be necessary
+            if os.path.isdir(tempdir):
+                shutil.rmtree(tempdir)
 
     def update_code(self):
         if self.check_new():
