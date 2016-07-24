@@ -69,13 +69,13 @@ class TestRunProgram:
         excode = launch.run()
         assert excode != 0
 
-    def test_background(self):
-        filebase = 'test_run_base'
-        fileback = filebase+'_back'+'.py'
-        launch = Launcher(fileback,'URL')
-        process_handle = launch.run(True)
-        time.sleep(1)
-        assert process_handle.is_alive()
-        time.sleep(2)
-        assert not process_handle.is_alive()
-        process_handle.join()
+#    def test_background(self):
+#        filebase = 'test_run_base'
+#        fileback = filebase+'_back'+'.py'
+#        launch = Launcher(fileback,'URL')
+#        process_handle = launch.run(True)
+#        time.sleep(1)
+#        assert process_handle.is_alive()
+#        time.sleep(2)
+#        assert not process_handle.is_alive()
+#        process_handle.join()
