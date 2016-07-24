@@ -17,6 +17,8 @@ def fixture_update_dir(request):
             os.remove('version.txt')
         if os.path.isdir("extradir"):
             shutil.rmtree("extradir")
+        if os.path.isdir("filelist.txt"):
+            os.remove("filelist.txt")
         launch = Launcher('extradir/blah.py',
                           r'http://rlee287.github.io/pyautoupdate/testing/')
         launch._reset_update_dir()
@@ -28,9 +30,11 @@ def fixture_update_dir(request):
     os.mkdir("extradir")
     with open(os.path.join("extradir", "blah.py"), mode='w') as code:
         code.write("print('This is the old version')")
+    with open("filelist.txt", mode='w') as filelist:
+        filelist.write("extradir/blah.py")
     return fixture_update_dir
 
-@pytest.mark.xfail
+@pytest.mark.trylast
 @needinternet
 def test_check_vers_update(fixture_update_dir):
     launch = Launcher('extradir/blah.py',

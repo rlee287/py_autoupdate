@@ -39,7 +39,8 @@ class TestRunProgram:
         request.addfinalizer(teardown)
         return self.create_test_file
 
-    def test_run(self,create_test_file):
+    @staticmethod
+    def test_run(create_test_file):
         filebase = 'test_run_base'
         filecode = filebase+'.py'
         filetext = filebase+'.txt'
@@ -50,26 +51,30 @@ class TestRunProgram:
             nums = number_file.read()
             assert nums == str([i**2 for i in range(20)])
 
-    def test_run_pid(self,create_test_file):
+    @staticmethod
+    def test_run_pid(create_test_file):
         filebase = 'test_run_base_pid'
         filecode = filebase+'.py'
         launch = Launcher(filecode,'have')
         excode = launch.run()
         assert excode==0
 
-    def test_run_fail(self,create_test_file):
+    @staticmethod
+    def test_run_fail(create_test_file):
         filebase = 'test_run_base_fail'
         filecode = filebase+'.py'
         launch = Launcher(filecode,'URL')
         excode = launch.run()
         assert excode != 0
 
-    def test_nofile(self):
+    @staticmethod
+    def test_nofile():
         launch = Launcher('does_not_exist_404j958458ryeiu.py','(in)sanity')
         excode = launch.run()
         assert excode != 0
 
-#    def test_background(self):
+#    @staticmethod
+#    def test_background():
 #        filebase = 'test_run_base'
 #        fileback = filebase+'_back'+'.py'
 #        launch = Launcher(fileback,'URL')

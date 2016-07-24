@@ -5,9 +5,11 @@ import os
 import sys
 import shutil
 import tempfile
+import pprint
 
 from pkg_resources import parse_version
 from setuptools.archive_util import unpack_archive
+from ._move_glob import *
 import requests
 
 class Launcher:
@@ -182,48 +184,51 @@ class Launcher:
         os.remove(self.newfiles)
 
     def _replace_files(self):
-        contain_dir=os.path.dirname(os.path.abspath(self.filepath))
-        print("contain_dir", contain_dir)
-        print("abs self.filepath", os.path.abspath(self.filepath))
-        for dirpath, dirnames, filenames in os.walk(contain_dir):
-            for filename in filenames:
-                print("dir:",os.path.abspath(dirpath))
-                print("file:",os.path.join(dirpath,filename))
-            # Avoid removing download directory
-            if dirpath != self.updatedir:
+        with open("filelist.txt", "r") as file_handle:
+            for line in file_handle:
+                file_rm=os.path.normpath(os.path.join(".",line))
+                if file_rm.split(os.path.sep)[0]!="downloads":
+                    print("Removing",file_rm)
+                    os.remove(file_rm)
+                    file_rm_dir=os.path.dirname(file_rm)
+                    if os.path.isdir(file_rm_dir):
+                        try:
+                            os.rmdir(file_rm_dir)
+                            print("Removing",file_rm_dir)
+                        except OSError:
+                            pass #Directory is not empty yet
+        tempdir=tempfile.mkdtemp()
+        print("Moving downloads to", tempdir)
+        move_glob(os.path.join(self.updatedir,"*"), tempdir)
+        with tempfile.TemporaryFile() as filelist_backup:
+            with open("filelist.txt", "r+b") as file_handle:
+                shutil.copyfileobj(file_handle,filelist_backup)
+            os.remove("filelist.txt")
+            filelist_new=list()
+            for dirpath, dirnames, filenames in os.walk(tempdir):
                 for filename in filenames:
-                    rm_path=os.path.abspath(os.path.join(dirpath,filename))
-                    if dirpath == contain_dir:
-                        # Avoid removing version file
-                        if filename != "version.txt":
-                            os.unlink(rm_path)
-                            print("Remove",rm_path)
-                    else:
-                        os.unlink(rm_path)
-                        print("Remove",rm_path)
-        with tempfile.TemporaryDirectory() as tempdir:
-            # Copy version.txt and downloads here as shutil.copytree
-            # Cannot copy into existing directory
-            tempdir_inside=os.path.join(tempdir, "pyautoupdate_temp")
-            print("tempdir:",tempdir)
-            print("tempdir_inside",tempdir_inside)
-            print("Copying",os.path.join(contain_dir,".."),"to tempdir")
-            shutil.copytree(os.path.join(contain_dir,".."), tempdir_inside, True)
-            print("Contents inside tempdir_inside:")
-            import pprint
-            pprint.pprint(os.listdir(tempdir_inside))
-            print("Removing",contain_dir)
-            shutil.rmtree(contain_dir)
-            print("Copying",os.path.join(tempdir_inside, self.updatedir),"to",contain_dir)
-            shutil.copytree(os.path.join(tempdir_inside, self.updatedir),
-                            contain_dir, True)
-            # tempfile takes care of the tempdir automatically
-            # No need to remove it manually
+                    filepath=os.path.normpath(os.path.join(dirpath,
+                                              filename))
+                    relpath_start=os.path.join(tempdir)
+                    filepath=os.path.relpath(filepath,start=relpath_start)
+                    filepath+="\n"
+                    filelist_new.append(filepath)
+            print("new filelist")
+            pprint.pprint(filelist_new)
+            print("Writing new filelist to filelist.txt")
+            with open("filelist.txt", "w") as file_handle:
+                file_handle.writelines(filelist_new)
+            print("Move tempdir contents to current directory")
+            move_glob(os.path.join(tempdir,"*"),".")
+            #Ensure tempdir no longer exists: shouldn't be necessary
+            if os.path.isdir(tempdir):
+                shutil.rmtree(tempdir)
 
     def update_code(self):
         if self.check_new():
             self._reset_update_dir()
             self._get_new()
             self._replace_files()
+            self._reset_update_dir()
         else:
             print("Already up to date")
