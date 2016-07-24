@@ -3,7 +3,7 @@
 ``pyautoupdate`` is a python wrapper that allows the wrapped code to
 automatically update.
 
-|Build_Status| |Codecov_Status|
+|Build_Status| |Codecov_Status| |QuantifiedCode_Status|
 
 **Note: This is pre-alpha code. The update functionality does not work
 yet.**
@@ -34,5 +34,10 @@ LGPL 2.1
 .. |pyautoupdate_logo| image:: https://cloud.githubusercontent.com/assets/14067959/13902076/25e8305e-edf7-11e5-873c-8a4e0fc2780f.png
 .. |Build_Status| image:: https://travis-ci.org/rlee287/pyautoupdate.svg?branch=develop
    :target: https://travis-ci.org/rlee287/pyautoupdate
+   :alt: Travis CI results
 .. |Codecov_Status| image:: http://codecov.io/github/rlee287/pyautoupdate/coverage.svg?branch=develop
    :target: http://codecov.io/github/rlee287/pyautoupdate?branch=develop
+   :alt: Codecov Coverage measurements
+.. |QuantifiedCode_Status| image:: https://www.quantifiedcode.com/api/v1/project/e70a21e3928a4cce87655a17fd853765/badge.svg
+  :target: https://www.quantifiedcode.com/app/project/e70a21e3928a4cce87655a17fd853765
+  :alt: QuantifiedCode issues
