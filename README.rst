@@ -5,9 +5,6 @@ automatically update.
 
 |Build_Status| |Codecov_Status| |QuantifiedCode_Status|
 
-**Note: This is pre-alpha code. The update functionality does not work
-yet.**
-
 Advantages
 ----------
 
@@ -18,10 +15,14 @@ Advantages
 
 Dependencies
 ------------
-
+Core Dependencies
+~~~~~~~~~~~~~~~~~
 -  For python 2, python 2.6 or later is required
 -  For python 3, python 3.3 or later is required
 -  ``requests`` for retrieving updated versions
+
+Development Dependencies
+~~~~~~~~~~~~~~~~~~~~~~~~
 -  ``pytest`` for running the tests
 -  ``pytest_cov`` to measure coverage
 -  ``pylint`` for code style checks
