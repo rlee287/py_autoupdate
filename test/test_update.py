@@ -37,6 +37,7 @@ def fixture_update_dir(request):
 @pytest.mark.trylast
 @needinternet
 def test_check_vers_update(fixture_update_dir):
+    assert os.path.isfile("filelist.txt")
     launch = Launcher('extradir/blah.py',
                       r'http://rlee287.github.io/pyautoupdate/testing/')
     print("launch.oldcwd:", launch.oldcwd)
@@ -52,3 +53,4 @@ def test_check_vers_update(fixture_update_dir):
     with open(os.path.abspath("extradir/blah.py"), "r") as file_code:
         file_text=file_code.read()
     assert "new version" in file_text
+    assert os.path.isfile("filelist.txt")
