@@ -220,9 +220,8 @@ class Launcher:
                 file_handle.writelines(filelist_new)
             print("Move tempdir contents to current directory")
             move_glob(os.path.join(tempdir,"*"),".")
-            #Ensure tempdir no longer exists: shouldn't be necessary
-            if os.path.isdir(tempdir):
-                shutil.rmtree(tempdir)
+            #Ensure tempdir no longer exists: Should be empty
+            os.rmdir(tempdir)
 
     def update_code(self):
         if self.check_new():
