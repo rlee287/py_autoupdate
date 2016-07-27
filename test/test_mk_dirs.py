@@ -7,8 +7,7 @@ import pytest
 @pytest.fixture(scope='function')
 def create_update_dir(request):
     def teardown():
-        if os.path.isdir('downloads'):
-            os.rmdir('downloads')
+        os.rmdir('downloads')
     request.addfinalizer(teardown)
     return create_update_dir
 

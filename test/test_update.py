@@ -17,7 +17,7 @@ def fixture_update_dir(request):
             os.remove('version.txt')
         if os.path.isdir("extradir"):
             shutil.rmtree("extradir")
-        if os.path.isdir("filelist.txt"):
+        if os.path.isfile("filelist.txt"):
             os.remove("filelist.txt")
         launch = Launcher('extradir/blah.py',
                           r'http://rlee287.github.io/pyautoupdate/testing/')

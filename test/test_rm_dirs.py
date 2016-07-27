@@ -19,8 +19,7 @@ def create_update_dir(request):
             if os.path.isfile(file_path):
                 os.unlink(file_path)
                 raise AssertionError#fail test if files exist
-        if os.path.isdir('downloads'):
-            os.rmdir('downloads')
+        os.rmdir('downloads')
     request.addfinalizer(teardown)
     return create_update_dir
 
