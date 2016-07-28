@@ -1,6 +1,5 @@
 import glob
 import shutil
-import os
 
 def move_glob(src,dst):
     """Moves files from src to dest.
