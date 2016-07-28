@@ -184,6 +184,7 @@ class Launcher:
         os.remove(self.newfiles)
 
     def _replace_files(self):
+        """Replaces the existing files with the downloaded files."""
         with open("filelist.txt", "r") as file_handle:
             for line in file_handle:
                 file_rm=os.path.normpath(os.path.join(".",line))
@@ -224,6 +225,7 @@ class Launcher:
             os.rmdir(tempdir)
 
     def update_code(self):
+        """Updates the code if necessary"""
         if self.check_new():
             self._reset_update_dir()
             self._get_new()
