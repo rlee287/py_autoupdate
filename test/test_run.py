@@ -1,6 +1,7 @@
 from __future__ import absolute_import, print_function
 
 import os
+import time
 import pytest
 from ..pyautoupdate.launcher import Launcher
 
@@ -68,13 +69,13 @@ class TestRunProgram:
         excode = launch.run()
         assert excode != 0
 
-#    def test_background(self):
-#        filebase = 'test_run_base'
-#        fileback = filebase+'_back'+'.py'
-#        launch = Launcher(fileback,'URL')
-#        process_handle = launch.run(True)
-#        time.sleep(1)
-#        assert process_handle.is_alive()
-#        time.sleep(2)
-#        assert not process_handle.is_alive()
-#        process_handle.join()
+    def test_background(self):
+        filebase = 'test_run_base'
+        fileback = filebase+'_back'+'.py'
+        launch = Launcher(fileback,'URL')
+        process_handle = launch.run(True)
+        time.sleep(1)
+        assert process_handle.is_alive()
+        time.sleep(3)
+        #Really takes at least 2 seconds for windows to kill process
+        assert not process_handle.is_alive()
