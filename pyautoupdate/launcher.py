@@ -92,11 +92,16 @@ class Launcher:
 
               End users should never call this directly.
               Please use the :meth:`run` method instead.'''
+        #Find the right error to raise depending on python version
+        try:
+            error_to_raise=FileNotFoundError
+        except NameError:
+            error_to_raise=IOError
         #Open code file
         try:
             code_file = open(self.filepath, mode='r')
             code = code_file.read()
-        except (FileNotFoundError, IOError):
+        except (error_to_raise):
             print('Unable to open file {} to run code'.format(self.filepath)
                   , file=sys.stderr)
             print('The full traceback is below:', file=sys.stderr)
