@@ -202,10 +202,10 @@ class Launcher:
                             print("Removing",file_rm_dir)
                         except OSError:
                             pass #Directory is not empty yet
-        tempdir=tempfile.mkdtemp()
-        print("Moving downloads to", tempdir)
-        move_glob(os.path.join(self.updatedir,"*"), tempdir)
-        with tempfile.TemporaryFile() as filelist_backup:
+        with tempfile.TemporaryDirectory() as tempdir:
+            print("Moving downloads to", tempdir)
+            move_glob(os.path.join(self.updatedir,"*"), tempdir)
+            filelist_backup=tempfile.mkstemp()
             with open("filelist.txt", "r+b") as file_handle:
                 shutil.copyfileobj(file_handle,filelist_backup)
             os.remove("filelist.txt")
@@ -225,8 +225,8 @@ class Launcher:
                 file_handle.writelines(filelist_new)
             print("Move tempdir contents to current directory")
             move_glob(os.path.join(tempdir,"*"),".")
-            #Ensure tempdir no longer exists: Should be empty
-            os.rmdir(tempdir)
+            print("Remove backup filelist"):
+            os.remove(filelist_backup)
 
     def update_code(self):
         if self.check_new():
