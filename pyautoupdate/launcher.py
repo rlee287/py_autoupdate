@@ -205,7 +205,7 @@ class Launcher:
         with tempfile.TemporaryDirectory() as tempdir:
             print("Moving downloads to", tempdir)
             move_glob(os.path.join(self.updatedir,"*"), tempdir)
-            filelist_backup=tempfile.mkstemp()
+            filelist_backup,filelist_backup_path=tempfile.mkstemp()
             with open("filelist.txt", "r+b") as file_handle:
                 shutil.copyfileobj(file_handle,filelist_backup)
             os.remove("filelist.txt")
