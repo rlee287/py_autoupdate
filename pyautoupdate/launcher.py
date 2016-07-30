@@ -226,7 +226,8 @@ class Launcher:
             print("Move tempdir contents to current directory")
             move_glob(os.path.join(tempdir,"*"),".")
             print("Remove backup filelist")
-            os.remove(filelist_backup)
+            filelist_backup.close()
+            os.remove(filelist_backup.name)
 
     def update_code(self):
         if self.check_new():
