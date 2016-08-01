@@ -224,11 +224,15 @@ class Launcher:
             print("Writing new filelist to filelist.txt")
             with open("filelist.txt", "w") as file_handle:
                 file_handle.writelines(filelist_new)
+            print("Backup tempdir")
+            backupdir=tempfile.mkdtemp()
+            copy_glob(os.path.join(tempdir,"*"),backupdir)
             print("Move tempdir contents to current directory")
             move_glob(os.path.join(tempdir,"*"),".")
             print("Remove backup filelist")
             filelist_backup.close()
             os.remove(filelist_backup.name)
+            shutil.rmtree(backupdir)
         except Exception:
             raise
         finally:
