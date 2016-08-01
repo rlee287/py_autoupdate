@@ -227,8 +227,20 @@ class Launcher:
             print("Backup tempdir")
             backupdir=tempfile.mkdtemp()
             copy_glob(os.path.join(tempdir,"*"),backupdir)
+            print("Contents of tempdir:")
+            for dirpath, dirnames, filenames in os.walk(tempdir):
+                print("dir:",os.path.abspath(dirpath))
+                for filename in filenames:
+                    print("file:",os.path.join(dirpath,filename))
+            print("Contents of backupdir")
+            for dirpath, dirnames, filenames in os.walk(backupdir):
+                print("dir:",os.path.abspath(dirpath))
+                for filename in filenames:
+                    print("file:",os.path.join(dirpath,filename))
             print("Move tempdir contents to current directory")
             move_glob(os.path.join(tempdir,"*"),".")
+            print("Contents of tempdir")
+            pprint.pprint(os.listdir(tempdir))
             print("Remove backup filelist")
             filelist_backup.close()
             os.remove(filelist_backup.name)
