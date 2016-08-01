@@ -203,7 +203,7 @@ class Launcher:
                         except OSError:
                             pass #Directory is not empty yet
         tempdir=tempfile.mkdtemp()
-        if True: #avoid indent
+        try:
             print("Moving downloads to", tempdir)
             move_glob(os.path.join(self.updatedir,"*"), tempdir)
             filelist_backup=tempfile.NamedTemporaryFile(delete=False)
@@ -233,9 +233,9 @@ class Launcher:
             filelist_backup.close()
             os.remove(filelist_backup.name)
             shutil.rmtree(backupdir)
-        #except Exception:
-        #    raise
-        #finally:
+        except Exception:
+            raise
+        finally:
             os.rmdir(tempdir) #Should be empty at this point
 
     def update_code(self):
