@@ -245,8 +245,8 @@ class Launcher:
             filelist_backup.close()
             os.remove(filelist_backup.name)
             shutil.rmtree(backupdir)
-        except Exception:
-            raise
+        except Exception as e:
+            print(e, file=sys.stderr)
         finally:
             os.rmdir(tempdir) #Should be empty at this point
 
