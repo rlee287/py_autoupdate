@@ -233,6 +233,8 @@ class Launcher:
             filelist_backup.close()
             os.remove(filelist_backup.name)
             shutil.rmtree(backupdir)
+            print("Remaining files of tempdir")
+            pprint.pprint(os.listdir(tempdir))
         except Exception:
             raise
         finally:
