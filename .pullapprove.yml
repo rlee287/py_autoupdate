@@ -1,7 +1,7 @@
 approve_by_comment: true
-approve_regex: ^Approved
+approve_regex: ^PullApprove [Aa]pproval signified
 author_approval: default
-reject_regex: ^Rejected
+reject_regex: ^PullApprove [Rr]ejection signified
 reset_on_push: true
 reset_on_reopen: true
 reviewers:

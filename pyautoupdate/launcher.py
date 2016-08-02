@@ -9,7 +9,7 @@ import pprint
 
 from pkg_resources import parse_version
 from setuptools.archive_util import unpack_archive
-from ._move_glob import move_glob
+from ._move_glob import move_glob, copy_glob
 import requests
 
 class Launcher:
@@ -92,11 +92,16 @@ class Launcher:
 
               End users should never call this directly.
               Please use the :meth:`run` method instead.'''
+        #Find the right error to raise depending on python version
+        try:
+            error_to_raise=FileNotFoundError
+        except NameError:
+            error_to_raise=IOError
         #Open code file
         try:
             code_file = open(self.filepath, mode='r')
             code = code_file.read()
-        except (FileNotFoundError, IOError):
+        except (error_to_raise):
             print('Unable to open file {} to run code'.format(self.filepath)
                   , file=sys.stderr)
             print('The full traceback is below:', file=sys.stderr)
@@ -199,9 +204,10 @@ class Launcher:
                         except OSError:
                             pass #Directory is not empty yet
         tempdir=tempfile.mkdtemp()
-        print("Moving downloads to", tempdir)
-        move_glob(os.path.join(self.updatedir,"*"), tempdir)
-        with tempfile.TemporaryFile() as filelist_backup:
+        try:
+            print("Moving downloads to", tempdir)
+            move_glob(os.path.join(self.updatedir,"*"), tempdir)
+            filelist_backup=tempfile.NamedTemporaryFile(delete=False)
             with open("filelist.txt", "r+b") as file_handle:
                 shutil.copyfileobj(file_handle,filelist_backup)
             os.remove("filelist.txt")
@@ -219,10 +225,27 @@ class Launcher:
             print("Writing new filelist to filelist.txt")
             with open("filelist.txt", "w") as file_handle:
                 file_handle.writelines(filelist_new)
+            print("Backup tempdir")
+            backupdir=tempfile.mkdtemp()
+            copy_glob(os.path.join(tempdir,"*"),backupdir)
             print("Move tempdir contents to current directory")
             move_glob(os.path.join(tempdir,"*"),".")
-            #Ensure tempdir no longer exists: Should be empty
-            os.rmdir(tempdir)
+            print("Remove backup filelist")
+            filelist_backup.close()
+            os.remove(filelist_backup.name)
+            shutil.rmtree(backupdir)
+            print("Remaining files of tempdir")
+            pprint.pprint(os.listdir(tempdir))
+        except Exception:
+            raise
+        finally:
+            try:
+                os.rmdir(tempdir) #Should be empty at this point unless something happened
+            except OSError:
+                print("Tempdir is not empty!")
+                print("Here are its contents")
+                pprint.pprint(os.listdir(tempdir))
+                shutil.rmtree(tempdir)
 
     def update_code(self):
         """Updates the code if necessary"""
