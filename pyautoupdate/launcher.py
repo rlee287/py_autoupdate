@@ -239,7 +239,13 @@ class Launcher:
        # except Exception:
        #     raise
        # finally:
-            os.rmdir(tempdir) #Should be empty at this point
+            try:
+                os.rmdir(tempdir) #Should be empty at this point
+            except OSError:
+                print("Tempdir is not empty!")
+                print("Here are its contents")
+                pprint.pprint(os.listdir(tempdir))
+                shutil.rmtree(tempdir)
 
     def update_code(self):
         if self.check_new():
