@@ -1,6 +1,7 @@
 ###########################################################################
 ### CODE BELOW COPIED FROM Python 3.5.1                                 ###
 ### Backport of ntpath.commonpath functionality                         ###
+### Modifications clearly marked via comments                           ###
 ### CODE USED IN COMPLIANCE WITH https://docs.python.org/3/license.html ###
 ###########################################################################
 
@@ -39,7 +40,11 @@ def commonpath(paths):
         try:
             isabs, = set(p[:1] == sep for d, p in drivesplits)
         except ValueError:
-            raise ValueError("Can't mix absolute and relative paths") from None
+            ### Begin modified block ###
+            #raise ValueError("Can't mix absolute and relative paths") from None
+            #raise from None is not supported in Python 2
+            raise ValueError("Can't mix absolute and relative paths")
+            ### End modified block ###
 
         # Check that all drive letters or UNC paths match. The check is made only
         # now otherwise type errors for mixing strings and bytes would not be

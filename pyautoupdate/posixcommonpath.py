@@ -1,6 +1,7 @@
 ###########################################################################
 ### CODE BELOW COPIED FROM Python 3.5.1                                 ###
 ### Backport of posixpath.commonpath functionality                      ###
+### Modifications clearly marked via comments                           ###
 ### CODE USED IN COMPLIANCE WITH https://docs.python.org/3/license.html ###
 ###########################################################################
 
@@ -30,7 +31,11 @@ def commonpath(paths):
         try:
             isabs, = set(p[:1] == sep for p in paths)
         except ValueError:
-            raise ValueError("Can't mix absolute and relative paths") from None
+            ### Begin modified block
+            #raise ValueError("Can't mix absolute and relative paths") from None
+            #raise from None is not supported in Python 2
+            raise ValueError("Can't mix absolute and relative paths")
+            ### End modified block
 
         split_paths = [[c for c in s if c and c != curdir] for s in split_paths]
         s1 = min(split_paths)
