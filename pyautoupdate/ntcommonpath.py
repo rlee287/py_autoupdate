@@ -1,8 +1,11 @@
 ###########################################################################
-### CODE BELOW COPIED FROM Python 3.5.1 DO NOT MODIFY                   ###
+### CODE BELOW COPIED FROM Python 3.5.1                                 ###
 ### Backport of ntpath.commonpath functionality                         ###
 ### CODE USED IN COMPLIANCE WITH https://docs.python.org/3/license.html ###
 ###########################################################################
+
+import genericpath
+from ntpath import splitdrive
 
 # Return the longest common sub-path of the sequence of paths given as input.
 # The function is case-insensitive and 'separator-insensitive', i.e. if the
