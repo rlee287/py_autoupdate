@@ -7,7 +7,8 @@ from .pytest_makevers import fixture_update_dir
 import os
 
 @needinternet
-def test_check_vers_update(fixture_update_dir):
+def test_check_need_update(fixture_update_dir):
+    """Test that ensures that updates occur when needed"""
     package=fixture_update_dir("0.0.1")
     launch = Launcher('blah',
                       r'http://rlee287.github.io/pyautoupdate/testing/')
