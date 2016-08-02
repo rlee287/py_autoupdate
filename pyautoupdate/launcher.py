@@ -203,8 +203,7 @@ class Launcher:
                         except OSError:
                             pass #Directory is not empty yet
         tempdir=tempfile.mkdtemp()
-        #try:
-        if True:
+        try:
             print("Moving downloads to", tempdir)
             move_glob(os.path.join(self.updatedir,"*"), tempdir)
             filelist_backup=tempfile.NamedTemporaryFile(delete=False)
@@ -236,11 +235,11 @@ class Launcher:
             shutil.rmtree(backupdir)
             print("Remaining files of tempdir")
             pprint.pprint(os.listdir(tempdir))
-       # except Exception:
-       #     raise
-       # finally:
+        except Exception:
+            raise
+        finally:
             try:
-                os.rmdir(tempdir) #Should be empty at this point
+                os.rmdir(tempdir) #Should be empty at this point unless something happened
             except OSError:
                 print("Tempdir is not empty!")
                 print("Here are its contents")
