@@ -9,7 +9,7 @@ import pprint
 
 from pkg_resources import parse_version
 from setuptools.archive_util import unpack_archive
-from ._move_glob import move_glob
+from ._move_glob import move_glob, copy_glob
 import requests
 
 class Launcher:
@@ -203,9 +203,10 @@ class Launcher:
                         except OSError:
                             pass #Directory is not empty yet
         tempdir=tempfile.mkdtemp()
-        print("Moving downloads to", tempdir)
-        move_glob(os.path.join(self.updatedir,"*"), tempdir)
-        with tempfile.TemporaryFile() as filelist_backup:
+        try:
+            print("Moving downloads to", tempdir)
+            move_glob(os.path.join(self.updatedir,"*"), tempdir)
+            filelist_backup=tempfile.NamedTemporaryFile(delete=False)
             with open("filelist.txt", "r+b") as file_handle:
                 shutil.copyfileobj(file_handle,filelist_backup)
             os.remove("filelist.txt")
@@ -223,10 +224,27 @@ class Launcher:
             print("Writing new filelist to filelist.txt")
             with open("filelist.txt", "w") as file_handle:
                 file_handle.writelines(filelist_new)
+            print("Backup tempdir")
+            backupdir=tempfile.mkdtemp()
+            copy_glob(os.path.join(tempdir,"*"),backupdir)
             print("Move tempdir contents to current directory")
             move_glob(os.path.join(tempdir,"*"),".")
-            #Ensure tempdir no longer exists: Should be empty
-            os.rmdir(tempdir)
+            print("Remove backup filelist")
+            filelist_backup.close()
+            os.remove(filelist_backup.name)
+            shutil.rmtree(backupdir)
+            print("Remaining files of tempdir")
+            pprint.pprint(os.listdir(tempdir))
+        except Exception:
+            raise
+        finally:
+            try:
+                os.rmdir(tempdir) #Should be empty at this point unless something happened
+            except OSError:
+                print("Tempdir is not empty!")
+                print("Here are its contents")
+                pprint.pprint(os.listdir(tempdir))
+                shutil.rmtree(tempdir)
 
     def update_code(self):
         if self.check_new():
