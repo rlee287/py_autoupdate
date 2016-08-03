@@ -113,8 +113,8 @@ class Launcher:
               Please use the :meth:`run` method instead.'''
         #Open code file
         try:
-            code_file = open(self.filepath, mode='r')
-            code = code_file.read()
+            with open(self.filepath, mode='r') as code_file:
+                code = code_file.read()
         except Exception:
             raise
         else:
