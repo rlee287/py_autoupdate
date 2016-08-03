@@ -71,9 +71,13 @@ class TestRunProgram:
 
     def test_nofile(self):
         """Test that checks error thrown when file does not exist"""
-        launch = Launcher('does_not_exist_404j958458ryeiu.py','(in)sanity')
-        excode = launch.run()
-        assert excode != 0
+        try:
+            error_to_raise=FileNotFoundError
+        except NameError:
+            error_to_raise=IOError
+        with pytest.raises(error_to_raise):
+            launch = Launcher('does_not_exist_404.py','(in)sanity')
+            excode = launch.run()
 
     def test_background(self):
         """Test that runs code in the background
@@ -92,7 +96,7 @@ class TestRunProgram:
         launch = Launcher(fileback,'URL')
         process_handle = launch.run(True)
         time.sleep(1)
-        assert process_handle.is_alive()
+        assert launch.process_is_alive
         time.sleep(3)
         #Really takes at least 2 seconds for windows to kill process
-        assert not process_handle.is_alive()
+        assert not launch.process_is_alive

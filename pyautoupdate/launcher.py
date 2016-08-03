@@ -10,6 +10,8 @@ import pprint
 from pkg_resources import parse_version
 from setuptools.archive_util import unpack_archive
 from ._move_glob import move_glob, copy_glob
+from .exceptions import *
+
 import requests
 
 class Launcher:
@@ -79,6 +81,23 @@ class Launcher:
         self.kwargs = kwargs
         self.oldcwd=os.getcwd()
         self.cwd=os.path.abspath(os.path.join(".",self.filepath))
+        self.__process = multiprocessing.Process(target=self._call_code)
+        self.process_exitcode=None
+
+######################### Process attribute getters  #########################
+    @property
+    def process_is_alive(self):
+        return self.__process.is_alive()
+
+    @property
+    def process_pid(self):
+        return self.__process.pid
+
+    def process_join(self,timeout=None):
+        self.__process.join(timeout)
+
+    def process_terminate(self):
+        self.__process.terminate()
 
 ########################### Code execution methods ###########################
 
@@ -92,19 +111,11 @@ class Launcher:
 
               End users should never call this directly.
               Please use the :meth:`run` method instead.'''
-        #Find the right error to raise depending on python version
-        try:
-            error_to_raise=FileNotFoundError
-        except NameError:
-            error_to_raise=IOError
         #Open code file
         try:
-            code_file = open(self.filepath, mode='r')
-            code = code_file.read()
-        except (error_to_raise):
-            print('Unable to open file {} to run code'.format(self.filepath)
-                  , file=sys.stderr)
-            print('The full traceback is below:', file=sys.stderr)
+            with open(self.filepath, mode='r') as code_file:
+                code = code_file.read()
+        except Exception:
             raise
         else:
             #Only attempt to run when file has been opened
@@ -123,17 +134,36 @@ class Launcher:
 
            :return: the exit code of the executed code or the Process
            :rtype: :class:`int` or :class:`multiprocessing.Process`'''
-        #Call code through wrapper
-        run_code = multiprocessing.Process(target=self._call_code)
-        run_code.start()
-        if not background:
-            run_code.join()
-            #Exit code can be used by program that calls the launcher
-            return run_code.exitcode
+        #Find the right error to raise depending on python version
+        try:
+            error_to_raise=FileNotFoundError
+        except NameError:
+            error_to_raise=IOError
+        if not os.path.isfile(self.filepath):
+            raise error_to_raise("No file at {0}".format(self.filepath))
+        if self.process_pid is None:
+            # Process has not run yet
+            self.__process.start()
+            if not background:
+                self.__process.join()
+                #Exit code can be used by program that calls the launcher
+                self.process_exitcode=self.__process.exitcode
+                return self.process_exitcode
         else:
-            return run_code
+            # Process has started
+            if self.process_exitcode is not None:
+                # Process has already terminated
+                # Reinitialize the process instance
+                self.__process = None
+                self.__process = multiprocessing.Process(target=
+                                                         self._call_code)
+                # Recursion, since this will reset @property properties
+                self.run(background)
+            else:
+                raise ProcessRunningException
 
 ######################### New code retrieval methods #########################
+
 
     def check_new(self):
         '''Retrieves the latest version number from the remote host.
@@ -225,27 +255,16 @@ class Launcher:
             print("Writing new filelist to filelist.txt")
             with open("filelist.txt", "w") as file_handle:
                 file_handle.writelines(filelist_new)
-            print("Backup tempdir")
-            backupdir=tempfile.mkdtemp()
-            copy_glob(os.path.join(tempdir,"*"),backupdir)
-            print("Move tempdir contents to current directory")
-            move_glob(os.path.join(tempdir,"*"),".")
+            print("Copy tempdir contents to current directory")
+            copy_glob(os.path.join(tempdir,"*"),".")
             print("Remove backup filelist")
             filelist_backup.close()
             os.remove(filelist_backup.name)
-            shutil.rmtree(backupdir)
-            print("Remaining files of tempdir")
-            pprint.pprint(os.listdir(tempdir))
         except Exception:
             raise
         finally:
-            try:
-                os.rmdir(tempdir) #Should be empty at this point unless something happened
-            except OSError:
-                print("Tempdir is not empty!")
-                print("Here are its contents")
-                pprint.pprint(os.listdir(tempdir))
-                shutil.rmtree(tempdir)
+            print("Removing tempdir")
+            shutil.rmtree(tempdir)
 
     def update_code(self):
         """Updates the code if necessary"""
