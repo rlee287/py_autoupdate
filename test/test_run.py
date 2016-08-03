@@ -75,7 +75,7 @@ class TestRunProgram:
         launch = Launcher(fileback,'URL')
         process_handle = launch.run(True)
         time.sleep(1)
-        assert process_handle.is_alive()
+        assert launch.process_is_alive
         time.sleep(3)
         #Really takes at least 2 seconds for windows to kill process
-        assert not process_handle.is_alive()
+        assert not launch.process_is_alive

@@ -10,6 +10,7 @@ import pprint
 from pkg_resources import parse_version
 from setuptools.archive_util import unpack_archive
 from ._move_glob import move_glob, copy_glob
+
 import requests
 
 class Launcher:
@@ -79,6 +80,23 @@ class Launcher:
         self.kwargs = kwargs
         self.oldcwd=os.getcwd()
         self.cwd=os.path.abspath(os.path.join(".",self.filepath))
+        self.__process = multiprocessing.Process(target=self._call_code)
+        self.process_exitcode=None
+
+######################### Process attribute getters  #########################
+    @property
+    def process_is_alive(self):
+        return self.__process.is_alive()
+
+    @property
+    def process_pid(self):
+        return self.__process.pid
+
+    def process_join(self,timeout=None):
+        self.__process.join(timeout)
+
+    def process_terminate(self):
+        self.__process.terminate()
 
 ########################### Code execution methods ###########################
 
@@ -123,17 +141,29 @@ class Launcher:
 
            :return: the exit code of the executed code or the Process
            :rtype: :class:`int` or :class:`multiprocessing.Process`'''
-        #Call code through wrapper
-        run_code = multiprocessing.Process(target=self._call_code)
-        run_code.start()
-        if not background:
-            run_code.join()
-            #Exit code can be used by program that calls the launcher
-            return run_code.exitcode
+        if self.process_pid is None:
+            # Process has not run yet
+            self.__process.start()
+            if not background:
+                self.__process.join()
+                #Exit code can be used by program that calls the launcher
+                self.process_exitcode=self.__process.exitcode
+                return self.process_exitcode
         else:
-            return run_code
+            # Process has started
+            if self.process_exitcode is not None:
+                # Process has already terminated
+                # Reinitialize the process instance
+                self.__process = None
+                self.__process = multiprocessing.Process(target=
+                                                         self._call_code)
+                # Recursion, since this will reset @property properties
+                self.run(background)
+            else:
+                print("Process is already running!")
 
 ######################### New code retrieval methods #########################
+
 
     def check_new(self):
         '''Retrieves the latest version number from the remote host.
