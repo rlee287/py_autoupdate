@@ -140,7 +140,7 @@ class Launcher:
         except NameError:
             error_to_raise=IOError
         if not os.path.isfile(self.filepath):
-            raise error_to_raise("No file at {}".format(self.filepath))
+            raise error_to_raise("No file at {0}".format(self.filepath))
         if self.process_pid is None:
             # Process has not run yet
             self.__process.start()
