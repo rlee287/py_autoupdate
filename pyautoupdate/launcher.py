@@ -145,7 +145,7 @@ class Launcher:
             # Process has not run yet
             self.__process.start()
             if not background:
-                self.__process.join()
+                self.process_join()
                 #Exit code can be used by program that calls the launcher
                 self.process_exitcode=self.__process.exitcode
                 return self.process_exitcode
