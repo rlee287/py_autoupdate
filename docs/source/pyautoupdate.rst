@@ -1,5 +1,5 @@
-``pyautoupdate`` package
-========================
+pyautoupdate package
+====================
 
 .. module:: pyautoupdate
 

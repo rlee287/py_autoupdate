@@ -24,6 +24,8 @@ Example code using ``pyautoupdate``:
    # Update files
    launch.update()
 
+**pyautoupdate's code is hosted on** `Github <www.github.com/rlee287/pyautoupdate>`_.
+
 Contents:
 
 .. toctree::
