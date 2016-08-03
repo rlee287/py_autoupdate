@@ -10,6 +10,7 @@ import pprint
 from pkg_resources import parse_version
 from setuptools.archive_util import unpack_archive
 from ._move_glob import move_glob, copy_glob
+from .exceptions import *
 
 import requests
 
@@ -110,19 +111,11 @@ class Launcher:
 
               End users should never call this directly.
               Please use the :meth:`run` method instead.'''
-        #Find the right error to raise depending on python version
-        try:
-            error_to_raise=FileNotFoundError
-        except NameError:
-            error_to_raise=IOError
         #Open code file
         try:
             code_file = open(self.filepath, mode='r')
             code = code_file.read()
-        except (error_to_raise):
-            print('Unable to open file {} to run code'.format(self.filepath)
-                  , file=sys.stderr)
-            print('The full traceback is below:', file=sys.stderr)
+        except Exception:
             raise
         else:
             #Only attempt to run when file has been opened
@@ -141,6 +134,13 @@ class Launcher:
 
            :return: the exit code of the executed code or the Process
            :rtype: :class:`int` or :class:`multiprocessing.Process`'''
+        #Find the right error to raise depending on python version
+        try:
+            error_to_raise=FileNotFoundError
+        except NameError:
+            error_to_raise=IOError
+        if not os.path.isfile(self.filepath):
+            raise error_to_raise
         if self.process_pid is None:
             # Process has not run yet
             self.__process.start()
@@ -160,7 +160,7 @@ class Launcher:
                 # Recursion, since this will reset @property properties
                 self.run(background)
             else:
-                print("Process is already running!")
+                raise ProcessRunningException
 
 ######################### New code retrieval methods #########################
 

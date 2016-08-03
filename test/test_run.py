@@ -65,9 +65,13 @@ class TestRunProgram:
         assert excode != 0
 
     def test_nofile(self):
-        launch = Launcher('does_not_exist_404j958458ryeiu.py','(in)sanity')
-        excode = launch.run()
-        assert excode != 0
+        try:
+            error_to_raise=FileNotFoundError
+        except NameError:
+            error_to_raise=IOError
+        with pytest.raises(error_to_raise):
+            launch = Launcher('does_not_exist_404.py','(in)sanity')
+            excode = launch.run()
 
     def test_background(self):
         filebase = 'test_run_base'
