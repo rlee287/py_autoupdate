@@ -33,7 +33,7 @@ def fixture_update_setup(request):
         code.write("print('This is the old version')")
     with open("filelist.txt", mode='w') as filelist:
         filelist.write("extradir/blah.py")
-    return fixture_update_dir
+    return fixture_update_setup
 
 @pytest.mark.trylast
 @needinternet

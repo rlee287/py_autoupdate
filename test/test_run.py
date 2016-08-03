@@ -54,7 +54,7 @@ class TestRunProgram:
             assert nums == str([i**2 for i in range(20)])
 
     def test_run_pid(self,create_test_file):
-       """Test that attempts to access attributes from the parent object"""
+        """Test that attempts to access attributes from the parent object"""
         filebase = 'test_run_base_pid'
         filecode = filebase+'.py'
         launch = Launcher(filecode,'have')
