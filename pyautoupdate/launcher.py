@@ -2,7 +2,6 @@ from __future__ import absolute_import, print_function
 
 import multiprocessing
 import os
-import sys
 import shutil
 import tempfile
 import pprint
@@ -10,7 +9,7 @@ import pprint
 from pkg_resources import parse_version
 from setuptools.archive_util import unpack_archive
 from ._move_glob import move_glob, copy_glob
-from .exceptions import *
+from .exceptions import ProcessRunningException
 
 import requests
 
