@@ -6,9 +6,11 @@ import pytest
 from ..pyautoupdate.launcher import Launcher
 
 class TestRunProgram:
+    """Collection of tests that run programs with pyautoupdate"""
 
     @pytest.fixture(scope='class')
     def create_test_file(self, request):
+        """Writes code files for tests and deletes them afterwards"""
         filebase='test_run_base'
         filecode=filebase+'.py'
         filetext=filebase+'.txt'
@@ -40,6 +42,7 @@ class TestRunProgram:
         return self.create_test_file
 
     def test_run(self,create_test_file):
+        """Basic test that confirms that code will run"""
         filebase = 'test_run_base'
         filecode = filebase+'.py'
         filetext = filebase+'.txt'
@@ -51,6 +54,7 @@ class TestRunProgram:
             assert nums == str([i**2 for i in range(20)])
 
     def test_run_pid(self,create_test_file):
+       """Test that attempts to access attributes from the parent object"""
         filebase = 'test_run_base_pid'
         filecode = filebase+'.py'
         launch = Launcher(filecode,'have')
@@ -58,6 +62,7 @@ class TestRunProgram:
         assert excode==0
 
     def test_run_fail(self,create_test_file):
+        """Test that runs errored code and checks exit status"""
         filebase = 'test_run_base_fail'
         filecode = filebase+'.py'
         launch = Launcher(filecode,'URL')
@@ -65,11 +70,23 @@ class TestRunProgram:
         assert excode != 0
 
     def test_nofile(self):
+        """Test that checks error thrown when file does not exist"""
         launch = Launcher('does_not_exist_404j958458ryeiu.py','(in)sanity')
         excode = launch.run()
         assert excode != 0
 
     def test_background(self):
+        """Test that runs code in the background
+        ASCII art depicting timeline shown below:
+          0        1        2        3        4 seconds|
+        --+--------+--------+--------+--------+--------+
+          ^        ^        ^    ^       ^    ^        |Spawned
+        "start"    |      "end"  |       |    |        |process
+                   |             |Windows|    |        |-------
+              "is_alive"         |Kills  | "is_dead"   |Test
+                                 |Process|             |Checks
+
+        """
         filebase = 'test_run_base'
         fileback = filebase+'_back'+'.py'
         launch = Launcher(fileback,'URL')
