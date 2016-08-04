@@ -116,6 +116,8 @@ class Launcher:
         #Only attempt to run when file has been opened
         localvar = vars(self).copy()
         localvar["check_new"] = self.check_new
+        del localvar["_Launcher__process"]
+        pprint.pprint(localvar)
         exec(code, dict(), localvar)
 
     def run(self, background=False):
