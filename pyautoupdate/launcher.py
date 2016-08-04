@@ -235,6 +235,7 @@ class Launcher:
             filelist_backup=tempfile.NamedTemporaryFile(delete=False)
             with open("filelist.txt", "r+b") as file_handle:
                 shutil.copyfileobj(file_handle,filelist_backup)
+            filelist_backup.close()
             os.remove("filelist.txt")
             filelist_new=list()
             for dirpath, dirnames, filenames in os.walk(tempdir):
@@ -253,10 +254,7 @@ class Launcher:
             print("Copy tempdir contents to current directory")
             copy_glob(os.path.join(tempdir,"*"),".")
             print("Remove backup filelist")
-            filelist_backup.close()
             os.remove(filelist_backup.name)
-        except Exception:
-            raise
         finally:
             print("Removing tempdir")
             shutil.rmtree(tempdir)
