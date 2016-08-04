@@ -16,6 +16,9 @@ def test_check_vers_update(fixture_update_dir):
     isnew=launch.check_new()
     assert isnew
     assert os.path.isfile("version.txt")
-    assert os.path.isfile("version.txt.old")
-    # Make sure existing .old can be removed
-    launch.check_new()
+    assert os.path.isfile("version_history.log")
+    with open("version_history.log","r") as log_handle:
+        log=log_handle.read()
+    assert "New" in log
+    # Make sure log can be appended to
+    #launch.check_new()

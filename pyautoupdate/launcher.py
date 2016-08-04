@@ -1,5 +1,6 @@
 from __future__ import absolute_import, print_function
 
+from datetime import datetime
 import multiprocessing
 import os
 import shutil
@@ -82,6 +83,14 @@ class Launcher:
         self.cwd=os.path.abspath(os.path.join(".",self.filepath))
         self.__process = multiprocessing.Process(target=self._call_code)
         self.process_exitcode=None
+
+    @property
+    def version_doc(self):
+        return "version.txt"
+
+    @property
+    def version_log(self):
+        return "version_history.log"
 
 ######################### Process attribute getters  #########################
     @property
@@ -172,20 +181,26 @@ class Launcher:
               to compare versions.
 
               Any versioning scheme described in :pep:`440` can be used.'''
-        versionurl=self.url+"version.txt"
+        versionurl=self.url+self.version_doc
         #get new files
         get_new=requests.get(versionurl, allow_redirects=True)
         get_new.raise_for_status()
-        #move to new file only when connection succeeds
-        if os.path.isfile("version.txt.old"):
-            os.remove("version.txt.old")
-        os.rename("version.txt","version.txt.old")
-        with open("version.txt", 'w') as new_version:
-            new_version.write(get_new.text)
-        with open("version.txt.old", 'r') as old_version:
-            oldver=old_version.read()
         newver=get_new.text
-        return parse_version(newver)>parse_version(oldver)
+        #move to new file only when connection succeeds
+        with open(self.version_doc, 'r') as old_version:
+            oldver=old_version.read()
+        has_new=(parse_version(newver)>parse_version(oldver))
+        if has_new:
+            version_to_add="Old {0}|New {1}|Time {2}\n"\
+                           .format(oldver,newver,datetime.utcnow())
+        else:
+            version_to_add="Old {0}|Up to date|Time {1}\n"\
+                           .format(oldver,datetime.utcnow())
+        with open(self.version_log, "a") as log_file:
+            log_file.write(version_to_add)
+        with open(self.version_doc, 'w') as new_version:
+            new_version.write(newver)
+        return has_new
 
 
     def _reset_update_dir(self):
