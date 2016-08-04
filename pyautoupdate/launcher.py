@@ -111,16 +111,12 @@ class Launcher:
               End users should never call this directly.
               Please use the :meth:`run` method instead.'''
         #Open code file
-        try:
-            with open(self.filepath, mode='r') as code_file:
-                code = code_file.read()
-        except Exception:
-            raise
-        else:
-            #Only attempt to run when file has been opened
-            localvar = vars(self).copy()
-            localvar["check_new"] = self.check_new
-            exec(code, globals(), localvar)
+        with open(self.filepath, mode='r') as code_file:
+            code = code_file.read()
+        #Only attempt to run when file has been opened
+        localvar = vars(self).copy()
+        localvar["check_new"] = self.check_new
+        exec(code, dict(), localvar)
 
     def run(self, background=False):
         '''Method used to run code.
