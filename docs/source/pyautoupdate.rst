@@ -1,4 +1,4 @@
-pyautoupdate package
+Pyautoupdate package
 ====================
 
 .. module:: pyautoupdate
