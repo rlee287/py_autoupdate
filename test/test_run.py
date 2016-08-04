@@ -25,12 +25,20 @@ class TestRunProgram:
         'print(update.is_set())\n'+\
         'update.clear()\n'+\
         'print(update.is_set())'
-        codepid='import os\n'+'a=os.getpid()\n'+'b=os.getppid()\n'+\
-             'c=pid\n'+'print("pid", a)\n'+'print("ppid",b)\n'+\
-             'print("LauncherPid",c)\n'+'assert b==c\n'+'assert a!=c\n'
+        codepid='import os\n'+\
+                'a=os.getpid()\n'+\
+                'b=os.getppid()\n'+\
+                'c=pid\n'+\
+                'print("pid", a)\n'+\
+                'print("ppid",b)\n'+\
+                'print("LauncherPid",c)\n'+\
+                'assert b==c\n'+\
+                'assert a!=c\n'
         codefail='nonexistent_eiofjeoifjdoijfkldsjf'
-        codeback='import time\n'+'print("start")\n'+'time.sleep(2)\n'+\
-             'print("end")'
+        codeback='import time\n'+\
+                 'print("start")\n'+\
+                 'time.sleep(2)\n'+\
+                 'print("end")'
         for name,code in zip([filecode, filepid, filefail, fileback],
                              [codebasic, codepid, codefail, codeback]):
             with open(name, mode='w') as code_file:
