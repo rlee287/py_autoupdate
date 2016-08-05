@@ -64,6 +64,18 @@ class Launcher:
     def __init__(self, filepath, url, newfiles='project.zip',
                  updatedir='downloads',
                  *args, **kwargs):
+        with warnings.catch_warnings():
+            warnings.simplefilter("error",category=PEP440Warning)
+            try:
+                with open("version.txt","r") as version_check:
+                    vers=version_check.read()
+                    if len(vers)>0:
+                        parse_version(vers)
+            except PEP440Warning:
+                print("version.txt is not a valid version number!")
+                print("This could mean that the version.txt is corrupted.")
+                print("Please check that version.txt is not being used!")
+                print("It will be overwritten by this program!")
         if len(filepath) != 0:
             self.filepath = filepath
         else:
