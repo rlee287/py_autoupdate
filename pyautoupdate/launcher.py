@@ -68,38 +68,35 @@ class Launcher:
         # Check that version.txt
         with warnings.catch_warnings():
             warnings.simplefilter("error",category=PEP440Warning)
-            try:
-                error_to_raise=FileNotFoundError
-            except NameError:
-                error_to_raise=IOError
-            try:
-                with open(self.version_doc,"r") as version_check:
-                    vers=version_check.read()
-                    if len(vers)>0:
-                        parse_version(vers)
-            except PEP440Warning:
-                print("{0} does not have a valid version number!"
-                      .format(self.version_doc))
-                print("Please check that {0} is not being used!"
-                      .format(self.version_doc))
-                print("It will be overwritten by this program!")
-                print("Otherwise the {0} is corrupted."
-                      .format(self.version_doc))
-                print("Please use the logfile at {0} to restore it."
-                      .format(self.version_doc))
-            except error_to_raise:
-                pass
-        with open(self.version_log,"r") as log_file:
-            log_syntax=re.compile(r"Old .+?\|(New .+?|Up to date)\|Time .+?")
-            for line in log_file:
-                if line!="\n":
-                    has_match=re.match(log_syntax,line)
-                    if has_match is None:
-                        print("Log file at {0} is corrupted!"
-                              .format(self.version_log))
-                        print("Please check that {0} is not being used!"
-                              .format(self.version_log))
-                        print("It will be overwritten by this program!")
+            if os.path.isfile(self.version_doc):
+                try:
+                    with open(self.version_doc,"r") as version_check:
+                        vers=version_check.read()
+                        if len(vers)>0:
+                            parse_version(vers)
+                except PEP440Warning:
+                    print("{0} does not have a valid version number!"
+                          .format(self.version_doc))
+                    print("Please check that {0} is not being used!"
+                          .format(self.version_doc))
+                    print("It will be overwritten by this program!")
+                    print("Otherwise the {0} is corrupted."
+                          .format(self.version_doc))
+                    print("Please use the logfile at {0} to restore it."
+                          .format(self.version_doc))
+        if os.path.isfile(self.version_log):
+            with open(self.version_log,"r") as log_file:
+                log_syntax=re.compile(
+                              r"Old .+?\|(New .+?|Up to date)\|Time .+?")
+                for line in log_file:
+                    if line!="\n":
+                        has_match=re.match(log_syntax,line)
+                        if has_match is None:
+                            print("Log file at {0} is corrupted!"
+                                  .format(self.version_log))
+                            print("Please check that {0} is not being used!"
+                                  .format(self.version_log))
+                            print("It will be overwritten by this program!")
         if len(filepath) != 0:
             self.filepath = filepath
         else:
