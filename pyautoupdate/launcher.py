@@ -6,8 +6,9 @@ import os
 import shutil
 import tempfile
 import pprint
+import warnings
 
-from pkg_resources import parse_version
+from pkg_resources import parse_version, PEP440Warning
 from setuptools.archive_util import unpack_archive
 from ._move_glob import move_glob, copy_glob
 from .exceptions import ProcessRunningException
@@ -91,6 +92,10 @@ class Launcher:
     @property
     def version_log(self):
         return "version_history.log"
+
+    @property
+    def file_list(self):
+        return "filelist.txt"
 
 ######################### Process attribute getters  #########################
     @property
@@ -230,7 +235,7 @@ class Launcher:
         os.remove(self.newfiles)
 
     def _replace_files(self):
-        with open("filelist.txt", "r") as file_handle:
+        with open(self.file_list, "r") as file_handle:
             for line in file_handle:
                 file_rm=os.path.normpath(os.path.join(".",line))
                 if file_rm.split(os.path.sep)[0]!="downloads":
@@ -248,10 +253,10 @@ class Launcher:
             print("Moving downloads to", tempdir)
             move_glob(os.path.join(self.updatedir,"*"), tempdir)
             filelist_backup=tempfile.NamedTemporaryFile(delete=False)
-            with open("filelist.txt", "r+b") as file_handle:
+            with open(self.file_list, "r+b") as file_handle:
                 shutil.copyfileobj(file_handle,filelist_backup)
             filelist_backup.close()
-            os.remove("filelist.txt")
+            os.remove(self.file_list)
             filelist_new=list()
             for dirpath, dirnames, filenames in os.walk(tempdir):
                 for filename in filenames:
@@ -264,7 +269,7 @@ class Launcher:
             print("new filelist")
             pprint.pprint(filelist_new)
             print("Writing new filelist to filelist.txt")
-            with open("filelist.txt", "w") as file_handle:
+            with open(self.file_list, "w") as file_handle:
                 file_handle.writelines(filelist_new)
             print("Copy tempdir contents to current directory")
             copy_glob(os.path.join(tempdir,"*"),".")
