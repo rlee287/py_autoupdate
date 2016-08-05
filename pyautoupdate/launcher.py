@@ -72,10 +72,12 @@ class Launcher:
                     if len(vers)>0:
                         parse_version(vers)
             except PEP440Warning:
-                print("version.txt is not a valid version number!")
-                print("This could mean that the version.txt is corrupted.")
+                print("version.txt does not have a valid version number!")
                 print("Please check that version.txt is not being used!")
                 print("It will be overwritten by this program!")
+                print("Otherwise the version.txt is corrupted.")
+                print("Please use the logfile at {0} to restore it."
+                      .format(self.version_log))
         if len(filepath) != 0:
             self.filepath = filepath
         else:
