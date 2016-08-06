@@ -65,8 +65,10 @@ class Launcher:
     def __init__(self, filepath, url, newfiles='project.zip',
                  updatedir='downloads',
                  *args, **kwargs):
+        print("Initializing launcher")
         # Check that version.txt
         with warnings.catch_warnings():
+            invalid_log=False
             warnings.simplefilter("error",category=PEP440Warning)
             if os.path.isfile(self.version_doc):
                 try:
@@ -75,28 +77,29 @@ class Launcher:
                         if len(vers)>0:
                             parse_version(vers)
                 except PEP440Warning:
-                    print("{0} does not have a valid version number!"
-                          .format(self.version_doc))
-                    print("Please check that {0} is not being used!"
-                          .format(self.version_doc))
-                    print("It will be overwritten by this program!")
-                    print("Otherwise the {0} is corrupted."
-                          .format(self.version_doc))
-                    print("Please use the logfile at {0} to restore it."
-                          .format(self.version_doc))
+                    invalid_log=True
+            if invalid_log:
+                print("{0} does not have a valid version number!"
+                      .format(self.version_doc))
+                print("Please check that {0} is not being used!"
+                      .format(self.version_doc))
+                print("It will be overwritten by this program!")
+                print("Otherwise the {0} is corrupted."
+                      .format(self.version_doc))
+                print("Please use the logfile at {0} to restore it."
+                      .format(self.version_doc))
         if os.path.isfile(self.version_log):
             with open(self.version_log,"r") as log_file:
                 log_syntax=re.compile(
                               r"Old .+?\|(New .+?|Up to date)\|Time .+?")
-                for line in log_file:
-                    if line!="\n":
-                        has_match=re.match(log_syntax,line)
-                        if has_match is None:
-                            print("Log file at {0} is corrupted!"
-                                  .format(self.version_log))
-                            print("Please check that {0} is not being used!"
-                                  .format(self.version_log))
-                            print("It will be overwritten by this program!")
+                if line!="\n" and len(line)>0:
+                    has_match=re.match(log_syntax,log_file.read())
+                    if has_match is None:
+                        print("Log file at {0} is corrupted!"
+                              .format(self.version_log))
+                        print("Please check that {0} is not being used!"
+                              .format(self.version_log))
+                        print("It will be overwritten by this program!")
         if len(filepath) != 0:
             self.filepath = filepath
         else:
@@ -224,9 +227,11 @@ class Launcher:
         get_new=requests.get(versionurl, allow_redirects=True)
         get_new.raise_for_status()
         newver=get_new.text
+        newver=newver.rstrip("\n")
         #move to new file only when connection succeeds
         with open(self.version_doc, 'r') as old_version:
             oldver=old_version.read()
+            oldver=oldver.rstrip("\n")
         has_new=(parse_version(newver)>parse_version(oldver))
         if has_new:
             version_to_add="Old {0}|New {1}|Time {2}\n"\
