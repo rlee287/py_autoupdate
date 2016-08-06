@@ -46,9 +46,11 @@ def fixture_corrupt_vers(request):
 def test_check_corrupted_log(fixture_corrupt_log):
     with pytest.raises(CorruptedFileWarning):
         with warnings.catch_warnings():
+            warnings.simplefilter("error",category=CorruptedFileWarning)
             launch=Launcher("123","456")
 
 def test_check_corrupted_vers(fixture_corrupt_vers):
     with pytest.raises(CorruptedFileWarning):
         with warnings.catch_warnings():
+            warnings.simplefilter("error",category=CorruptedFileWarning)
             launch=Launcher("123","456")
