@@ -92,9 +92,9 @@ class Launcher:
             with open(self.version_log,"r") as log_file:
                 log_syntax=re.compile(
                               r"Old .+?\|(New .+?|Up to date)\|Time .+?")
-                line=log_file.read()
-                if line!="\n" and len(line)>0:
-                    has_match=re.match(log_syntax,line)
+                version=log_file.read()
+                if version!="\n" and len(version)>0:
+                    has_match=re.match(log_syntax,version)
                     if has_match is None:
                         print("Log file at {0} is corrupted!"
                               .format(self.version_log))
