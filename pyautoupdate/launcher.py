@@ -12,7 +12,7 @@ import re
 from pkg_resources import parse_version, PEP440Warning
 from setuptools.archive_util import unpack_archive
 from ._move_glob import move_glob, copy_glob
-from .exceptions import ProcessRunningException
+from .exceptions import ProcessRunningException, CorruptedFileWarning
 
 import requests
 
@@ -88,6 +88,9 @@ class Launcher:
                       .format(self.version_doc))
                 print("Please use the logfile at {0} to restore it."
                       .format(self.version_doc))
+                warnings.warn("{0} is corrupted!".format(self.version_doc),
+                                                         CorruptedFileWarning,
+                                                         stacklevel=2)
         if os.path.isfile(self.version_log):
             with open(self.version_log,"r") as log_file:
                 log_syntax=re.compile(
@@ -101,6 +104,11 @@ class Launcher:
                         print("Please check that {0} is not being used!"
                               .format(self.version_log))
                         print("It will be overwritten by this program!")
+                        warnings.warn("{0} is corrupted!"
+                                      .format(self.version_log),
+                                      CorruptedFileWarning,
+                                      stacklevel=2)
+
         if len(filepath) != 0:
             self.filepath = filepath
         else:
@@ -277,6 +285,18 @@ class Launcher:
         with open(self.file_list, "r") as file_handle:
             for line in file_handle:
                 file_rm=os.path.normpath(os.path.join(".",line))
+                if not os.path.isfile(file_rm):
+                    print("{0} contains the invalid filepath {1}."
+                          .format(self.file_list,file_rm))
+                    print("Please check that {0} is not being used!"
+                          .format(self.file_list))
+                    print("Otherwise the {0} is corrupted."
+                          .format(self.file_list))
+                    print("Updates will fail until this is restored.")
+                    warnings.warn("{0} is corrupted!"
+                                  .format(self.version_log),
+                                  CorruptedFileWarning,
+                                  stacklevel=2)
                 if file_rm.split(os.path.sep)[0]!="downloads":
                     print("Removing",file_rm)
                     os.remove(file_rm)
