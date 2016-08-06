@@ -1,8 +1,10 @@
 from __future__ import absolute_import, print_function
 
 from ..pyautoupdate.launcher import Launcher
+from ..pyautoupdate.exceptions import CorruptedFileWarning
 
 import os
+import warnings
 
 import pytest
 
@@ -42,7 +44,11 @@ def fixture_corrupt_vers(request):
     return fixture_corrupt_vers
 
 def test_check_corrupted_log(fixture_corrupt_log):
-    launch=Launcher("123","456")
+    with pytest.raises(CorruptedFileWarning):
+        with warnings.catch_warnings():
+            launch=Launcher("123","456")
 
 def test_check_corrupted_vers(fixture_corrupt_vers):
-    launch=Launcher("123","456")
+    with pytest.raises(CorruptedFileWarning):
+        with warnings.catch_warnings():
+            launch=Launcher("123","456")
