@@ -4,6 +4,7 @@ import os
 import time
 import pytest
 from ..pyautoupdate.launcher import Launcher
+from ..pyautoupdate.exceptions import ProcessRunningException
 
 class TestRunProgram:
     """Collection of tests that run programs with pyautoupdate"""
@@ -108,3 +109,27 @@ class TestRunProgram:
         time.sleep(3)
         #Really takes at least 2 seconds for windows to kill process
         assert not launch.process_is_alive
+
+    def test_run_twice(self):
+        """Test that runs code in the background
+        ASCII art depicting timeline shown below:
+          0        1        2        3        4 seconds|
+        --+--------+--------+--------+--------+--------+
+          ^        ^        ^    ^       ^    ^        |Spawned
+        "start"    |      "end"  |       |    |        |process
+                   |             |Windows|    |        |-------
+           "try_to_run_fail"     |Kills  | "run_twice" |Test
+                                 |Process|             |Checks
+
+        """
+        filebase = 'test_run_base'
+        fileback = filebase+'_back'+'.py'
+        launch = Launcher(fileback,'URL')
+        launch.run(True)
+        time.sleep(1)
+        #Process is still alive
+        with pytest.raises(ProcessRunningException):
+            launch.run(True)
+        time.sleep(3)
+        #Process is dead now, can run again
+        launch.run()
