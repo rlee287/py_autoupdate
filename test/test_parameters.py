@@ -9,7 +9,7 @@ import warnings
 import pytest
 
 def test_check_urlslash():
-    """Check that slash is appended to end of url"""
+    """Test that checks that leading slash is properly added to URL"""
     launch = Launcher('not here',
                       r'http://rlee287.github.io/pyautoupdate/testing/')
     launch2 = Launcher('why do I need to do this',

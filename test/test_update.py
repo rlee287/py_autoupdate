@@ -9,7 +9,8 @@ import os
 import shutil
 
 @pytest.fixture(scope='function')
-def fixture_update_dir(request):
+def fixture_update_setup(request):
+    """Sets up and tears down version docs and code files"""
     def teardown():
         if os.path.isfile('version_history.log'):
             os.remove('version_history.log')
@@ -32,11 +33,12 @@ def fixture_update_dir(request):
         code.write("print('This is the old version')")
     with open("filelist.txt", mode='w') as filelist:
         filelist.write("extradir/blah.py")
-    return fixture_update_dir
+    return fixture_update_setup
 
 @pytest.mark.trylast
 @needinternet
-def test_check_vers_update(fixture_update_dir):
+def test_check_update(fixture_update_setup):
+    """Checks the ability of program to upload new code"""
     assert os.path.isfile("filelist.txt")
     launch = Launcher('extradir/blah.py',
                       r'http://rlee287.github.io/pyautoupdate/testing/')

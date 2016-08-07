@@ -11,6 +11,7 @@ import pytest
 
 @pytest.fixture("function")
 def create_zip(request):
+    """Fixture that creates an empty .zip file"""
     def teardown():
         if os.path.isfile("project.zip"):
             os.remove("project.zip")
@@ -27,7 +28,8 @@ def create_zip(request):
 
 @pytest.mark.trylast
 @needinternet
-def test_check_vers_update(create_zip, fixture_update_dir):
+def test_check_get_new(create_zip, fixture_update_dir):
+    """Test that gets new version from internet"""
     package=fixture_update_dir("0.0.1")
     launch = Launcher('filling up the boring replacements',
                       r'http://rlee287.github.io/pyautoupdate/testing/')
