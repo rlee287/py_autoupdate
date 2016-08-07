@@ -310,35 +310,33 @@ class Launcher:
                         except OSError:
                             pass #Directory is not empty yet
         tempdir=tempfile.mkdtemp()
-        try:
-            print("Moving downloads to", tempdir)
-            move_glob(os.path.join(self.updatedir,"*"), tempdir)
-            filelist_backup=tempfile.NamedTemporaryFile(delete=False)
-            with open(self.file_list, "r+b") as file_handle:
-                shutil.copyfileobj(file_handle,filelist_backup)
-            filelist_backup.close()
-            os.remove(self.file_list)
-            filelist_new=list()
-            for dirpath, dirnames, filenames in os.walk(tempdir):
-                for filename in filenames:
-                    filepath=os.path.normpath(os.path.join(dirpath,
-                                              filename))
-                    relpath_start=os.path.join(tempdir)
-                    filepath=os.path.relpath(filepath,start=relpath_start)
-                    filepath+="\n"
-                    filelist_new.append(filepath)
-            print("new filelist")
-            pprint.pprint(filelist_new)
-            print("Writing new filelist to filelist.txt")
-            with open(self.file_list, "w") as file_handle:
-                file_handle.writelines(filelist_new)
-            print("Copy tempdir contents to current directory")
-            copy_glob(os.path.join(tempdir,"*"),".")
-            print("Remove backup filelist")
-            os.remove(filelist_backup.name)
-        finally:
-            print("Removing tempdir")
-            shutil.rmtree(tempdir)
+        print("Moving downloads to", tempdir)
+        move_glob(os.path.join(self.updatedir,"*"), tempdir)
+        filelist_backup=tempfile.NamedTemporaryFile(delete=False)
+        with open(self.file_list, "r+b") as file_handle:
+            shutil.copyfileobj(file_handle,filelist_backup)
+        filelist_backup.close()
+        os.remove(self.file_list)
+        filelist_new=list()
+        for dirpath, dirnames, filenames in os.walk(tempdir):
+            for filename in filenames:
+                filepath=os.path.normpath(os.path.join(dirpath,
+                                          filename))
+                relpath_start=os.path.join(tempdir)
+                filepath=os.path.relpath(filepath,start=relpath_start)
+                filepath+="\n"
+                filelist_new.append(filepath)
+        print("new filelist")
+        pprint.pprint(filelist_new)
+        print("Writing new filelist to filelist.txt")
+        with open(self.file_list, "w") as file_handle:
+            file_handle.writelines(filelist_new)
+        print("Copy tempdir contents to current directory")
+        copy_glob(os.path.join(tempdir,"*"),".")
+        print("Remove backup filelist")
+        os.remove(filelist_backup.name)
+        print("Removing tempdir")
+        shutil.rmtree(tempdir)
 
     def update_code(self):
         if self.check_new():
