@@ -130,7 +130,6 @@ class Launcher:
         self.oldcwd=os.getcwd()
         self.cwd=os.path.abspath(os.path.join(".",self.filepath))
         self.__process = multiprocessing.Process(target=self._call_code)
-        self.process_exitcode=None
 
     @property
     def version_doc(self):
@@ -152,6 +151,10 @@ class Launcher:
     @property
     def process_pid(self):
         return self.__process.pid
+
+    @property
+    def process_exitcode(self):
+        return self.__process.exitcode
 
     def process_join(self,timeout=None):
         self.__process.join(timeout)
@@ -204,7 +207,6 @@ class Launcher:
             if not background:
                 self.process_join()
                 #Exit code can be used by program that calls the launcher
-                self.process_exitcode=self.__process.exitcode
                 return self.process_exitcode
         else:
             # Process has started
