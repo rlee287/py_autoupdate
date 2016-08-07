@@ -130,6 +130,10 @@ class TestRunProgram:
         #Process is still alive
         with pytest.raises(ProcessRunningException):
             launch.run(True)
-        time.sleep(3)
+        from time import perf_counter
+        a=perf_counter()
+        launch.process_join()
+        b=perf_counter()
+        print("time",b-a)
         #Process is dead now, can run again
         launch.run()
