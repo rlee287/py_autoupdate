@@ -9,7 +9,7 @@ import pprint
 import warnings
 import re
 
-from pkg_resources import parse_version, PEP440Warning
+from pkg_resources import parse_version, SetuptoolsVersion, PEP440Warning
 from setuptools.archive_util import unpack_archive
 from ._move_glob import move_glob, copy_glob
 from .exceptions import ProcessRunningException, CorruptedFileWarning
@@ -75,7 +75,9 @@ class Launcher:
                     with open(self.version_doc,"r") as version_check:
                         vers=version_check.read()
                         if len(vers)>0:
-                            parse_version(vers)
+                            vers_obj=parse_version(vers)
+                            if not isinstance(vers_obj,SetuptoolsVersion):
+                                raise PEP440Warning
                 except PEP440Warning:
                     invalid_log=True
             if invalid_log:
