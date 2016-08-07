@@ -12,8 +12,8 @@ import shutil
 def fixture_update_setup(request):
     """Sets up and tears down version docs and code files"""
     def teardown():
-        if os.path.isfile('version.txt.old'):
-            os.remove('version.txt.old')
+        if os.path.isfile('version_history.log'):
+            os.remove('version_history.log')
         if os.path.isfile('version.txt'):
             os.remove('version.txt')
         if os.path.isdir("extradir"):

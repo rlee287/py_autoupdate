@@ -15,4 +15,7 @@ def test_check_vers_noupdate(fixture_update_dir):
     isnew=launch.check_new()
     assert not isnew
     assert os.path.isfile("version.txt")
-    assert os.path.isfile("version.txt.old")
+    assert os.path.isfile("version_history.log")
+    with open("version_history.log","r") as log_handle:
+        log=log_handle.read()
+    assert "Up to date" in log

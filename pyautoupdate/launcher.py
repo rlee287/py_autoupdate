@@ -1,15 +1,18 @@
 from __future__ import absolute_import, print_function
 
+from datetime import datetime
 import multiprocessing
 import os
 import shutil
 import tempfile
 import pprint
+import warnings
+import re
 
-from pkg_resources import parse_version
+from pkg_resources import parse_version, SetuptoolsVersion, PEP440Warning
 from setuptools.archive_util import unpack_archive
 from ._move_glob import move_glob, copy_glob
-from .exceptions import ProcessRunningException
+from .exceptions import ProcessRunningException, CorruptedFileWarning
 
 import requests
 
@@ -62,6 +65,52 @@ class Launcher:
     def __init__(self, filepath, url, newfiles='project.zip',
                  updatedir='downloads',
                  *args, **kwargs):
+        print("Initializing launcher")
+        # Check that version.txt
+        with warnings.catch_warnings():
+            invalid_log=False
+            warnings.simplefilter("error",category=PEP440Warning)
+            if os.path.isfile(self.version_doc):
+                try:
+                    with open(self.version_doc,"r") as version_check:
+                        vers=version_check.read()
+                        if len(vers)>0:
+                            vers_obj=parse_version(vers)
+                            if not isinstance(vers_obj,SetuptoolsVersion):
+                                raise PEP440Warning
+                except PEP440Warning:
+                    invalid_log=True
+            if invalid_log:
+                print("{0} does not have a valid version number!"
+                      .format(self.version_doc))
+                print("Please check that {0} is not being used!"
+                      .format(self.version_doc))
+                print("It will be overwritten by this program!")
+                print("Otherwise the {0} is corrupted."
+                      .format(self.version_doc))
+                print("Please use the logfile at {0} to restore it."
+                      .format(self.version_doc))
+                warnings.warn("{0} is corrupted!".format(self.version_doc),
+                                                         CorruptedFileWarning,
+                                                         stacklevel=2)
+        if os.path.isfile(self.version_log):
+            with open(self.version_log,"r") as log_file:
+                log_syntax=re.compile(
+                              r"Old .+?\|(New .+?|Up to date)\|Time .+?")
+                version=log_file.read()
+                if version!="\n" and len(version)>0:
+                    has_match=re.match(log_syntax,version)
+                    if has_match is None:
+                        print("Log file at {0} is corrupted!"
+                              .format(self.version_log))
+                        print("Please check that {0} is not being used!"
+                              .format(self.version_log))
+                        print("It will be overwritten by this program!")
+                        warnings.warn("{0} is corrupted!"
+                                      .format(self.version_log),
+                                      CorruptedFileWarning,
+                                      stacklevel=2)
+
         if len(filepath) != 0:
             self.filepath = filepath
         else:
@@ -82,6 +131,18 @@ class Launcher:
         self.cwd=os.path.abspath(os.path.join(".",self.filepath))
         self.__process = multiprocessing.Process(target=self._call_code)
         self.process_exitcode=None
+
+    @property
+    def version_doc(self):
+        return "version.txt"
+
+    @property
+    def version_log(self):
+        return "version_history.log"
+
+    @property
+    def file_list(self):
+        return "filelist.txt"
 
 ######################### Process attribute getters  #########################
     @property
@@ -111,16 +172,13 @@ class Launcher:
               End users should never call this directly.
               Please use the :meth:`run` method instead.'''
         #Open code file
-        try:
-            with open(self.filepath, mode='r') as code_file:
-                code = code_file.read()
-        except Exception:
-            raise
-        else:
-            #Only attempt to run when file has been opened
-            localvar = vars(self).copy()
-            localvar["check_new"] = self.check_new
-            exec(code, globals(), localvar)
+        with open(self.filepath, mode='r') as code_file:
+            code = code_file.read()
+        #Only attempt to run when file has been opened
+        localvar = vars(self).copy()
+        localvar["check_new"] = self.check_new
+        del localvar["_Launcher__process"]
+        exec(code, dict(), localvar)
 
     def run(self, background=False):
         '''Method used to run code.
@@ -175,20 +233,28 @@ class Launcher:
               to compare versions.
 
               Any versioning scheme described in :pep:`440` can be used.'''
-        versionurl=self.url+"version.txt"
+        versionurl=self.url+self.version_doc
         #get new files
         get_new=requests.get(versionurl, allow_redirects=True)
         get_new.raise_for_status()
-        #move to new file only when connection succeeds
-        if os.path.isfile("version.txt.old"):
-            os.remove("version.txt.old")
-        os.rename("version.txt","version.txt.old")
-        with open("version.txt", 'w') as new_version:
-            new_version.write(get_new.text)
-        with open("version.txt.old", 'r') as old_version:
-            oldver=old_version.read()
         newver=get_new.text
-        return parse_version(newver)>parse_version(oldver)
+        newver=newver.rstrip("\n")
+        #move to new file only when connection succeeds
+        with open(self.version_doc, 'r') as old_version:
+            oldver=old_version.read()
+            oldver=oldver.rstrip("\n")
+        has_new=(parse_version(newver)>parse_version(oldver))
+        if has_new:
+            version_to_add="Old {0}|New {1}|Time {2}\n"\
+                           .format(oldver,newver,datetime.utcnow())
+        else:
+            version_to_add="Old {0}|Up to date|Time {1}\n"\
+                           .format(oldver,datetime.utcnow())
+        with open(self.version_log, "a") as log_file:
+            log_file.write(version_to_add)
+        with open(self.version_doc, 'w') as new_version:
+            new_version.write(newver)
+        return has_new
 
 
     def _reset_update_dir(self):
@@ -219,9 +285,21 @@ class Launcher:
 
     def _replace_files(self):
         """Replaces the existing files with the downloaded files."""
-        with open("filelist.txt", "r") as file_handle:
+        with open(self.file_list, "r") as file_handle:
             for line in file_handle:
                 file_rm=os.path.normpath(os.path.join(".",line))
+                if not os.path.isfile(file_rm):
+                    print("{0} contains the invalid filepath {1}."
+                          .format(self.file_list,file_rm))
+                    print("Please check that {0} is not being used!"
+                          .format(self.file_list))
+                    print("Otherwise the {0} is corrupted."
+                          .format(self.file_list))
+                    print("Updates will fail until this is restored.")
+                    warnings.warn("{0} is corrupted!"
+                                  .format(self.version_log),
+                                  CorruptedFileWarning,
+                                  stacklevel=2)
                 if file_rm.split(os.path.sep)[0]!="downloads":
                     print("Removing",file_rm)
                     os.remove(file_rm)
@@ -233,37 +311,33 @@ class Launcher:
                         except OSError:
                             pass #Directory is not empty yet
         tempdir=tempfile.mkdtemp()
-        try:
-            print("Moving downloads to", tempdir)
-            move_glob(os.path.join(self.updatedir,"*"), tempdir)
-            filelist_backup=tempfile.NamedTemporaryFile(delete=False)
-            with open("filelist.txt", "r+b") as file_handle:
-                shutil.copyfileobj(file_handle,filelist_backup)
-            os.remove("filelist.txt")
-            filelist_new=list()
-            for dirpath, dirnames, filenames in os.walk(tempdir):
-                for filename in filenames:
-                    filepath=os.path.normpath(os.path.join(dirpath,
-                                              filename))
-                    relpath_start=os.path.join(tempdir)
-                    filepath=os.path.relpath(filepath,start=relpath_start)
-                    filepath+="\n"
-                    filelist_new.append(filepath)
-            print("new filelist")
-            pprint.pprint(filelist_new)
-            print("Writing new filelist to filelist.txt")
-            with open("filelist.txt", "w") as file_handle:
-                file_handle.writelines(filelist_new)
-            print("Copy tempdir contents to current directory")
-            copy_glob(os.path.join(tempdir,"*"),".")
-            print("Remove backup filelist")
-            filelist_backup.close()
-            os.remove(filelist_backup.name)
-        except Exception:
-            raise
-        finally:
-            print("Removing tempdir")
-            shutil.rmtree(tempdir)
+        print("Moving downloads to", tempdir)
+        move_glob(os.path.join(self.updatedir,"*"), tempdir)
+        filelist_backup=tempfile.NamedTemporaryFile(delete=False)
+        with open(self.file_list, "r+b") as file_handle:
+            shutil.copyfileobj(file_handle,filelist_backup)
+        filelist_backup.close()
+        os.remove(self.file_list)
+        filelist_new=list()
+        for dirpath, dirnames, filenames in os.walk(tempdir):
+            for filename in filenames:
+                filepath=os.path.normpath(os.path.join(dirpath,
+                                          filename))
+                relpath_start=os.path.join(tempdir)
+                filepath=os.path.relpath(filepath,start=relpath_start)
+                filepath+="\n"
+                filelist_new.append(filepath)
+        print("new filelist")
+        pprint.pprint(filelist_new)
+        print("Writing new filelist to filelist.txt")
+        with open(self.file_list, "w") as file_handle:
+            file_handle.writelines(filelist_new)
+        print("Copy tempdir contents to current directory")
+        copy_glob(os.path.join(tempdir,"*"),".")
+        print("Remove backup filelist")
+        os.remove(filelist_backup.name)
+        print("Removing tempdir")
+        shutil.rmtree(tempdir)
 
     def update_code(self):
         """Updates the code if necessary"""
