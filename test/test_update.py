@@ -11,8 +11,8 @@ import shutil
 @pytest.fixture(scope='function')
 def fixture_update_dir(request):
     def teardown():
-        if os.path.isfile('version.txt.old'):
-            os.remove('version.txt.old')
+        if os.path.isfile('version_history.log'):
+            os.remove('version_history.log')
         if os.path.isfile('version.txt'):
             os.remove('version.txt')
         if os.path.isdir("extradir"):

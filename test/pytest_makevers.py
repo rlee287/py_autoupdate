@@ -5,8 +5,8 @@ import pytest
 def fixture_update_dir(request):
     def create_update_dir(version="0.0.1"):
         def teardown():
-            if os.path.isfile('version.txt.old'):
-                os.remove('version.txt.old')
+            if os.path.isfile('version_history.log'):
+                os.remove('version_history.log')
             if os.path.isfile('version.txt'):
                 os.remove('version.txt')
         request.addfinalizer(teardown)
