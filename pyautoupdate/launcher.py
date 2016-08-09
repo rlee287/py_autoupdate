@@ -1,6 +1,7 @@
 from __future__ import absolute_import, print_function
 
 from datetime import datetime
+from logging import DEBUG, INFO, WARNING, ERROR, CRITICAL
 import multiprocessing
 import os
 import shutil
@@ -64,8 +65,10 @@ class Launcher:
 
     def __init__(self, filepath, url, newfiles='project.zip',
                  updatedir='downloads',
+                 log_level=INFO,
                  *args, **kwargs):
-        print("Initializing launcher")
+        self.log=multiprocessing.log_to_stderr()
+        self.log.info("Initializing launcher")
         # Check that version.txt
         with warnings.catch_warnings():
             invalid_log=False
@@ -81,15 +84,15 @@ class Launcher:
                 except PEP440Warning:
                     invalid_log=True
             if invalid_log:
-                print("{0} does not have a valid version number!"
-                      .format(self.version_doc))
-                print("Please check that {0} is not being used!"
-                      .format(self.version_doc))
-                print("It will be overwritten by this program!")
-                print("Otherwise the {0} is corrupted."
-                      .format(self.version_doc))
-                print("Please use the logfile at {0} to restore it."
-                      .format(self.version_doc))
+                self.log.warning("{0} does not have a valid version number!"
+                                 .format(self.version_doc))
+                self.log.warning("Please check that {0} is not being used!"
+                                 .format(self.version_doc))
+                self.log.warning("It will be overwritten by this program!")
+                self.log.warning("Otherwise the {0} is corrupted."
+                                 .format(self.version_doc))
+                self.log.warning("Please use the logfile at {0} to restore it."
+                                 .format(self.version_doc))
                 warnings.warn("{0} is corrupted!".format(self.version_doc),
                                                          CorruptedFileWarning,
                                                          stacklevel=2)
@@ -101,11 +104,13 @@ class Launcher:
                 if version!="\n" and len(version)>0:
                     has_match=re.match(log_syntax,version)
                     if has_match is None:
-                        print("Log file at {0} is corrupted!"
-                              .format(self.version_log))
-                        print("Please check that {0} is not being used!"
-                              .format(self.version_log))
-                        print("It will be overwritten by this program!")
+                        self.log.warning("Log file at {0} is corrupted!"
+                                         .format(self.version_log))
+                        self.log.warning("Please check that {0} is "
+                                         "not being used!"
+                                         .format(self.version_log))
+                        self.log.warning("It will be overwritten "
+                                         "by this program!")
                         warnings.warn("{0} is corrupted!"
                                       .format(self.version_log),
                                       CorruptedFileWarning,
@@ -291,29 +296,30 @@ class Launcher:
             for line in file_handle:
                 file_rm=os.path.normpath(os.path.join(".",line))
                 if not os.path.isfile(file_rm):
-                    print("{0} contains the invalid filepath {1}."
-                          .format(self.file_list,file_rm))
-                    print("Please check that {0} is not being used!"
-                          .format(self.file_list))
-                    print("Otherwise the {0} is corrupted."
-                          .format(self.file_list))
-                    print("Updates will fail until this is restored.")
+                    self.log.error("{0} contains the invalid filepath {1}."
+                                   .format(self.file_list,file_rm))
+                    self.log.error("Please check that {0} is not being used!"
+                                   .format(self.file_list))
+                    self.log.error("Otherwise the {0} is corrupted."
+                                   .format(self.file_list))
+                    self.log.error("Updates will fail until this is restored.")
                     warnings.warn("{0} is corrupted!"
                                   .format(self.version_log),
                                   CorruptedFileWarning,
                                   stacklevel=2)
                 if file_rm.split(os.path.sep)[0]!="downloads":
-                    print("Removing",file_rm)
+                    self.log.debug("Removing {0}",file_rm)
                     os.remove(file_rm)
                     file_rm_dir=os.path.dirname(file_rm)
                     if os.path.isdir(file_rm_dir):
                         try:
                             os.rmdir(file_rm_dir)
-                            print("Removing",file_rm_dir)
+                            self.log.debug("Removing directory {0}",
+                                           file_rm_dir)
                         except OSError:
                             pass #Directory is not empty yet
         tempdir=tempfile.mkdtemp()
-        print("Moving downloads to", tempdir)
+        self.log.debug("Moving downloads to {0}", tempdir)
         move_glob(os.path.join(self.updatedir,"*"), tempdir)
         filelist_backup=tempfile.NamedTemporaryFile(delete=False)
         with open(self.file_list, "r+b") as file_handle:
@@ -329,16 +335,16 @@ class Launcher:
                 filepath=os.path.relpath(filepath,start=relpath_start)
                 filepath+="\n"
                 filelist_new.append(filepath)
-        print("new filelist")
-        pprint.pprint(filelist_new)
-        print("Writing new filelist to filelist.txt")
+        self.log.debug("new filelist")
+        self.log.debug(pprint.pformat(filelist_new))
+        self.log.info("Writing new filelist to filelist.txt")
         with open(self.file_list, "w") as file_handle:
             file_handle.writelines(filelist_new)
-        print("Copy tempdir contents to current directory")
+        self.log.info("Copy tempdir contents to current directory")
         copy_glob(os.path.join(tempdir,"*"),".")
-        print("Remove backup filelist")
+        self.log.info("Remove backup filelist")
         os.remove(filelist_backup.name)
-        print("Removing tempdir")
+        self.log.info("Removing tempdir")
         shutil.rmtree(tempdir)
 
     def update_code(self):
@@ -349,4 +355,4 @@ class Launcher:
             self._replace_files()
             self._reset_update_dir()
         else:
-            print("Already up to date")
+            self.log.info("Already up to date")
