@@ -56,7 +56,7 @@ class TestRunProgram:
         filebase = 'test_run_base'
         filecode = filebase+'.py'
         filetext = filebase+'.txt'
-        launch = Launcher(filecode,'Must','project.zip','downloads',INFO,
+        launch = Launcher(filecode,'Must',
                           "extra_args",extra="extra_kwargs")
         excode = launch.run()
         assert excode == 0

@@ -63,10 +63,11 @@ class Launcher:
 
        Please ensure that all ``args`` and ``kwargs`` can be pickled.'''
 
-    def __init__(self, filepath, url, newfiles='project.zip',
+    def __init__(self, filepath, url,
+                 *args, **kwargs,
+                 newfiles='project.zip',
                  updatedir='downloads',
-                 log_level=INFO,
-                 *args, **kwargs):
+                 log_level=INFO):
         self.log=multiprocessing.log_to_stderr()
         self.log.info("Initializing launcher")
         # Check that version.txt
@@ -171,7 +172,7 @@ class Launcher:
 
 ########################### Code execution methods ###########################
 
-    def _call_code(self):
+    def _call_code(self, *args, **kwargs):
         '''Method that executes the wrapped code.
 
            Internally used as target of :py:class:`multiprocessing.Process`
@@ -188,6 +189,8 @@ class Launcher:
         localvar = vars(self).copy()
         localvar["check_new"] = self.check_new
         del localvar["_Launcher__process"]
+        localvar["args"]=args
+        localvar["kwargs"]=kwargs
         exec(code, dict(), localvar)
 
     def run(self, background=False):
