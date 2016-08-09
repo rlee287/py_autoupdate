@@ -3,6 +3,7 @@ from __future__ import absolute_import, print_function
 import os
 import time
 import pytest
+from logging import INFO
 from ..pyautoupdate.launcher import Launcher
 from ..pyautoupdate.exceptions import ProcessRunningException
 
@@ -55,7 +56,8 @@ class TestRunProgram:
         filebase = 'test_run_base'
         filecode = filebase+'.py'
         filetext = filebase+'.txt'
-        launch = Launcher(filecode,'Must')
+        launch = Launcher(filecode,'Must','project.zip','downloads',INFO
+                          "extra_args",extra="extra_kwargs")
         excode = launch.run()
         assert excode == 0
         with open(filetext,mode="r") as number_file:
