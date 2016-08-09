@@ -134,7 +134,9 @@ class Launcher:
         self.kwargs = kwargs
         self.oldcwd=os.getcwd()
         self.cwd=os.path.abspath(os.path.join(".",self.filepath))
-        self.__process = multiprocessing.Process(target=self._call_code)
+        self.__process = multiprocessing.Process(target=self._call_code,
+                                                 args=self.args,
+                                                 kwargs=self.kwargs)
 
     @property
     def version_doc(self):
@@ -220,7 +222,9 @@ class Launcher:
                 # Reinitialize the process instance
                 self.__process = None
                 self.__process = multiprocessing.Process(target=
-                                                         self._call_code)
+                                                         self._call_code,
+                                                         args=self.args,
+                                                         kwargs=self.kwargs)
                 # Recursion, since this will reset @property properties
                 self.run(background)
             else:
