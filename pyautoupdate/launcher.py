@@ -64,11 +64,10 @@ class Launcher:
        Please ensure that all ``args`` and ``kwargs`` can be pickled.'''
 
     def __init__(self, filepath, url,
-                 *args,
                  newfiles='project.zip',
                  updatedir='downloads',
                  log_level=INFO,
-                 **kwargs):
+                 *args,**kwargs):
         self.log=multiprocessing.log_to_stderr()
         self.log.info("Initializing launcher")
         # Check that version.txt
