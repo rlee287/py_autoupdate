@@ -91,12 +91,12 @@ class Launcher:
                 print("Please use the logfile at {0} to restore it."
                       .format(self.version_doc))
                 warnings.warn("{0} is corrupted!".format(self.version_doc),
-                                                         CorruptedFileWarning,
-                                                         stacklevel=2)
+                              CorruptedFileWarning,
+                              stacklevel=2)
         if os.path.isfile(self.version_log):
             with open(self.version_log,"r") as log_file:
                 log_syntax=re.compile(
-                              r"Old .+?\|(New .+?|Up to date)\|Time .+?")
+                    r"Old .+?\|(New .+?|Up to date)\|Time .+?")
                 version=log_file.read()
                 if version!="\n" and len(version)>0:
                     has_match=re.match(log_syntax,version)
@@ -324,7 +324,7 @@ class Launcher:
         for dirpath, dirnames, filenames in os.walk(tempdir):
             for filename in filenames:
                 filepath=os.path.normpath(os.path.join(dirpath,
-                                          filename))
+                                                       filename))
                 relpath_start=os.path.join(tempdir)
                 filepath=os.path.relpath(filepath,start=relpath_start)
                 filepath+="\n"
