@@ -88,7 +88,7 @@ class TestRunProgram:
             error_to_raise=IOError
         with pytest.raises(error_to_raise):
             launch = Launcher('does_not_exist_404.py','(in)sanity')
-            excode = launch.run()
+            launch.run()
 
     def test_background(self):
         """Test that runs code in the background
@@ -105,7 +105,7 @@ class TestRunProgram:
         filebase = 'test_run_base'
         fileback = filebase+'_back'+'.py'
         launch = Launcher(fileback,'URL')
-        process_handle = launch.run(True)
+        launch.run(True)
         time.sleep(1)
         assert launch.process_is_alive
         time.sleep(3)
