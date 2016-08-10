@@ -42,7 +42,7 @@ class TestRunProgram:
                  'print("start")\n'+\
                  'time.sleep(2)\n'+\
                  'print("end")'
-        codelog='log.info("This should be an information warning")\n'
+        codelog='log.error("This should be an error")\n'
         for name,code in zip([filecode, filepid, filefail,
                               fileback, filelog],
                              [codebasic, codepid, codefail,
@@ -96,7 +96,8 @@ class TestRunProgram:
     def test_run_log(self):
         """Test that attempts to access attributes from the parent object"""
         filelog = 'test_run_base_log.py'
-        launch = Launcher(filelog,'logs made out of wood!')
+        launch = Launcher(filelog,'logs made out of wood!',
+                          'project.zip','downloads',INFO)
         excode = launch.run()
         assert excode==0
 
