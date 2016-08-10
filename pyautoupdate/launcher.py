@@ -191,6 +191,7 @@ class Launcher:
         del localvar["_Launcher__process"]
         localvar["args"]=args
         localvar["kwargs"]=kwargs
+        localvar["log"]=multiprocessing.log_to_stderr()
         exec(code, dict(), localvar)
 
     def run(self, background=False):
@@ -213,7 +214,10 @@ class Launcher:
             raise error_to_raise("No file at {0}".format(self.filepath))
         if self.process_pid is None:
             # Process has not run yet
+            _backup_log=self.log
+            del self.log
             self.__process.start()
+            self.log=_backup_log
             if not background:
                 self.process_join()
                 #Exit code can be used by program that calls the launcher
