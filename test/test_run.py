@@ -19,6 +19,7 @@ class TestRunProgram:
         filepid=filebase+'_pid'+'.py'
         filefail=filebase+'_fail'+'.py'
         fileback=filebase+'_back'+'.py'
+        filelog=filebase+'_log'+'.py'
         codebasic='with open("'+filetext+'", mode="w") as number_file:\n'+\
         '    l=[i**2 for i in range(20)]\n'+\
         '    number_file.write(str(l))\n'+\
@@ -41,12 +42,16 @@ class TestRunProgram:
                  'print("start")\n'+\
                  'time.sleep(2)\n'+\
                  'print("end")'
-        for name,code in zip([filecode, filepid, filefail, fileback],
-                             [codebasic, codepid, codefail, codeback]):
+        codelog='log.info("This should be an information warning")\n'
+        for name,code in zip([filecode, filepid, filefail,
+                              fileback, filelog],
+                             [codebasic, codepid, codefail,
+                              codeback, codelog]):
             with open(name, mode='w') as code_file:
                 code_file.write(code)
         def teardown():
-            for name in [filecode, filetext, filepid, filefail, fileback]:
+            for name in [filecode, filetext, filepid,
+                         filefail, fileback, filelog]:
                 os.remove(name)
         request.addfinalizer(teardown)
         return self.create_test_file
@@ -66,16 +71,14 @@ class TestRunProgram:
 
     def test_run_pid(self,create_test_file):
         """Test that attempts to access attributes from the parent object"""
-        filebase = 'test_run_base_pid'
-        filecode = filebase+'.py'
+        filecode = 'test_run_base_pid.py'
         launch = Launcher(filecode,'have')
         excode = launch.run()
         assert excode==0
 
     def test_run_fail(self,create_test_file):
         """Test that runs errored code and checks exit status"""
-        filebase = 'test_run_base_fail'
-        filecode = filebase+'.py'
+        filecode = 'test_run_base_fail.py'
         launch = Launcher(filecode,'URL')
         excode = launch.run()
         assert excode != 0
@@ -90,6 +93,14 @@ class TestRunProgram:
             launch = Launcher('does_not_exist_404.py','(in)sanity')
             launch.run()
 
+    def test_run_log(self):
+        """Test that attempts to access attributes from the parent object"""
+        filelog = 'test_run_base_log.py'
+        launch = Launcher(filelog,'logs made out of wood!')
+        excode = launch.run()
+        assert excode==0
+
+
     def test_background(self):
         """Test that runs code in the background
         ASCII art depicting timeline shown below:
@@ -102,8 +113,7 @@ class TestRunProgram:
                                  |Process|             |Checks
 
         """
-        filebase = 'test_run_base'
-        fileback = filebase+'_back'+'.py'
+        fileback = 'test_run_base_back.py'
         launch = Launcher(fileback,'URL')
         launch.run(True)
         time.sleep(1)
@@ -124,9 +134,8 @@ class TestRunProgram:
                                  |Process|             |Checks
 
         """
-        filebase = 'test_run_base'
-        fileback = filebase+'_back'+'.py'
-        launch = Launcher(fileback,'URL')
+        filetwice = 'test_run_base_back.py'
+        launch = Launcher(filetwice,'URL')
         launch.run(True)
         time.sleep(1)
         #Process is still alive
