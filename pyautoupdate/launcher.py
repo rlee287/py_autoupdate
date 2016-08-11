@@ -289,7 +289,7 @@ class Launcher:
             #Remove old contents
             shutil.rmtree(self.updatedir)
         #Make new directory (one shouldn't exist)
-        os.makedirs(self.updatedir)
+        os.mkdir(self.updatedir)
 
     def _get_new(self):
         '''Retrieves the new archive and extracts it to the downloads
