@@ -138,6 +138,7 @@ class Launcher:
         self.__process = multiprocessing.Process(target=self._call_code,
                                                  args=self.args,
                                                  kwargs=self.kwargs)
+        self.log.info("Launcher initialized")
 
     @property
     def version_doc(self):
@@ -206,6 +207,7 @@ class Launcher:
            :return: the exit code of the executed code or the Process
            :rtype: :class:`int` or :class:`multiprocessing.Process`'''
         #Find the right error to raise depending on python version
+        self.log.info("Starting code")
         try:
             error_to_raise=FileNotFoundError
         except NameError:
@@ -218,6 +220,7 @@ class Launcher:
             del self.log
             self.__process.start()
             self.log=_backup_log
+            self.log.info("Process started")
             if not background:
                 self.process_join()
                 #Exit code can be used by program that calls the launcher
