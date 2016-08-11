@@ -166,9 +166,11 @@ class Launcher:
         return self.__process.exitcode
 
     def process_join(self,timeout=None):
+        self.log.info("Joining process")
         self.__process.join(timeout)
 
     def process_terminate(self):
+        self.log.warning("Terminating Process")
         self.__process.terminate()
 
 ########################### Code execution methods ###########################
@@ -254,6 +256,7 @@ class Launcher:
               to compare versions.
 
               Any versioning scheme described in :pep:`440` can be used.'''
+        self.log.info("Checking for updates")
         versionurl=self.url+self.version_doc
         #get new files
         get_new=requests.get(versionurl, allow_redirects=True)
@@ -291,6 +294,7 @@ class Launcher:
     def _get_new(self):
         '''Retrieves the new archive and extracts it to the downloads
            directory.'''
+        self.log.info("Retrieving new version")
         if os.path.isfile(self.newfiles):
             os.remove(self.newfiles)
         newurl = self.url+self.newfiles
