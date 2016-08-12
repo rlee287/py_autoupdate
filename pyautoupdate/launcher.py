@@ -198,8 +198,9 @@ class Launcher:
         localvar["args"]=args
         localvar["kwargs"]=kwargs
         localvar["log"]=multiprocessing.log_to_stderr()
-        self.log.debug("Starting process with the following localvar:\n"+\
-                       pprint.pformat(localvar))
+        localvar["log"].debug("Starting process with"
+                              " the following local variables:\n"+\
+                              pprint.pformat(localvar))
         exec(code, dict(), localvar)
 
     def run(self, background=False):
