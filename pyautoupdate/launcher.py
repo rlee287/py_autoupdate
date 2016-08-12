@@ -69,6 +69,7 @@ class Launcher:
                  log_level=INFO,
                  *args,**kwargs):
         self.log=multiprocessing.log_to_stderr()
+        self.log.setlevel(log_level)
         self.log.info("Initializing launcher")
         # Check that version.txt
         with warnings.catch_warnings():
@@ -195,6 +196,8 @@ class Launcher:
         localvar["args"]=args
         localvar["kwargs"]=kwargs
         localvar["log"]=multiprocessing.log_to_stderr()
+        self.log.debug("Starting process with the following localvar:\n"
+                       pprint.pformat(localvar))
         exec(code, dict(), localvar)
 
     def run(self, background=False):
@@ -285,6 +288,7 @@ class Launcher:
         '''Resets the update directory to its default state.
 
            Also creates a new update directory if it doesn't exist.'''
+        self.log.debug("Resetting update directory")
         if os.path.isdir(self.updatedir):
             #Remove old contents
             shutil.rmtree(self.updatedir)
@@ -310,6 +314,7 @@ class Launcher:
 
     def _replace_files(self):
         """Replaces the existing files with the downloaded files."""
+        self.log.info("Replacing files")
         with open(self.file_list, "r") as file_handle:
             for line in file_handle:
                 file_rm=os.path.normpath(os.path.join(".",line))
@@ -339,6 +344,7 @@ class Launcher:
         tempdir=tempfile.mkdtemp()
         self.log.debug("Moving downloads to {0}", tempdir)
         move_glob(os.path.join(self.updatedir,"*"), tempdir)
+        self.log.debug("Backing up current filelist")
         filelist_backup=tempfile.NamedTemporaryFile(delete=False)
         with open(self.file_list, "r+b") as file_handle:
             shutil.copyfileobj(file_handle,filelist_backup)
@@ -353,7 +359,7 @@ class Launcher:
                 filepath=os.path.relpath(filepath,start=relpath_start)
                 filepath+="\n"
                 filelist_new.append(filepath)
-        self.log.debug("new filelist")
+        self.log.debug("New filelist")
         self.log.debug(pprint.pformat(filelist_new))
         self.log.info("Writing new filelist to filelist.txt")
         with open(self.file_list, "w") as file_handle:
@@ -368,9 +374,11 @@ class Launcher:
     def update_code(self):
         """Updates the code if necessary"""
         if self.check_new():
+            self.log.info("Beginning update process")
             self._reset_update_dir()
             self._get_new()
             self._replace_files()
             self._reset_update_dir()
+            self.log.info("Update successful")
         else:
             self.log.info("Already up to date")
