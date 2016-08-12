@@ -44,6 +44,8 @@ class Launcher:
     +-------------+-------------------------------------------------+
     |``updatedir``|Directory into which the new archive is extracted|
     +-------------+-------------------------------------------------+
+    |``log``      |Logger for Pyautoupdate and for the executed code|
+    +-------------+-------------------------------------------------+
     |``newfiles`` |Name of the archive containing the new files     |
     +-------------+-------------------------------------------------+
     |``update``   |:class:`multiprocessing.Event` that can be set to|
@@ -69,7 +71,7 @@ class Launcher:
                  log_level=INFO,
                  *args,**kwargs):
         self.log=multiprocessing.log_to_stderr()
-        self.log.setlevel(log_level)
+        self.log.setLevel(log_level)
         self.log.info("Initializing launcher")
         # Check that version.txt
         with warnings.catch_warnings():
@@ -196,7 +198,7 @@ class Launcher:
         localvar["args"]=args
         localvar["kwargs"]=kwargs
         localvar["log"]=multiprocessing.log_to_stderr()
-        self.log.debug("Starting process with the following localvar:\n"
+        self.log.debug("Starting process with the following localvar:\n"+\
                        pprint.pformat(localvar))
         exec(code, dict(), localvar)
 
