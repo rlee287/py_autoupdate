@@ -19,3 +19,4 @@ def test_check_vers_noupdate(fixture_update_dir):
     with open("version_history.log","r") as log_handle:
         log=log_handle.read()
     assert "Up to date" in log
+    del launch

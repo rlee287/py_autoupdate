@@ -15,6 +15,8 @@ def test_check_urlslash():
     launch2 = Launcher('why do I need to do this',
                        r'http://rlee287.github.io/pyautoupdate/testing')
     assert launch.url == launch2.url
+    del launch
+    del launch2
 
 def test_check_emptyfilepath():
     """Check that error is raised with empty file"""
