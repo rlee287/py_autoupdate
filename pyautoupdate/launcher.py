@@ -151,6 +151,7 @@ class Launcher:
         return version_valid
 
     def version_log_validator(self):
+        valid_log=True
         if os.path.isfile(self.version_log):
             with open(self.version_log,"r") as log_file:
                 log_syntax=re.compile(
@@ -158,7 +159,8 @@ class Launcher:
                 version=log_file.read()
                 if version!="\n" and len(version)>0:
                     has_match=re.match(log_syntax,version)
-        return bool(has_match)
+                    valid_log=bool(has_match)
+        return bool(valid_log)
 
 ######################### Process attribute getters  #########################
 
