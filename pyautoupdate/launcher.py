@@ -70,8 +70,11 @@ class Launcher:
                  updatedir='downloads',
                  log_level=INFO,
                  *args,**kwargs):
-        self.log=multiprocessing.log_to_stderr()
+        self.log=multiprocessing.get_logger()
         self.log.setLevel(log_level)
+        if self.log.hasHandlers:
+            # Create handler to sys.stderr
+            multiprocessing.log_to_stderr()
         self.log.info("Initializing launcher")
         # Check that version.txt
         with warnings.catch_warnings():
