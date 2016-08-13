@@ -4,7 +4,6 @@
 ### CODE USED IN COMPLIANCE WITH https://docs.python.org/3/license.html ###
 ###########################################################################
 
-import genericpath
 
 # Return the longest common sub-path of the sequence of paths given as input.
 # The paths are not normalized before comparing them (this is the
@@ -43,4 +42,3 @@ def commonpath(paths):
 
     prefix = sep if isabs else sep[:0]
     return prefix + sep.join(common)
-

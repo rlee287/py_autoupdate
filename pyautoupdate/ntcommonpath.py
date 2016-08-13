@@ -4,7 +4,6 @@
 ### CODE USED IN COMPLIANCE WITH https://docs.python.org/3/license.html ###
 ###########################################################################
 
-import genericpath
 from ntpath import splitdrive
 
 # Return the longest common sub-path of the sequence of paths given as input.
@@ -63,4 +62,3 @@ def commonpath(paths):
 
     prefix = drive + sep if isabs else drive
     return prefix + sep.join(common)
-

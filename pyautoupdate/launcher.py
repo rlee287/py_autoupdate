@@ -1,6 +1,7 @@
 from __future__ import absolute_import, print_function
 
 from datetime import datetime
+from logging import WARNING
 import multiprocessing
 import os
 import shutil
@@ -50,6 +51,8 @@ class Launcher:
     +-------------+-------------------------------------------------+
     |``pid``      |PID of parent process that spawns the code       |
     +-------------+-------------------------------------------------+
+    |``log``      |Logger for Pyautoupdate and for the executed code|
+    +-------------+-------------------------------------------------+
     |``args``     |``args`` for the spawned code                    |
     +-------------+-------------------------------------------------+
     |``kwargs``   |``kwargs`` for the spawned code                  |
@@ -62,10 +65,17 @@ class Launcher:
 
        Please ensure that all ``args`` and ``kwargs`` can be pickled.'''
 
-    def __init__(self, filepath, url, newfiles='project.zip',
+    def __init__(self, filepath, url,
+                 newfiles='project.zip',
                  updatedir='downloads',
-                 *args, **kwargs):
-        print("Initializing launcher")
+                 log_level=WARNING,
+                 *args,**kwargs):
+        self.log=multiprocessing.get_logger()
+        self.log.setLevel(log_level)
+        if len(self.log.handlers)==0:
+            # Create handler to sys.stderr
+            multiprocessing.log_to_stderr()
+        self.log.info("Initializing launcher")
         # Check that version.txt
         with warnings.catch_warnings():
             invalid_log=False
@@ -81,15 +91,12 @@ class Launcher:
                 except PEP440Warning:
                     invalid_log=True
             if invalid_log:
-                print("{0} does not have a valid version number!"
-                      .format(self.version_doc))
-                print("Please check that {0} is not being used!"
-                      .format(self.version_doc))
-                print("It will be overwritten by this program!")
-                print("Otherwise the {0} is corrupted."
-                      .format(self.version_doc))
-                print("Please use the logfile at {0} to restore it."
-                      .format(self.version_doc))
+                self.log.warning("{0} does not have a valid version number!\n"
+                                 "Please check that {0} is not being used!\n"
+                                 "It will be overwritten by this program!\n"
+                                 "If the {0} is corrupted,"
+                                 "Please use the logfile at {0} to restore it."
+                                 ,self.version_doc)
                 warnings.warn("{0} is corrupted!".format(self.version_doc),
                               CorruptedFileWarning,
                               stacklevel=2)
@@ -101,11 +108,11 @@ class Launcher:
                 if version!="\n" and len(version)>0:
                     has_match=re.match(log_syntax,version)
                     if has_match is None:
-                        print("Log file at {0} is corrupted!"
-                              .format(self.version_log))
-                        print("Please check that {0} is not being used!"
-                              .format(self.version_log))
-                        print("It will be overwritten by this program!")
+                        self.log.warning("Log file at {0} is corrupted!\n"
+                                         "Please check that {0} is "
+                                         "not being used!\n"
+                                         "It will be overwritten "
+                                         "by this program!",self.version_log)
                         warnings.warn("{0} is corrupted!"
                                       .format(self.version_log),
                                       CorruptedFileWarning,
@@ -127,7 +134,10 @@ class Launcher:
         self.pid = os.getpid()
         self.args = args
         self.kwargs = kwargs
-        self.__process = multiprocessing.Process(target=self._call_code)
+        self.__process = multiprocessing.Process(target=self._call_code,
+                                                 args=self.args,
+                                                 kwargs=self.kwargs)
+        self.log.info("Launcher initialized")
 
     @property
     def version_doc(self):
@@ -155,14 +165,16 @@ class Launcher:
         return self.__process.exitcode
 
     def process_join(self,timeout=None):
+        self.log.info("Joining process")
         self.__process.join(timeout)
 
     def process_terminate(self):
+        self.log.warning("Terminating Process")
         self.__process.terminate()
 
 ########################### Code execution methods ###########################
 
-    def _call_code(self):
+    def _call_code(self, *args, **kwargs):
         '''Method that executes the wrapped code.
 
            Internally used as target of :py:class:`multiprocessing.Process`
@@ -179,6 +191,12 @@ class Launcher:
         localvar = vars(self).copy()
         localvar["check_new"] = self.check_new
         del localvar["_Launcher__process"]
+        localvar["args"]=args
+        localvar["kwargs"]=kwargs
+        localvar["log"]=multiprocessing.get_logger()
+        localvar["log"].debug("Starting process with"
+                              " the following local variables:\n"+\
+                              pprint.pformat(localvar))
         exec(code, dict(), localvar)
 
     def run(self, background=False):
@@ -193,6 +211,7 @@ class Launcher:
            :return: the exit code of the executed code or the Process
            :rtype: :class:`int` or :class:`multiprocessing.Process`'''
         #Find the right error to raise depending on python version
+        self.log.info("Starting code")
         try:
             error_to_raise=FileNotFoundError
         except NameError:
@@ -201,7 +220,11 @@ class Launcher:
             raise error_to_raise("No file at {0}".format(self.filepath))
         if self.process_pid is None:
             # Process has not run yet
+            _backup_log=self.log
+            del self.log
             self.__process.start()
+            self.log=_backup_log
+            self.log.info("Process started")
             if not background:
                 self.process_join()
                 #Exit code can be used by program that calls the launcher
@@ -213,7 +236,9 @@ class Launcher:
                 # Reinitialize the process instance
                 self.__process = None
                 self.__process = multiprocessing.Process(target=
-                                                         self._call_code)
+                                                         self._call_code,
+                                                         args=self.args,
+                                                         kwargs=self.kwargs)
                 # Recursion, since this will reset @property properties
                 self.run(background)
             else:
@@ -233,6 +258,7 @@ class Launcher:
               to compare versions.
 
               Any versioning scheme described in :pep:`440` can be used.'''
+        self.log.info("Checking for updates")
         versionurl=self.url+self.version_doc
         #get new files
         get_new=requests.get(versionurl, allow_redirects=True)
@@ -261,6 +287,7 @@ class Launcher:
         '''Resets the update directory to its default state.
 
            Also creates a new update directory if it doesn't exist.'''
+        self.log.debug("Resetting update directory")
         if os.path.isdir(self.updatedir):
             #Remove old contents
             shutil.rmtree(self.updatedir)
@@ -270,6 +297,7 @@ class Launcher:
     def _get_new(self):
         '''Retrieves the new archive and extracts it to the downloads
            directory.'''
+        self.log.info("Retrieving new version")
         if os.path.isfile(self.newfiles):
             os.remove(self.newfiles)
         newurl = self.url+self.newfiles
@@ -285,34 +313,36 @@ class Launcher:
 
     def _replace_files(self):
         """Replaces the existing files with the downloaded files."""
+        self.log.info("Replacing files")
         with open(self.file_list, "r") as file_handle:
             for line in file_handle:
                 file_rm=os.path.normpath(os.path.join(".",line))
                 if not os.path.isfile(file_rm):
-                    print("{0} contains the invalid filepath {1}."
-                          .format(self.file_list,file_rm))
-                    print("Please check that {0} is not being used!"
-                          .format(self.file_list))
-                    print("Otherwise the {0} is corrupted."
-                          .format(self.file_list))
-                    print("Updates will fail until this is restored.")
-                    warnings.warn("{0} is corrupted!"
-                                  .format(self.version_log),
+                    self.log.error("{0} contains the invalid filepath {1}.\n"
+                                   "Please check that {0} is not being used!\n"
+                                   "Otherwise the {0} is corrupted.\n"
+                                   "Updates will fail until this is restored."
+                                   ,self.file_list,file_rm)
+                    warnings.warn("{0} is corrupted and contains the "
+                                  "invalid path {1}!"
+                                  .format(self.file_list,file_rm),
                                   CorruptedFileWarning,
                                   stacklevel=2)
                 if file_rm.split(os.path.sep)[0]!="downloads":
-                    print("Removing",file_rm)
+                    self.log.debug("Removing {0}",file_rm)
                     os.remove(file_rm)
                     file_rm_dir=os.path.dirname(file_rm)
                     if os.path.isdir(file_rm_dir):
                         try:
                             os.rmdir(file_rm_dir)
-                            print("Removing",file_rm_dir)
+                            self.log.debug("Removing directory {0}",
+                                           file_rm_dir)
                         except OSError:
                             pass #Directory is not empty yet
         tempdir=tempfile.mkdtemp()
-        print("Moving downloads to", tempdir)
+        self.log.debug("Moving downloads to {0}", tempdir)
         move_glob(os.path.join(self.updatedir,"*"), tempdir)
+        self.log.debug("Backing up current filelist")
         filelist_backup=tempfile.NamedTemporaryFile(delete=False)
         with open(self.file_list, "r+b") as file_handle:
             shutil.copyfileobj(file_handle,filelist_backup)
@@ -327,24 +357,26 @@ class Launcher:
                 filepath=os.path.relpath(filepath,start=relpath_start)
                 filepath+="\n"
                 filelist_new.append(filepath)
-        print("new filelist")
-        pprint.pprint(filelist_new)
-        print("Writing new filelist to filelist.txt")
+        self.log.debug("New filelist")
+        self.log.debug(pprint.pformat(filelist_new))
+        self.log.info("Writing new filelist to filelist.txt")
         with open(self.file_list, "w") as file_handle:
             file_handle.writelines(filelist_new)
-        print("Copy tempdir contents to current directory")
+        self.log.info("Copy tempdir contents to current directory")
         copy_glob(os.path.join(tempdir,"*"),".")
-        print("Remove backup filelist")
+        self.log.info("Remove backup filelist")
         os.remove(filelist_backup.name)
-        print("Removing tempdir")
+        self.log.info("Removing tempdir")
         shutil.rmtree(tempdir)
 
     def update_code(self):
         """Updates the code if necessary"""
         if self.check_new():
+            self.log.info("Beginning update process")
             self._reset_update_dir()
             self._get_new()
             self._replace_files()
             self._reset_update_dir()
+            self.log.info("Update successful")
         else:
-            print("Already up to date")
+            self.log.info("Already up to date")
