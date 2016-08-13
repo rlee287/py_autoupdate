@@ -72,7 +72,7 @@ class Launcher:
                  *args,**kwargs):
         self.log=multiprocessing.get_logger()
         self.log.setLevel(log_level)
-        if self.log.hasHandlers:
+        if len(self.log.handlers)==0:
             # Create handler to sys.stderr
             multiprocessing.log_to_stderr()
         self.log.info("Initializing launcher")
@@ -200,7 +200,7 @@ class Launcher:
         del localvar["_Launcher__process"]
         localvar["args"]=args
         localvar["kwargs"]=kwargs
-        localvar["log"]=multiprocessing.log_to_stderr()
+        localvar["log"]=multiprocessing.get_logger()
         localvar["log"].debug("Starting process with"
                               " the following local variables:\n"+\
                               pprint.pformat(localvar))
