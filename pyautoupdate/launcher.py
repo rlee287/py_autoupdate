@@ -1,7 +1,7 @@
 from __future__ import absolute_import, print_function
 
 from datetime import datetime
-from logging import DEBUG, INFO, WARNING, ERROR, CRITICAL
+from logging import WARNING
 import multiprocessing
 import os
 import shutil
@@ -44,14 +44,14 @@ class Launcher:
     +-------------+-------------------------------------------------+
     |``updatedir``|Directory into which the new archive is extracted|
     +-------------+-------------------------------------------------+
-    |``log``      |Logger for Pyautoupdate and for the executed code|
-    +-------------+-------------------------------------------------+
     |``newfiles`` |Name of the archive containing the new files     |
     +-------------+-------------------------------------------------+
     |``update``   |:class:`multiprocessing.Event` that can be set to|
     |             |signal an update event                           |
     +-------------+-------------------------------------------------+
     |``pid``      |PID of parent process that spawns the code       |
+    +-------------+-------------------------------------------------+
+    |``log``      |Logger for Pyautoupdate and for the executed code|
     +-------------+-------------------------------------------------+
     |``args``     |``args`` for the spawned code                    |
     +-------------+-------------------------------------------------+
@@ -68,7 +68,7 @@ class Launcher:
     def __init__(self, filepath, url,
                  newfiles='project.zip',
                  updatedir='downloads',
-                 log_level=INFO,
+                 log_level=WARNING,
                  *args,**kwargs):
         self.log=multiprocessing.get_logger()
         self.log.setLevel(log_level)
