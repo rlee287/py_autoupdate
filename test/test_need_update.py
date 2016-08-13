@@ -12,8 +12,6 @@ def test_check_need_update(fixture_update_dir):
     package=fixture_update_dir("0.0.1")
     launch = Launcher('blah',
                       r'http://rlee287.github.io/pyautoupdate/testing/')
-    print("launch.oldcwd:", launch.oldcwd)
-    print("os.getcwd:",os.getcwd())
     isnew=launch.check_new()
     assert isnew
     assert os.path.isfile("version.txt")
@@ -21,5 +19,3 @@ def test_check_need_update(fixture_update_dir):
     with open("version_history.log","r") as log_handle:
         log=log_handle.read()
     assert "New" in log
-    # Make sure log can be appended to
-    #launch.check_new()
