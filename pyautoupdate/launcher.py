@@ -71,6 +71,7 @@ class Launcher:
                  log_level=WARNING,
                  *args,**kwargs):
         self.log=multiprocessing.get_logger()
+        #Create handle to self.log only if necessary
         self.log.setLevel(log_level)
         if len(self.log.handlers)==0:
             # Create handler to sys.stderr
@@ -98,13 +99,15 @@ class Launcher:
                           .format(self.version_log),
                           CorruptedFileWarning,
                           stacklevel=2)
-
+        # Check that filepath is not empty
         if len(filepath) != 0:
             self.filepath = filepath
         else:
             raise ValueError("Filepath must not be empty")
+        # Check that URL is specified
         if len(url) == 0:
             raise ValueError("URL must not be empty")
+        # Append slash to end of URL if it is not present
         if url.endswith("/"):
             self.url = url
         else:
@@ -137,6 +140,7 @@ class Launcher:
     def version_doc_validator(self):
         version_valid=True
         with warnings.catch_warnings():
+            # Throw error at PEP440Warning so that it can be caught in except
             warnings.simplefilter("error",category=PEP440Warning)
             if os.path.isfile(self.version_doc):
                 try:
@@ -194,33 +198,35 @@ class Launcher:
 
               End users should never call this directly.
               Please use the :meth:`run` method instead.'''
-        #Open code file
+        # Open code file
         with open(self.filepath, mode='r') as code_file:
             code = code_file.read()
-        #Only attempt to run when file has been opened
         localvar = vars(self).copy()
+        # Manipulate __dict__ attribute to add handle to check_new
         localvar["check_new"] = self.check_new
+        # Remove handle to process
         del localvar["_Launcher__process"]
+        # Pass in args, kwargs, and logger
         localvar["args"]=args
         localvar["kwargs"]=kwargs
+        # multiprocessing.get_logger again since this is not pickleable
         localvar["log"]=multiprocessing.get_logger()
         localvar["log"].debug("Starting process with"
                               " the following local variables:\n"+\
                               pprint.pformat(localvar))
+        # Execute code in file
         exec(code, dict(), localvar)
 
     def run(self, background=False):
         '''Method used to run code.
 
-           If background is ``True``, returns a handle to the Process object.
-
-           Otherwise, it returns the Process's exitcode.
+           If background is ``False``, returns the Process's exitcode.
 
            :param bool background: Whether to run code in background
 
-           :return: the exit code of the executed code or the Process
-           :rtype: :class:`int` or :class:`multiprocessing.Process`'''
-        #Find the right error to raise depending on python version
+           :return: the exit code if background is ``False``
+           :rtype: :class:`int`'''
+        # Find the right error to raise depending on python version
         self.log.info("Starting code")
         try:
             error_to_raise=FileNotFoundError
@@ -270,16 +276,17 @@ class Launcher:
               Any versioning scheme described in :pep:`440` can be used.'''
         self.log.info("Checking for updates")
         versionurl=self.url+self.version_doc
-        #get new files
+        # Get new files
         get_new=requests.get(versionurl, allow_redirects=True)
         get_new.raise_for_status()
         newver=get_new.text
         newver=newver.rstrip("\n")
-        #move to new file only when connection succeeds
+        # Read in old version and compare to new version
         with open(self.version_doc, 'r') as old_version:
             oldver=old_version.read()
             oldver=oldver.rstrip("\n")
         has_new=(parse_version(newver)>parse_version(oldver))
+        # Add entry to the logfile and update version.txt
         if has_new:
             version_to_add="Old {0}|New {1}|Time {2}\n"\
                            .format(oldver,newver,datetime.utcnow())
@@ -299,34 +306,39 @@ class Launcher:
            Also creates a new update directory if it doesn't exist.'''
         self.log.debug("Resetting update directory")
         if os.path.isdir(self.updatedir):
-            #Remove old contents
+            # Remove old contents
             shutil.rmtree(self.updatedir)
-        #Make new directory (one shouldn't exist)
+        # Make new empty directory
+        # shutil.rmtree would have deleted the directory
         os.mkdir(self.updatedir)
 
     def _get_new(self):
         '''Retrieves the new archive and extracts it to the downloads
            directory.'''
         self.log.info("Retrieving new version")
+        # Remove old archive
         if os.path.isfile(self.newfiles):
             os.remove(self.newfiles)
         newurl = self.url+self.newfiles
-        #get new files
+        # Get new files
         http_get = requests.get(newurl, stream=True, allow_redirects=True)
         http_get.raise_for_status()
         with open(self.newfiles, 'wb') as filehandle:
             for chunk in http_get.iter_content(chunk_size=1024*50):
                 if chunk:
                     filehandle.write(chunk)
+        # Unpack archive and remove it after extraction
         unpack_archive(self.newfiles, self.updatedir)
         os.remove(self.newfiles)
 
     def _replace_files(self):
         """Replaces the existing files with the downloaded files."""
         self.log.info("Replacing files")
+        # Read in files from filelist
         with open(self.file_list, "r") as file_handle:
             for line in file_handle:
                 file_rm=os.path.normpath(os.path.join(".",line))
+                # Confirm that each file in filelist exists
                 if not os.path.isfile(file_rm):
                     self.log.error("{0} contains the invalid filepath {1}.\n"
                                    "Please check that {0} is not being used!\n"
@@ -348,7 +360,8 @@ class Launcher:
                             self.log.debug("Removing directory {0}",
                                            file_rm_dir)
                         except OSError:
-                            pass #Directory is not empty yet
+                            # Directory is not empty yet
+                            pass
         tempdir=tempfile.mkdtemp()
         self.log.debug("Moving downloads to {0}", tempdir)
         move_glob(os.path.join(self.updatedir,"*"), tempdir)
