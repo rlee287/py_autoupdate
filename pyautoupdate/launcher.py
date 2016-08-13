@@ -127,8 +127,6 @@ class Launcher:
         self.pid = os.getpid()
         self.args = args
         self.kwargs = kwargs
-        self.oldcwd=os.getcwd()
-        self.cwd=os.path.abspath(os.path.join(".",self.filepath))
         self.__process = multiprocessing.Process(target=self._call_code)
 
     @property
