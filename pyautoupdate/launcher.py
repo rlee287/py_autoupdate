@@ -76,47 +76,28 @@ class Launcher:
             # Create handler to sys.stderr
             multiprocessing.log_to_stderr()
         self.log.info("Initializing launcher")
-        # Check that version.txt
-        with warnings.catch_warnings():
-            invalid_log=False
-            warnings.simplefilter("error",category=PEP440Warning)
-            if os.path.isfile(self.version_doc):
-                try:
-                    with open(self.version_doc,"r") as version_check:
-                        vers=version_check.read()
-                        if len(vers)>0:
-                            vers_obj=parse_version(vers)
-                            if not isinstance(vers_obj,SetuptoolsVersion):
-                                raise PEP440Warning
-                except PEP440Warning:
-                    invalid_log=True
-            if invalid_log:
-                self.log.warning("{0} does not have a valid version number!\n"
-                                 "Please check that {0} is not being used!\n"
-                                 "It will be overwritten by this program!\n"
-                                 "If the {0} is corrupted,"
-                                 "Please use the logfile at {0} to restore it."
-                                 ,self.version_doc)
-                warnings.warn("{0} is corrupted!".format(self.version_doc),
-                              CorruptedFileWarning,
-                              stacklevel=2)
-        if os.path.isfile(self.version_log):
-            with open(self.version_log,"r") as log_file:
-                log_syntax=re.compile(
-                    r"Old .+?\|(New .+?|Up to date)\|Time .+?")
-                version=log_file.read()
-                if version!="\n" and len(version)>0:
-                    has_match=re.match(log_syntax,version)
-                    if has_match is None:
-                        self.log.warning("Log file at {0} is corrupted!\n"
-                                         "Please check that {0} is "
-                                         "not being used!\n"
-                                         "It will be overwritten "
-                                         "by this program!",self.version_log)
-                        warnings.warn("{0} is corrupted!"
-                                      .format(self.version_log),
-                                      CorruptedFileWarning,
-                                      stacklevel=2)
+        # Check that version.txt is valid
+        if not self.version_doc_validator():
+            self.log.warning("{0} does not have a valid version number!\n"
+                             "Please check that {0} is not being used!\n"
+                             "It will be overwritten by this program!\n"
+                             "If the {0} is corrupted,"
+                             "Please use the logfile at {1} to restore it."
+                             ,self.version_doc,self.version_log)
+            warnings.warn("{0} is corrupted!".format(self.version_doc),
+                          CorruptedFileWarning,
+                          stacklevel=2)
+        # Check that version_history.log is valid
+        if not self.version_log_validator():
+            self.log.warning("Log file at {0} is corrupted!\n"
+                             "Please check that {0} is "
+                             "not being used!\n"
+                             "It will be overwritten "
+                             "by this program!",self.version_log)
+            warnings.warn("{0} is corrupted!"
+                          .format(self.version_log),
+                          CorruptedFileWarning,
+                          stacklevel=2)
 
         if len(filepath) != 0:
             self.filepath = filepath
@@ -139,6 +120,8 @@ class Launcher:
                                                  kwargs=self.kwargs)
         self.log.info("Launcher initialized")
 
+####################### Filename getters and validators ######################
+
     @property
     def version_doc(self):
         return "version.txt"
@@ -151,7 +134,34 @@ class Launcher:
     def file_list(self):
         return "filelist.txt"
 
+    def version_doc_validator(self):
+        version_valid=True
+        with warnings.catch_warnings():
+            warnings.simplefilter("error",category=PEP440Warning)
+            if os.path.isfile(self.version_doc):
+                try:
+                    with open(self.version_doc,"r") as version_check:
+                        vers=version_check.read()
+                        if len(vers)>0:
+                            vers_obj=parse_version(vers)
+                            if not isinstance(vers_obj,SetuptoolsVersion):
+                                raise PEP440Warning
+                except PEP440Warning:
+                    version_valid=False
+        return version_valid
+
+    def version_log_validator(self):
+        if os.path.isfile(self.version_log):
+            with open(self.version_log,"r") as log_file:
+                log_syntax=re.compile(
+                    r"Old .+?\|(New .+?|Up to date)\|Time .+?")
+                version=log_file.read()
+                if version!="\n" and len(version)>0:
+                    has_match=re.match(log_syntax,version)
+        return bool(has_match)
+
 ######################### Process attribute getters  #########################
+
     @property
     def process_is_alive(self):
         return self.__process.is_alive()
