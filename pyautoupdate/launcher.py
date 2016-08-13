@@ -91,15 +91,12 @@ class Launcher:
                 except PEP440Warning:
                     invalid_log=True
             if invalid_log:
-                self.log.warning("{0} does not have a valid version number!"
-                                 .format(self.version_doc))
-                self.log.warning("Please check that {0} is not being used!"
-                                 .format(self.version_doc))
-                self.log.warning("It will be overwritten by this program!")
-                self.log.warning("Otherwise the {0} is corrupted."
-                                 .format(self.version_doc))
-                self.log.warning("Please use the logfile at {0} to restore it."
-                                 .format(self.version_doc))
+                self.log.warning("{0} does not have a valid version number!\n"
+                                 "Please check that {0} is not being used!\n"
+                                 "It will be overwritten by this program!\n"
+                                 "If the {0} is corrupted,"
+                                 "Please use the logfile at {0} to restore it."
+                                 ,self.version_doc)
                 warnings.warn("{0} is corrupted!".format(self.version_doc),
                               CorruptedFileWarning,
                               stacklevel=2)
@@ -111,13 +108,11 @@ class Launcher:
                 if version!="\n" and len(version)>0:
                     has_match=re.match(log_syntax,version)
                     if has_match is None:
-                        self.log.warning("Log file at {0} is corrupted!"
-                                         .format(self.version_log))
-                        self.log.warning("Please check that {0} is "
-                                         "not being used!"
-                                         .format(self.version_log))
-                        self.log.warning("It will be overwritten "
-                                         "by this program!")
+                        self.log.warning("Log file at {0} is corrupted!\n"
+                                         "Please check that {0} is "
+                                         "not being used!\n"
+                                         "It will be overwritten "
+                                         "by this program!",self.version_log)
                         warnings.warn("{0} is corrupted!"
                                       .format(self.version_log),
                                       CorruptedFileWarning,
@@ -323,15 +318,14 @@ class Launcher:
             for line in file_handle:
                 file_rm=os.path.normpath(os.path.join(".",line))
                 if not os.path.isfile(file_rm):
-                    self.log.error("{0} contains the invalid filepath {1}."
-                                   .format(self.file_list,file_rm))
-                    self.log.error("Please check that {0} is not being used!"
-                                   .format(self.file_list))
-                    self.log.error("Otherwise the {0} is corrupted."
-                                   .format(self.file_list))
-                    self.log.error("Updates will fail until this is restored.")
-                    warnings.warn("{0} is corrupted!"
-                                  .format(self.version_log),
+                    self.log.error("{0} contains the invalid filepath {1}.\n"
+                                   "Please check that {0} is not being used!\n"
+                                   "Otherwise the {0} is corrupted.\n"
+                                   "Updates will fail until this is restored."
+                                   ,self.file_list,file_rm)
+                    warnings.warn("{0} is corrupted and contains the "
+                                  "invalid path {1}!"
+                                  .format(self.file_list,file_rm),
                                   CorruptedFileWarning,
                                   stacklevel=2)
                 if file_rm.split(os.path.sep)[0]!="downloads":
