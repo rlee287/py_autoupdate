@@ -3,6 +3,7 @@ from __future__ import absolute_import, print_function
 from ..pyautoupdate.launcher import Launcher
 from .pytest_skipif import needinternet
 
+from logging import DEBUG
 import os
 import shutil
 
@@ -41,7 +42,8 @@ def test_check_update(fixture_update_setup):
     """Checks the ability of program to upload new code"""
     assert os.path.isfile("filelist.txt")
     launch = Launcher('extradir/blah.py',
-                      r'http://rlee287.github.io/pyautoupdate/testing/')
+                      r'http://rlee287.github.io/pyautoupdate/testing/',
+                      'project.zip','downloads',DEBUG)
     launch.update_code()
     assert os.path.isfile("extradir/blah.py")
     with open(os.path.abspath("extradir/blah.py"), "r") as file_code:
