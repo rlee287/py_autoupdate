@@ -19,4 +19,3 @@ def test_check_need_update(fixture_update_dir):
     with open("version_history.log","r") as log_handle:
         log=log_handle.read()
     assert "New" in log
-    del launch

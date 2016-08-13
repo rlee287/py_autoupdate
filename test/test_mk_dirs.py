@@ -18,4 +18,3 @@ def test_mk_dirs(create_update_dir):
     launch._reset_update_dir()
     assert os.path.isdir('downloads')
     print(os.path.abspath('downloads'))
-    del launch

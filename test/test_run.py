@@ -68,7 +68,6 @@ class TestRunProgram:
         with open(filetext,mode="r") as number_file:
             nums = number_file.read()
             assert nums == str([i**2 for i in range(20)])
-        del launch
 
     def test_run_pid(self,create_test_file):
         """Test that attempts to access attributes from the parent object"""
@@ -76,7 +75,6 @@ class TestRunProgram:
         launch = Launcher(filecode,'have')
         excode = launch.run()
         assert excode==0
-        del launch
 
     def test_run_fail(self,create_test_file):
         """Test that runs errored code and checks exit status"""
@@ -84,7 +82,6 @@ class TestRunProgram:
         launch = Launcher(filecode,'URL')
         excode = launch.run()
         assert excode != 0
-        del launch
 
     def test_nofile(self):
         """Test that checks error thrown when file does not exist"""
@@ -103,7 +100,7 @@ class TestRunProgram:
                           'project.zip','downloads',INFO)
         excode = launch.run()
         assert excode==0
-        del launch
+
 
     def test_background(self):
         """Test that runs code in the background
@@ -125,7 +122,6 @@ class TestRunProgram:
         time.sleep(3)
         #Really takes at least 2 seconds for windows to kill process
         assert not launch.process_is_alive
-        del launch
 
     def test_run_twice(self):
         """Test that runs code in the background
@@ -149,4 +145,3 @@ class TestRunProgram:
         launch.process_join()
         #Process is dead now, can run again
         launch.run()
-        del launch

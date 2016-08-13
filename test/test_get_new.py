@@ -37,4 +37,3 @@ def test_check_get_new(create_zip, fixture_update_dir):
     with open(os.path.abspath("downloads/extradir/blah.py"), "r") as file_code:
         file_text=file_code.read()
     assert "new version" in file_text
-    del launch

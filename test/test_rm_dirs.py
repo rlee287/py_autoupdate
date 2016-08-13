@@ -29,4 +29,3 @@ def test_rm_dirs(create_update_dir):
     launch = Launcher('all work and no play...','all play and no work...')
     launch._reset_update_dir()
     assert os.path.isdir('downloads')
-    del launch
