@@ -21,17 +21,16 @@ def fixture_update_setup(request):
             shutil.rmtree("extradir")
         if os.path.isfile("filelist.txt"):
             os.remove("filelist.txt")
-        launch = Launcher('extradir/blah.py',
-                          r'http://rlee287.github.io/pyautoupdate/testing/')
-        launch._reset_update_dir()
         if os.path.isdir("downloads"):
-            os.rmdir("downloads")
+            shutil.rmtree("downloads")
     request.addfinalizer(teardown)
     with open('version.txt', mode='w') as version_file:
         version_file.write("0.0.1")
     os.mkdir("extradir")
     with open(os.path.join("extradir", "blah.py"), mode='w') as code:
         code.write("print('This is the old version')")
+    with open(os.path.join("extradir","dummy.txt"), mode='w') as extra_file:
+        extra_file.write("1984: 2+2=5")
     with open("filelist.txt", mode='w') as filelist:
         filelist.write("extradir/blah.py")
     return fixture_update_setup
