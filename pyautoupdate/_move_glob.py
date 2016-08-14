@@ -22,8 +22,10 @@ def copy_glob(src,dst):
         if os.path.isdir(obj):
             start_part=commonpath([src,obj])
             end_part=os.path.relpath(obj,start_part)
-            shutil.copytree(obj,os.path.join(dst,end_part))
+            ctree_dst=os.path.join(dst,end_part)
+            if not os.path.isdir(ctree_dst):
+                shutil.copytree(obj,ctree_dst)
+            else:
+                copy_glob(os.path.join(obj,"*"),ctree_dst)
         else:
             shutil.copy2(obj,dst)
-
-
