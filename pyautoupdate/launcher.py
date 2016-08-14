@@ -84,7 +84,7 @@ class Launcher:
                              "It will be overwritten by this program!\n"
                              "If the {0} is corrupted,"
                              "Please use the logfile at {1} to restore it."
-                             ,self.version_doc,self.version_log)
+                             .format(self.version_doc,self.version_log))
             warnings.warn("{0} is corrupted!".format(self.version_doc),
                           CorruptedFileWarning,
                           stacklevel=2)
@@ -94,7 +94,7 @@ class Launcher:
                              "Please check that {0} is "
                              "not being used!\n"
                              "It will be overwritten "
-                             "by this program!",self.version_log)
+                             "by this program!".format(self.version_log))
             warnings.warn("{0} is corrupted!"
                           .format(self.version_log),
                           CorruptedFileWarning,
@@ -346,7 +346,7 @@ class Launcher:
                                    "Please check that {0} is not being used!\n"
                                    "Otherwise the {0} is corrupted.\n"
                                    "Updates will fail until this is restored."
-                                   ,self.file_list,file_rm)
+                                   .format(self.file_list,file_rm))
                     warnings.warn("{0} is corrupted and contains the "
                                   "invalid path {1}!"
                                   .format(self.file_list,file_rm),
