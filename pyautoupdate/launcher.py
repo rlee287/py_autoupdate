@@ -341,7 +341,7 @@ class Launcher:
                                   CorruptedFileWarning,
                                   stacklevel=2)
                 if file_rm.split(os.path.sep)[0]!="downloads":
-                    self.log.debug("Removing {0}",file_rm)
+                    self.log.debug("Removing {0}".format(file_rm))
                     os.remove(file_rm)
                     file_rm_dir=os.path.dirname(file_rm)
                     if os.path.isdir(file_rm_dir):
@@ -352,7 +352,7 @@ class Launcher:
                         except OSError:
                             pass #Directory is not empty yet
         tempdir=tempfile.mkdtemp()
-        self.log.debug("Moving downloads to {0}", tempdir)
+        self.log.debug("Moving downloads to {0}".format(tempdir))
         move_glob(os.path.join(self.updatedir,"*"), tempdir)
         self.log.debug("Backing up current filelist")
         filelist_backup=tempfile.NamedTemporaryFile(delete=False)
