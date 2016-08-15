@@ -20,14 +20,16 @@ class TestRunProgram:
         filefail=filebase+'_fail'+'.py'
         fileback=filebase+'_back'+'.py'
         filelog=filebase+'_log'+'.py'
-        codebasic='with open("'+filetext+'", mode="w") as number_file:\n'+\
+        codebasic='import pprint\n'+\
+        'with open("'+filetext+'", mode="w") as number_file:\n'+\
         '    l=[i**2 for i in range(20)]\n'+\
         '    number_file.write(str(l))\n'+\
         'print(update)\n'+\
         'update.set()\n'+\
         'print(update.is_set())\n'+\
         'update.clear()\n'+\
-        'print(update.is_set())'
+        'print(update.is_set())\n'+\
+        'pprint.pprint(locals())'
         codepid='import os\n'+\
                 'a=os.getpid()\n'+\
                 'b=os.getppid()\n'+\
