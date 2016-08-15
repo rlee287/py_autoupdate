@@ -99,7 +99,7 @@ class Launcher:
                           .format(self.version_log),
                           CorruptedFileWarning,
                           stacklevel=2)
-        # Check that filepath is not empty
+
         if len(filepath) != 0:
             self.filepath = filepath
         else:
@@ -140,7 +140,6 @@ class Launcher:
     def version_doc_validator(self):
         version_valid=True
         with warnings.catch_warnings():
-            # Throw error at PEP440Warning so that it can be caught in except
             warnings.simplefilter("error",category=PEP440Warning)
             if os.path.isfile(self.version_doc):
                 try:
@@ -353,7 +352,7 @@ class Launcher:
                                   CorruptedFileWarning,
                                   stacklevel=2)
                 if file_rm.split(os.path.sep)[0]!="downloads":
-                    self.log.debug("Removing {0}",file_rm)
+                    self.log.debug("Removing {0}".format(file_rm))
                     os.remove(file_rm)
                     file_rm_dir=os.path.dirname(file_rm)
                     if os.path.isdir(file_rm_dir):
@@ -365,7 +364,7 @@ class Launcher:
                             # Directory is not empty yet
                             pass
         tempdir=tempfile.mkdtemp()
-        self.log.debug("Moving downloads to {0}", tempdir)
+        self.log.debug("Moving downloads to {0}".format(tempdir))
         move_glob(os.path.join(self.updatedir,"*"), tempdir)
         self.log.debug("Backing up current filelist")
         filelist_backup=tempfile.NamedTemporaryFile(delete=False)
