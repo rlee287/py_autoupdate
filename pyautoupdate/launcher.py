@@ -25,6 +25,7 @@ class Launcher:
     :param str newfiles: Name of archive with new versions to download from
      site
     :param str updatedir: Directory in which new versions are downloaded into
+    :param int log_level: Logging level for the built in logger
     :param list args: ``args`` passed to the launched code
     :param dict kwargs: ``kwargs`` passed to the launched code
 
@@ -42,9 +43,9 @@ class Launcher:
     +-------------+-------------------------------------------------+
     |``url``      |Base url to check and download new versions      |
     +-------------+-------------------------------------------------+
-    |``updatedir``|Directory into which the new archive is extracted|
-    +-------------+-------------------------------------------------+
     |``newfiles`` |Name of the archive containing the new files     |
+    +-------------+-------------------------------------------------+
+    |``updatedir``|Directory into which the new archive is extracted|
     +-------------+-------------------------------------------------+
     |``update``   |:class:`multiprocessing.Event` that can be set to|
     |             |signal an update event                           |
@@ -53,9 +54,9 @@ class Launcher:
     +-------------+-------------------------------------------------+
     |``log``      |Logger for Pyautoupdate and for the executed code|
     +-------------+-------------------------------------------------+
-    |``args``     |``args`` for the spawned code                    |
+    |``args``     |``args`` :class:`tuple` for the spawned code     |
     +-------------+-------------------------------------------------+
-    |``kwargs``   |``kwargs`` for the spawned code                  |
+    |``kwargs``   |``kwargs`` :class:`dict` for the spawned code    |
     +-------------+-------------------------------------------------+
 
     .. warning::
@@ -77,7 +78,8 @@ class Launcher:
             # Create handler to sys.stderr
             multiprocessing.log_to_stderr()
         self.log.info("Initializing launcher")
-        # Check that version.txt is valid
+        # Check that version.txt is valid and create it if it does not exist
+        open(self.version_doc, 'a').close() # "Touch" self.version_doc
         if not self.version_doc_validator():
             self.log.warning("{0} does not have a valid version number!\n"
                              "Please check that {0} is not being used!\n"
@@ -89,6 +91,7 @@ class Launcher:
                           CorruptedFileWarning,
                           stacklevel=2)
         # Check that version_history.log is valid
+        open(self.version_log, 'a').close() # "Touch" self.version_doc
         if not self.version_log_validator():
             self.log.warning("Log file at {0} is corrupted!\n"
                              "Please check that {0} is "
@@ -138,31 +141,32 @@ class Launcher:
         return "filelist.txt"
 
     def version_doc_validator(self):
+        """Validates the file containing the current version number.
+
+        """
         version_valid=True
         with warnings.catch_warnings():
             warnings.simplefilter("error",category=PEP440Warning)
-            if os.path.isfile(self.version_doc):
-                try:
-                    with open(self.version_doc,"r") as version_check:
-                        vers=version_check.read()
-                        if len(vers)>0:
-                            vers_obj=parse_version(vers)
-                            if not isinstance(vers_obj,SetuptoolsVersion):
-                                raise PEP440Warning
-                except PEP440Warning:
-                    version_valid=False
+            try:
+                with open(self.version_doc,"r") as version_check:
+                    vers=version_check.read()
+                    if len(vers)>0:
+                        vers_obj=parse_version(vers)
+                        if not isinstance(vers_obj,SetuptoolsVersion):
+                            raise PEP440Warning
+            except PEP440Warning:
+                version_valid=False
         return version_valid
 
     def version_log_validator(self):
         valid_log=True
-        if os.path.isfile(self.version_log):
-            with open(self.version_log,"r") as log_file:
-                log_syntax=re.compile(
-                    r"Old .+?\|(New .+?|Up to date)\|Time .+?")
-                version=log_file.read()
-                if version!="\n" and len(version)>0:
-                    has_match=re.match(log_syntax,version)
-                    valid_log=bool(has_match)
+        with open(self.version_log,"r") as log_file:
+            log_syntax=re.compile(
+                r"Old .+?\|(New .+?|Up to date)\|Time .+?")
+            version=log_file.read()
+            if version!="\n" and len(version)>0:
+                has_match=re.match(log_syntax,version)
+                valid_log=bool(has_match)
         return bool(valid_log)
 
 ######################### Process attribute getters  #########################
