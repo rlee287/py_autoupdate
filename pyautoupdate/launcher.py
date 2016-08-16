@@ -17,7 +17,7 @@ from .exceptions import ProcessRunningException, CorruptedFileWarning
 
 import requests
 
-class Launcher:
+class Launcher(object):
     '''Creates a :class:`Launcher` object.
 
     :param str filepath: Path to file to execute

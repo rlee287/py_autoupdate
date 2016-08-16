@@ -7,7 +7,7 @@ from logging import INFO
 from ..pyautoupdate.launcher import Launcher
 from ..pyautoupdate.exceptions import ProcessRunningException
 
-class TestRunProgram:
+class TestRunProgram(object):
     """Collection of tests that run programs with pyautoupdate"""
 
     @pytest.fixture(scope='class')
