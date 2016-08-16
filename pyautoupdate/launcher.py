@@ -348,11 +348,14 @@ class Launcher(object):
     def _replace_files(self):
         """Replaces the existing files with the downloaded files."""
         self.log.info("Replacing files")
-        # Read in files from filelist
+        # Read in files from filelist and move to tempdir
+        tempdir=tempfile.mkdtemp()
+        self.log.debug("Moving old files to {0}".format(tempdir))
         with open(self.file_list, "r") as file_handle:
             for line in file_handle:
                 file_rm=os.path.normpath(os.path.join(".",line))
                 file_rm=file_rm.rstrip("\n")
+                file_rm_in_temp=os.path.join(tempdir,file_rm)
                 # Confirm that each file in filelist exists
                 if not os.path.isfile(file_rm):
                     self.log.error("{0} contains the invalid filepath {1}.\n"
@@ -365,9 +368,11 @@ class Launcher(object):
                                   .format(self.file_list,file_rm),
                                   CorruptedFileWarning,
                                   stacklevel=2)
-                if file_rm.split(os.path.sep)[0]!="downloads":
-                    self.log.debug("Removing {0}".format(file_rm))
-                    os.remove(file_rm)
+                init_dir=file_rm.split(os.path.sep)[0]
+                if init_dir not in [self.updatedir, self.version_doc,
+                                    self.version_log]:
+                    self.log.debug("Moving {0} to {1}".format(file_rm,tempdir))
+                    shutil.move(file_rm,file_rm_in_temp)
                     file_rm_dir=os.path.dirname(file_rm)
                     if os.path.isdir(file_rm_dir):
                         try:
@@ -377,9 +382,6 @@ class Launcher(object):
                         except OSError:
                             # Directory is not empty yet
                             pass
-        tempdir=tempfile.mkdtemp()
-        self.log.debug("Moving downloads to {0}".format(tempdir))
-        move_glob(os.path.join(self.updatedir,"*"), tempdir)
         self.log.debug("Backing up current filelist")
         filelist_backup=tempfile.NamedTemporaryFile(delete=False)
         with open(self.file_list, "r+b") as file_handle:
@@ -387,7 +389,7 @@ class Launcher(object):
         filelist_backup.close()
         os.remove(self.file_list)
         filelist_new=list()
-        for dirpath, dirnames, filenames in os.walk(tempdir):
+        for dirpath, dirnames, filenames in os.walk(self.updatedir):
             for filename in filenames:
                 filepath=os.path.normpath(os.path.join(dirpath,
                                                        filename))
@@ -400,8 +402,8 @@ class Launcher(object):
         self.log.info("Writing new filelist to filelist.txt")
         with open(self.file_list, "w") as file_handle:
             file_handle.writelines(filelist_new)
-        self.log.info("Copy tempdir contents to current directory")
-        copy_glob(os.path.join(tempdir,"*"),".")
+        self.log.info("Copy downloaded contents to current directory")
+        copy_glob(os.path.join(self.updatedir,"*"),".")
         self.log.info("Remove backup filelist")
         os.remove(filelist_backup.name)
         self.log.info("Removing tempdir")
