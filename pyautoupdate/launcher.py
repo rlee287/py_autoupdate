@@ -352,6 +352,7 @@ class Launcher:
         with open(self.file_list, "r") as file_handle:
             for line in file_handle:
                 file_rm=os.path.normpath(os.path.join(".",line))
+                file_rm=file_rm.rstrip("\n")
                 # Confirm that each file in filelist exists
                 if not os.path.isfile(file_rm):
                     self.log.error("{0} contains the invalid filepath {1}.\n"
@@ -371,8 +372,8 @@ class Launcher:
                     if os.path.isdir(file_rm_dir):
                         try:
                             os.rmdir(file_rm_dir)
-                            self.log.debug("Removing directory {0}",
-                                           file_rm_dir)
+                            self.log.debug("Removing directory {0}"
+                                           .format(file_rm_dir))
                         except OSError:
                             # Directory is not empty yet
                             pass
