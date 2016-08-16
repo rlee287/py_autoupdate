@@ -2,5 +2,3 @@ coverage:
   precision: 3
   round: nearest
   range: "75...95"
-  ignore:
-   - __init__
