@@ -54,9 +54,9 @@ class Launcher:
     +-------------+-------------------------------------------------+
     |``log``      |Logger for Pyautoupdate and for the executed code|
     +-------------+-------------------------------------------------+
-    |``args``     |``args`` :class:`tuple` for the spawned code     |
+    |``args``     |``args`` tuple for the spawned code              |
     +-------------+-------------------------------------------------+
-    |``kwargs``   |``kwargs`` :class:`dict` for the spawned code    |
+    |``kwargs``   |``kwargs`` dict for the spawned code             |
     +-------------+-------------------------------------------------+
 
     .. warning::
