@@ -143,6 +143,8 @@ class Launcher:
     def version_doc_validator(self):
         """Validates the file containing the current version number.
 
+        :return: Whether the version_doc is a proper version
+        :rtype: bool
         """
         version_valid=True
         with warnings.catch_warnings():
@@ -159,6 +161,11 @@ class Launcher:
         return version_valid
 
     def version_log_validator(self):
+        """Validates the file containing the version history.
+
+        :return: Whether the version_log is formatted properly
+        :rtype: bool
+        """
         valid_log=True
         with open(self.version_log,"r") as log_file:
             log_syntax=re.compile(
@@ -196,8 +203,11 @@ class Launcher:
     def _call_code(self, *args, **kwargs):
         '''Method that executes the wrapped code.
 
-           Internally used as target of :py:class:`multiprocessing.Process`
-           instance
+           This is internally used as target of a
+           :py:class:`multiprocessing.Process` instance.
+
+           :param tuple args: ``*args`` tuple from self.args
+           :param dict kwargs: ``**kwargs`` dict from self.kwargs
 
            .. warning::
 
@@ -230,7 +240,7 @@ class Launcher:
            :param bool background: Whether to run code in background
 
            :return: the exit code if background is ``False``
-           :rtype: :class:`int`'''
+           :rtype: :class:`int` or :class:`None`'''
         # Find the right error to raise depending on python version
         self.log.info("Starting code")
         try:
@@ -266,7 +276,6 @@ class Launcher:
                 raise ProcessRunningException
 
 ######################### New code retrieval methods #########################
-
 
     def check_new(self):
         '''Retrieves the latest version number from the remote host.
@@ -308,7 +317,7 @@ class Launcher:
     def _reset_update_dir(self):
         '''Resets the update directory to its default state.
 
-           Also creates a new update directory if it doesn't exist.'''
+           It also creates a new update directory if one doesn't exist.'''
         self.log.debug("Resetting update directory")
         if os.path.isdir(self.updatedir):
             # Remove old contents
