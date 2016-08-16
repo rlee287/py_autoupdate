@@ -3,11 +3,11 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to pyautoupdate's documentation!
+Welcome to Pyautoupdate's documentation!
 ========================================
 
 Pyautoupdate is a module that allows code to automatically update.
-Developers can focus on developing their application and use 
+Developers can focus on developing their application and use
 Pyautoupdate to easily ensure that the copy of the code on the end
 user's computer remains updated.
 
@@ -24,8 +24,6 @@ Example code using Pyautoupdate:
    # Update files
    launch.update()
 
-**pyautoupdate's code is hosted on** `Github <www.github.com/rlee287/pyautoupdate>`_.
-
 Contents:
 
 .. toctree::
@@ -40,4 +38,3 @@ Indices and tables
 * :ref:`genindex`
 * :ref:`modindex`
 * :ref:`search`
-
