@@ -23,9 +23,9 @@
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
-    <link rel="shortcut icon" href="_static/pyautoupdate_logo_square.ico"/>
+    <link rel="shortcut icon" href="_static/pyautoupdate_logo_icon.ico"/>
     <link rel="top" title="pyautoupdate 1.0.0a0 documentation" href="index.html" />
-    <link rel="prev" title="Welcome to pyautoupdate’s documentation!" href="index.html" />
+    <link rel="prev" title="Welcome to Pyautoupdate’s documentation!" href="index.html" />
    
   <link rel="stylesheet" href="_static/custom.css" type="text/css" />
   
@@ -58,6 +58,7 @@
 <li><strong>newfiles</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.5)"><em>str</em></a>) &#8211; Name of archive with new versions to download from
 site</li>
 <li><strong>updatedir</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.5)"><em>str</em></a>) &#8211; Directory in which new versions are downloaded into</li>
+<li><strong>log_level</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.5)"><em>int</em></a>) &#8211; Logging level for the built in logger</li>
 <li><strong>args</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.5)"><em>list</em></a>) &#8211; <code class="docutils literal"><span class="pre">args</span></code> passed to the launched code</li>
 <li><strong>kwargs</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.5)"><em>dict</em></a>) &#8211; <code class="docutils literal"><span class="pre">kwargs</span></code> passed to the launched code</li>
 </ul>
@@ -88,11 +89,11 @@ follows:</p>
 <tr class="row-odd"><td><code class="docutils literal"><span class="pre">url</span></code></td>
 <td>Base url to check and download new versions</td>
 </tr>
-<tr class="row-even"><td><code class="docutils literal"><span class="pre">updatedir</span></code></td>
-<td>Directory into which the new archive is extracted</td>
-</tr>
-<tr class="row-odd"><td><code class="docutils literal"><span class="pre">newfiles</span></code></td>
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">newfiles</span></code></td>
 <td>Name of the archive containing the new files</td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">updatedir</span></code></td>
+<td>Directory into which the new archive is extracted</td>
 </tr>
 <tr class="row-even"><td><code class="docutils literal"><span class="pre">update</span></code></td>
 <td><a class="reference external" href="https://docs.python.org/3/library/multiprocessing.html#multiprocessing.Event" title="(in Python v3.5)"><code class="xref py py-class docutils literal"><span class="pre">multiprocessing.Event</span></code></a> that can be set to
@@ -105,10 +106,10 @@ signal an update event</td>
 <td>Logger for Pyautoupdate and for the executed code</td>
 </tr>
 <tr class="row-odd"><td><code class="docutils literal"><span class="pre">args</span></code></td>
-<td><code class="docutils literal"><span class="pre">args</span></code> for the spawned code</td>
+<td><code class="docutils literal"><span class="pre">args</span></code> tuple for the spawned code</td>
 </tr>
 <tr class="row-even"><td><code class="docutils literal"><span class="pre">kwargs</span></code></td>
-<td><code class="docutils literal"><span class="pre">kwargs</span></code> for the spawned code</td>
+<td><code class="docutils literal"><span class="pre">kwargs</span></code> dict for the spawned code</td>
 </tr>
 </tbody>
 </table>
@@ -122,8 +123,20 @@ to run the code.</p>
 <dt id="pyautoupdate.Launcher._call_code">
 <code class="descname">_call_code</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyautoupdate/launcher.html#Launcher._call_code"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyautoupdate.Launcher._call_code" title="Permalink to this definition">¶</a></dt>
 <dd><p>Method that executes the wrapped code.</p>
-<p>Internally used as target of <a class="reference external" href="https://docs.python.org/3/library/multiprocessing.html#multiprocessing.Process" title="(in Python v3.5)"><code class="xref py py-class docutils literal"><span class="pre">multiprocessing.Process</span></code></a>
-instance</p>
+<p>This is internally used as target of a
+<a class="reference external" href="https://docs.python.org/3/library/multiprocessing.html#multiprocessing.Process" title="(in Python v3.5)"><code class="xref py py-class docutils literal"><span class="pre">multiprocessing.Process</span></code></a> instance.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>args</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.5)"><em>tuple</em></a>) &#8211; <code class="docutils literal"><span class="pre">*args</span></code> tuple from self.args</li>
+<li><strong>kwargs</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.5)"><em>dict</em></a>) &#8211; <code class="docutils literal"><span class="pre">**kwargs</span></code> dict from self.kwargs</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
 <div class="admonition warning">
 <p class="first admonition-title">Warning</p>
 <p class="last">End users should never call this directly.
@@ -148,7 +161,7 @@ directory.</p>
 <dt id="pyautoupdate.Launcher._reset_update_dir">
 <code class="descname">_reset_update_dir</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyautoupdate/launcher.html#Launcher._reset_update_dir"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyautoupdate.Launcher._reset_update_dir" title="Permalink to this definition">¶</a></dt>
 <dd><p>Resets the update directory to its default state.</p>
-<p>Also creates a new update directory if it doesn&#8217;t exist.</p>
+<p>It also creates a new update directory if one doesn&#8217;t exist.</p>
 </dd></dl>
 
 <dl class="method">
@@ -207,17 +220,16 @@ to compare versions.</p>
 <dt id="pyautoupdate.Launcher.run">
 <code class="descname">run</code><span class="sig-paren">(</span><em>background=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyautoupdate/launcher.html#Launcher.run"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyautoupdate.Launcher.run" title="Permalink to this definition">¶</a></dt>
 <dd><p>Method used to run code.</p>
-<p>If background is <code class="docutils literal"><span class="pre">True</span></code>, returns a handle to the Process object.</p>
-<p>Otherwise, it returns the Process&#8217;s exitcode.</p>
+<p>If background is <code class="docutils literal"><span class="pre">False</span></code>, returns the Process&#8217;s exitcode.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>background</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.5)"><em>bool</em></a>) &#8211; Whether to run code in background</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">the exit code of the executed code or the Process</td>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">the exit code if background is <code class="docutils literal"><span class="pre">False</span></code></td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.5)"><code class="xref py py-class docutils literal"><span class="pre">int</span></code></a> or <a class="reference external" href="https://docs.python.org/3/library/multiprocessing.html#multiprocessing.Process" title="(in Python v3.5)"><code class="xref py py-class docutils literal"><span class="pre">multiprocessing.Process</span></code></a></td>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.5)"><code class="xref py py-class docutils literal"><span class="pre">int</span></code></a> or <code class="xref py py-class docutils literal"><span class="pre">None</span></code></td>
 </tr>
 </tbody>
 </table>
@@ -237,7 +249,18 @@ to compare versions.</p>
 <dl class="method">
 <dt id="pyautoupdate.Launcher.version_doc_validator">
 <code class="descname">version_doc_validator</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyautoupdate/launcher.html#Launcher.version_doc_validator"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyautoupdate.Launcher.version_doc_validator" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Validates the file containing the current version number.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Whether the version_doc is a proper version</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.5)">bool</a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
 
 <dl class="attribute">
 <dt id="pyautoupdate.Launcher.version_log">
@@ -247,7 +270,18 @@ to compare versions.</p>
 <dl class="method">
 <dt id="pyautoupdate.Launcher.version_log_validator">
 <code class="descname">version_log_validator</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyautoupdate/launcher.html#Launcher.version_log_validator"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyautoupdate.Launcher.version_log_validator" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Validates the file containing the version history.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Whether the version_log is formatted properly</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.5)">bool</a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
 
 </dd></dl>
 

@@ -23,7 +23,7 @@
     <script type="text/javascript" src="../../_static/jquery.js"></script>
     <script type="text/javascript" src="../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../_static/doctools.js"></script>
-    <link rel="shortcut icon" href="../../_static/pyautoupdate_logo_square.ico"/>
+    <link rel="shortcut icon" href="../../_static/pyautoupdate_logo_icon.ico"/>
     <link rel="top" title="pyautoupdate 1.0.0a0 documentation" href="../../index.html" />
     <link rel="up" title="Module code" href="../index.html" />
    
@@ -68,6 +68,7 @@
 <span class="sd">    :param str newfiles: Name of archive with new versions to download from</span>
 <span class="sd">     site</span>
 <span class="sd">    :param str updatedir: Directory in which new versions are downloaded into</span>
+<span class="sd">    :param int log_level: Logging level for the built in logger</span>
 <span class="sd">    :param list args: ``args`` passed to the launched code</span>
 <span class="sd">    :param dict kwargs: ``kwargs`` passed to the launched code</span>
 
@@ -85,9 +86,9 @@
 <span class="sd">    +-------------+-------------------------------------------------+</span>
 <span class="sd">    |``url``      |Base url to check and download new versions      |</span>
 <span class="sd">    +-------------+-------------------------------------------------+</span>
-<span class="sd">    |``updatedir``|Directory into which the new archive is extracted|</span>
-<span class="sd">    +-------------+-------------------------------------------------+</span>
 <span class="sd">    |``newfiles`` |Name of the archive containing the new files     |</span>
+<span class="sd">    +-------------+-------------------------------------------------+</span>
+<span class="sd">    |``updatedir``|Directory into which the new archive is extracted|</span>
 <span class="sd">    +-------------+-------------------------------------------------+</span>
 <span class="sd">    |``update``   |:class:`multiprocessing.Event` that can be set to|</span>
 <span class="sd">    |             |signal an update event                           |</span>
@@ -96,9 +97,9 @@
 <span class="sd">    +-------------+-------------------------------------------------+</span>
 <span class="sd">    |``log``      |Logger for Pyautoupdate and for the executed code|</span>
 <span class="sd">    +-------------+-------------------------------------------------+</span>
-<span class="sd">    |``args``     |``args`` for the spawned code                    |</span>
+<span class="sd">    |``args``     |``args`` tuple for the spawned code              |</span>
 <span class="sd">    +-------------+-------------------------------------------------+</span>
-<span class="sd">    |``kwargs``   |``kwargs`` for the spawned code                  |</span>
+<span class="sd">    |``kwargs``   |``kwargs`` dict for the spawned code             |</span>
 <span class="sd">    +-------------+-------------------------------------------------+</span>
 
 <span class="sd">    .. warning::</span>
@@ -114,12 +115,14 @@
                  <span class="n">log_level</span><span class="o">=</span><span class="n">WARNING</span><span class="p">,</span>
                  <span class="o">*</span><span class="n">args</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">=</span><span class="n">multiprocessing</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span>
+        <span class="c1">#Create handle to self.log only if necessary</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">setLevel</span><span class="p">(</span><span class="n">log_level</span><span class="p">)</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">handlers</span><span class="p">)</span><span class="o">==</span><span class="mi">0</span><span class="p">:</span>
             <span class="c1"># Create handler to sys.stderr</span>
             <span class="n">multiprocessing</span><span class="o">.</span><span class="n">log_to_stderr</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Initializing launcher&quot;</span><span class="p">)</span>
-        <span class="c1"># Check that version.txt is valid</span>
+        <span class="c1"># Check that version.txt is valid and create it if it does not exist</span>
+        <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">version_doc</span><span class="p">,</span> <span class="s1">&#39;a&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">close</span><span class="p">()</span> <span class="c1"># &quot;Touch&quot; self.version_doc</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">version_doc_validator</span><span class="p">():</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;{0} does not have a valid version number!</span><span class="se">\n</span><span class="s2">&quot;</span>
                              <span class="s2">&quot;Please check that {0} is not being used!</span><span class="se">\n</span><span class="s2">&quot;</span>
@@ -131,6 +134,7 @@
                           <span class="n">CorruptedFileWarning</span><span class="p">,</span>
                           <span class="n">stacklevel</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
         <span class="c1"># Check that version_history.log is valid</span>
+        <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">version_log</span><span class="p">,</span> <span class="s1">&#39;a&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">close</span><span class="p">()</span> <span class="c1"># &quot;Touch&quot; self.version_doc</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">version_log_validator</span><span class="p">():</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;Log file at {0} is corrupted!</span><span class="se">\n</span><span class="s2">&quot;</span>
                              <span class="s2">&quot;Please check that {0} is &quot;</span>
@@ -146,8 +150,10 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">filepath</span> <span class="o">=</span> <span class="n">filepath</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Filepath must not be empty&quot;</span><span class="p">)</span>
+        <span class="c1"># Check that URL is specified</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">url</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;URL must not be empty&quot;</span><span class="p">)</span>
+        <span class="c1"># Append slash to end of URL if it is not present</span>
         <span class="k">if</span> <span class="n">url</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">url</span> <span class="o">=</span> <span class="n">url</span>
         <span class="k">else</span><span class="p">:</span>
@@ -178,31 +184,39 @@
         <span class="k">return</span> <span class="s2">&quot;filelist.txt&quot;</span>
 
 <div class="viewcode-block" id="Launcher.version_doc_validator"><a class="viewcode-back" href="../../pyautoupdate.html#pyautoupdate.Launcher.version_doc_validator">[docs]</a>    <span class="k">def</span> <span class="nf">version_doc_validator</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Validates the file containing the current version number.</span>
+
+<span class="sd">        :return: Whether the version_doc is a proper version</span>
+<span class="sd">        :rtype: bool</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">version_valid</span><span class="o">=</span><span class="bp">True</span>
         <span class="k">with</span> <span class="n">warnings</span><span class="o">.</span><span class="n">catch_warnings</span><span class="p">():</span>
             <span class="n">warnings</span><span class="o">.</span><span class="n">simplefilter</span><span class="p">(</span><span class="s2">&quot;error&quot;</span><span class="p">,</span><span class="n">category</span><span class="o">=</span><span class="n">PEP440Warning</span><span class="p">)</span>
-            <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">version_doc</span><span class="p">):</span>
-                <span class="k">try</span><span class="p">:</span>
-                    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">version_doc</span><span class="p">,</span><span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">version_check</span><span class="p">:</span>
-                        <span class="n">vers</span><span class="o">=</span><span class="n">version_check</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
-                        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">vers</span><span class="p">)</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">:</span>
-                            <span class="n">vers_obj</span><span class="o">=</span><span class="n">parse_version</span><span class="p">(</span><span class="n">vers</span><span class="p">)</span>
-                            <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">vers_obj</span><span class="p">,</span><span class="n">SetuptoolsVersion</span><span class="p">):</span>
-                                <span class="k">raise</span> <span class="n">PEP440Warning</span>
-                <span class="k">except</span> <span class="n">PEP440Warning</span><span class="p">:</span>
-                    <span class="n">version_valid</span><span class="o">=</span><span class="bp">False</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">version_doc</span><span class="p">,</span><span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">version_check</span><span class="p">:</span>
+                    <span class="n">vers</span><span class="o">=</span><span class="n">version_check</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+                    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">vers</span><span class="p">)</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">:</span>
+                        <span class="n">vers_obj</span><span class="o">=</span><span class="n">parse_version</span><span class="p">(</span><span class="n">vers</span><span class="p">)</span>
+                        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">vers_obj</span><span class="p">,</span><span class="n">SetuptoolsVersion</span><span class="p">):</span>
+                            <span class="k">raise</span> <span class="n">PEP440Warning</span>
+            <span class="k">except</span> <span class="n">PEP440Warning</span><span class="p">:</span>
+                <span class="n">version_valid</span><span class="o">=</span><span class="bp">False</span>
         <span class="k">return</span> <span class="n">version_valid</span>
 </div>
 <div class="viewcode-block" id="Launcher.version_log_validator"><a class="viewcode-back" href="../../pyautoupdate.html#pyautoupdate.Launcher.version_log_validator">[docs]</a>    <span class="k">def</span> <span class="nf">version_log_validator</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Validates the file containing the version history.</span>
+
+<span class="sd">        :return: Whether the version_log is formatted properly</span>
+<span class="sd">        :rtype: bool</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">valid_log</span><span class="o">=</span><span class="bp">True</span>
-        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">version_log</span><span class="p">):</span>
-            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">version_log</span><span class="p">,</span><span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">log_file</span><span class="p">:</span>
-                <span class="n">log_syntax</span><span class="o">=</span><span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span>
-                    <span class="s2">r&quot;Old .+?\|(New .+?|Up to date)\|Time .+?&quot;</span><span class="p">)</span>
-                <span class="n">version</span><span class="o">=</span><span class="n">log_file</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
-                <span class="k">if</span> <span class="n">version</span><span class="o">!=</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">version</span><span class="p">)</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">:</span>
-                    <span class="n">has_match</span><span class="o">=</span><span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">log_syntax</span><span class="p">,</span><span class="n">version</span><span class="p">)</span>
-                    <span class="n">valid_log</span><span class="o">=</span><span class="nb">bool</span><span class="p">(</span><span class="n">has_match</span><span class="p">)</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">version_log</span><span class="p">,</span><span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">log_file</span><span class="p">:</span>
+            <span class="n">log_syntax</span><span class="o">=</span><span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span>
+                <span class="s2">r&quot;Old .+?\|(New .+?|Up to date)\|Time .+?&quot;</span><span class="p">)</span>
+            <span class="n">version</span><span class="o">=</span><span class="n">log_file</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">version</span><span class="o">!=</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">version</span><span class="p">)</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">:</span>
+                <span class="n">has_match</span><span class="o">=</span><span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">log_syntax</span><span class="p">,</span><span class="n">version</span><span class="p">)</span>
+                <span class="n">valid_log</span><span class="o">=</span><span class="nb">bool</span><span class="p">(</span><span class="n">has_match</span><span class="p">)</span>
         <span class="k">return</span> <span class="nb">bool</span><span class="p">(</span><span class="n">valid_log</span><span class="p">)</span>
 
 <span class="c1">######################### Process attribute getters  #########################</span>
@@ -232,40 +246,45 @@
 <div class="viewcode-block" id="Launcher._call_code"><a class="viewcode-back" href="../../pyautoupdate.html#pyautoupdate.Launcher._call_code">[docs]</a>    <span class="k">def</span> <span class="nf">_call_code</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;Method that executes the wrapped code.</span>
 
-<span class="sd">           Internally used as target of :py:class:`multiprocessing.Process`</span>
-<span class="sd">           instance</span>
+<span class="sd">           This is internally used as target of a</span>
+<span class="sd">           :py:class:`multiprocessing.Process` instance.</span>
+
+<span class="sd">           :param tuple args: ``*args`` tuple from self.args</span>
+<span class="sd">           :param dict kwargs: ``**kwargs`` dict from self.kwargs</span>
 
 <span class="sd">           .. warning::</span>
 
 <span class="sd">              End users should never call this directly.</span>
 <span class="sd">              Please use the :meth:`run` method instead.&#39;&#39;&#39;</span>
-        <span class="c1">#Open code file</span>
+        <span class="c1"># Open code file</span>
         <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">filepath</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">code_file</span><span class="p">:</span>
             <span class="n">code</span> <span class="o">=</span> <span class="n">code_file</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
-        <span class="c1">#Only attempt to run when file has been opened</span>
         <span class="n">localvar</span> <span class="o">=</span> <span class="nb">vars</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="c1"># Manipulate __dict__ attribute to add handle to check_new</span>
         <span class="n">localvar</span><span class="p">[</span><span class="s2">&quot;check_new&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">check_new</span>
+        <span class="c1"># Remove handle to process</span>
         <span class="k">del</span> <span class="n">localvar</span><span class="p">[</span><span class="s2">&quot;_Launcher__process&quot;</span><span class="p">]</span>
+        <span class="c1"># Pass in args, kwargs, and logger</span>
         <span class="n">localvar</span><span class="p">[</span><span class="s2">&quot;args&quot;</span><span class="p">]</span><span class="o">=</span><span class="n">args</span>
         <span class="n">localvar</span><span class="p">[</span><span class="s2">&quot;kwargs&quot;</span><span class="p">]</span><span class="o">=</span><span class="n">kwargs</span>
+        <span class="c1"># multiprocessing.get_logger again since this is not pickleable</span>
         <span class="n">localvar</span><span class="p">[</span><span class="s2">&quot;log&quot;</span><span class="p">]</span><span class="o">=</span><span class="n">multiprocessing</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span>
         <span class="n">localvar</span><span class="p">[</span><span class="s2">&quot;log&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Starting process with&quot;</span>
                               <span class="s2">&quot; the following local variables:</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">+</span>\
                               <span class="n">pprint</span><span class="o">.</span><span class="n">pformat</span><span class="p">(</span><span class="n">localvar</span><span class="p">))</span>
+        <span class="c1"># Execute code in file</span>
         <span class="k">exec</span><span class="p">(</span><span class="n">code</span><span class="p">,</span> <span class="nb">dict</span><span class="p">(),</span> <span class="n">localvar</span><span class="p">)</span>
 </div>
 <div class="viewcode-block" id="Launcher.run"><a class="viewcode-back" href="../../pyautoupdate.html#pyautoupdate.Launcher.run">[docs]</a>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">background</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;Method used to run code.</span>
 
-<span class="sd">           If background is ``True``, returns a handle to the Process object.</span>
-
-<span class="sd">           Otherwise, it returns the Process&#39;s exitcode.</span>
+<span class="sd">           If background is ``False``, returns the Process&#39;s exitcode.</span>
 
 <span class="sd">           :param bool background: Whether to run code in background</span>
 
-<span class="sd">           :return: the exit code of the executed code or the Process</span>
-<span class="sd">           :rtype: :class:`int` or :class:`multiprocessing.Process`&#39;&#39;&#39;</span>
-        <span class="c1">#Find the right error to raise depending on python version</span>
+<span class="sd">           :return: the exit code if background is ``False``</span>
+<span class="sd">           :rtype: :class:`int` or :class:`None`&#39;&#39;&#39;</span>
+        <span class="c1"># Find the right error to raise depending on python version</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Starting code&quot;</span><span class="p">)</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">error_to_raise</span><span class="o">=</span><span class="n">FileNotFoundError</span>
@@ -300,7 +319,6 @@
                 <span class="k">raise</span> <span class="n">ProcessRunningException</span>
 
 <span class="c1">######################### New code retrieval methods #########################</span>
-
 </div>
 <div class="viewcode-block" id="Launcher.check_new"><a class="viewcode-back" href="../../pyautoupdate.html#pyautoupdate.Launcher.check_new">[docs]</a>    <span class="k">def</span> <span class="nf">check_new</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;Retrieves the latest version number from the remote host.</span>
@@ -315,16 +333,17 @@
 <span class="sd">              Any versioning scheme described in :pep:`440` can be used.&#39;&#39;&#39;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Checking for updates&quot;</span><span class="p">)</span>
         <span class="n">versionurl</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">url</span><span class="o">+</span><span class="bp">self</span><span class="o">.</span><span class="n">version_doc</span>
-        <span class="c1">#get new files</span>
+        <span class="c1"># Get new files</span>
         <span class="n">get_new</span><span class="o">=</span><span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">versionurl</span><span class="p">,</span> <span class="n">allow_redirects</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
         <span class="n">get_new</span><span class="o">.</span><span class="n">raise_for_status</span><span class="p">()</span>
         <span class="n">newver</span><span class="o">=</span><span class="n">get_new</span><span class="o">.</span><span class="n">text</span>
         <span class="n">newver</span><span class="o">=</span><span class="n">newver</span><span class="o">.</span><span class="n">rstrip</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
-        <span class="c1">#move to new file only when connection succeeds</span>
+        <span class="c1"># Read in old version and compare to new version</span>
         <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">version_doc</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">old_version</span><span class="p">:</span>
             <span class="n">oldver</span><span class="o">=</span><span class="n">old_version</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
             <span class="n">oldver</span><span class="o">=</span><span class="n">oldver</span><span class="o">.</span><span class="n">rstrip</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
         <span class="n">has_new</span><span class="o">=</span><span class="p">(</span><span class="n">parse_version</span><span class="p">(</span><span class="n">newver</span><span class="p">)</span><span class="o">&gt;</span><span class="n">parse_version</span><span class="p">(</span><span class="n">oldver</span><span class="p">))</span>
+        <span class="c1"># Add entry to the logfile and update version.txt</span>
         <span class="k">if</span> <span class="n">has_new</span><span class="p">:</span>
             <span class="n">version_to_add</span><span class="o">=</span><span class="s2">&quot;Old {0}|New {1}|Time {2}</span><span class="se">\n</span><span class="s2">&quot;</span>\
                            <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">oldver</span><span class="p">,</span><span class="n">newver</span><span class="p">,</span><span class="n">datetime</span><span class="o">.</span><span class="n">utcnow</span><span class="p">())</span>
@@ -341,37 +360,42 @@
 <div class="viewcode-block" id="Launcher._reset_update_dir"><a class="viewcode-back" href="../../pyautoupdate.html#pyautoupdate.Launcher._reset_update_dir">[docs]</a>    <span class="k">def</span> <span class="nf">_reset_update_dir</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;Resets the update directory to its default state.</span>
 
-<span class="sd">           Also creates a new update directory if it doesn&#39;t exist.&#39;&#39;&#39;</span>
+<span class="sd">           It also creates a new update directory if one doesn&#39;t exist.&#39;&#39;&#39;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Resetting update directory&quot;</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">updatedir</span><span class="p">):</span>
-            <span class="c1">#Remove old contents</span>
+            <span class="c1"># Remove old contents</span>
             <span class="n">shutil</span><span class="o">.</span><span class="n">rmtree</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">updatedir</span><span class="p">)</span>
-        <span class="c1">#Make new directory (one shouldn&#39;t exist)</span>
+        <span class="c1"># Make new empty directory</span>
+        <span class="c1"># shutil.rmtree would have deleted the directory</span>
         <span class="n">os</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">updatedir</span><span class="p">)</span>
 </div>
 <div class="viewcode-block" id="Launcher._get_new"><a class="viewcode-back" href="../../pyautoupdate.html#pyautoupdate.Launcher._get_new">[docs]</a>    <span class="k">def</span> <span class="nf">_get_new</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;Retrieves the new archive and extracts it to the downloads</span>
 <span class="sd">           directory.&#39;&#39;&#39;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Retrieving new version&quot;</span><span class="p">)</span>
+        <span class="c1"># Remove old archive</span>
         <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">newfiles</span><span class="p">):</span>
             <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">newfiles</span><span class="p">)</span>
         <span class="n">newurl</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">url</span><span class="o">+</span><span class="bp">self</span><span class="o">.</span><span class="n">newfiles</span>
-        <span class="c1">#get new files</span>
+        <span class="c1"># Get new files</span>
         <span class="n">http_get</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">newurl</span><span class="p">,</span> <span class="n">stream</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">allow_redirects</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
         <span class="n">http_get</span><span class="o">.</span><span class="n">raise_for_status</span><span class="p">()</span>
         <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">newfiles</span><span class="p">,</span> <span class="s1">&#39;wb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">filehandle</span><span class="p">:</span>
             <span class="k">for</span> <span class="n">chunk</span> <span class="ow">in</span> <span class="n">http_get</span><span class="o">.</span><span class="n">iter_content</span><span class="p">(</span><span class="n">chunk_size</span><span class="o">=</span><span class="mi">1024</span><span class="o">*</span><span class="mi">50</span><span class="p">):</span>
                 <span class="k">if</span> <span class="n">chunk</span><span class="p">:</span>
                     <span class="n">filehandle</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">chunk</span><span class="p">)</span>
+        <span class="c1"># Unpack archive and remove it after extraction</span>
         <span class="n">unpack_archive</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">newfiles</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">updatedir</span><span class="p">)</span>
         <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">newfiles</span><span class="p">)</span>
 </div>
 <div class="viewcode-block" id="Launcher._replace_files"><a class="viewcode-back" href="../../pyautoupdate.html#pyautoupdate.Launcher._replace_files">[docs]</a>    <span class="k">def</span> <span class="nf">_replace_files</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Replaces the existing files with the downloaded files.&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Replacing files&quot;</span><span class="p">)</span>
+        <span class="c1"># Read in files from filelist</span>
         <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">file_list</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file_handle</span><span class="p">:</span>
             <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">file_handle</span><span class="p">:</span>
                 <span class="n">file_rm</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">normpath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">,</span><span class="n">line</span><span class="p">))</span>
+                <span class="c1"># Confirm that each file in filelist exists</span>
                 <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">file_rm</span><span class="p">):</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;{0} contains the invalid filepath {1}.</span><span class="se">\n</span><span class="s2">&quot;</span>
                                    <span class="s2">&quot;Please check that {0} is not being used!</span><span class="se">\n</span><span class="s2">&quot;</span>
@@ -393,7 +417,8 @@
                             <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Removing directory {0}&quot;</span><span class="p">,</span>
                                            <span class="n">file_rm_dir</span><span class="p">)</span>
                         <span class="k">except</span> <span class="ne">OSError</span><span class="p">:</span>
-                            <span class="k">pass</span> <span class="c1">#Directory is not empty yet</span>
+                            <span class="c1"># Directory is not empty yet</span>
+                            <span class="k">pass</span>
         <span class="n">tempdir</span><span class="o">=</span><span class="n">tempfile</span><span class="o">.</span><span class="n">mkdtemp</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Moving downloads to {0}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tempdir</span><span class="p">))</span>
         <span class="n">move_glob</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">updatedir</span><span class="p">,</span><span class="s2">&quot;*&quot;</span><span class="p">),</span> <span class="n">tempdir</span><span class="p">)</span>
