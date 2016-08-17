@@ -42,3 +42,8 @@ LGPL 2.1
 .. |QuantifiedCode_Status| image:: https://www.quantifiedcode.com/api/v1/project/e70a21e3928a4cce87655a17fd853765/badge.svg
   :target: https://www.quantifiedcode.com/app/project/e70a21e3928a4cce87655a17fd853765
   :alt: QuantifiedCode issues
+
+
+.. image:: https://badges.gitter.im/pyautoupdate/Lobby.svg
+   :alt: Join the chat at https://gitter.im/pyautoupdate/Lobby
+   :target: https://gitter.im/pyautoupdate/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge
