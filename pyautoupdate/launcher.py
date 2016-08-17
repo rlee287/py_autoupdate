@@ -350,12 +350,14 @@ class Launcher(object):
         self.log.info("Replacing files")
         # Read in files from filelist and move to tempdir
         tempdir=tempfile.mkdtemp()
-        self.log.debug("Moving old files to {0}".format(tempdir))
+        self.log.debug("Created tempdir at {0}".format(tempdir))
+        self.log.info("Moving old files to tempdir")
         with open(self.file_list, "r") as file_handle:
             for line in file_handle:
                 file_rm=os.path.normpath(os.path.join(".",line))
                 file_rm=file_rm.rstrip("\n")
                 file_rm_in_temp=os.path.join(tempdir,file_rm)
+                os.makedirs(os.path.dirname(file_rm_in_temp),exist_ok=True)
                 # Confirm that each file in filelist exists
                 if not os.path.isfile(file_rm):
                     self.log.error("{0} contains the invalid filepath {1}.\n"
@@ -382,12 +384,14 @@ class Launcher(object):
                         except OSError:
                             # Directory is not empty yet
                             pass
-        self.log.debug("Backing up current filelist")
+        self.log.info("Backing up current filelist")
         filelist_backup=tempfile.NamedTemporaryFile(delete=False)
         with open(self.file_list, "r+b") as file_handle:
             shutil.copyfileobj(file_handle,filelist_backup)
         filelist_backup.close()
+        self.log.info("Removing old filelist")
         os.remove(self.file_list)
+        self.log.info("Creating new filelist")
         filelist_new=list()
         for dirpath, dirnames, filenames in os.walk(self.updatedir):
             for filename in filenames:
@@ -397,9 +401,8 @@ class Launcher(object):
                 filepath=os.path.relpath(filepath,start=relpath_start)
                 filepath+="\n"
                 filelist_new.append(filepath)
-        self.log.debug("New filelist")
-        self.log.debug(pprint.pformat(filelist_new))
-        self.log.info("Writing new filelist to filelist.txt")
+        self.log.debug("New filelist is:\n"+pprint.pformat(filelist_new))
+        self.log.info("Writing new filelist to {0}".format(self.file_list))
         with open(self.file_list, "w") as file_handle:
             file_handle.writelines(filelist_new)
         self.log.info("Copy downloaded contents to current directory")
