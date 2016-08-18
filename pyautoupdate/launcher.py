@@ -357,7 +357,10 @@ class Launcher(object):
                 file_rm=os.path.normpath(os.path.join(".",line))
                 file_rm=file_rm.rstrip("\n")
                 file_rm_in_temp=os.path.join(tempdir,file_rm)
-                os.makedirs(os.path.dirname(file_rm_in_temp),exist_ok=True)
+                file_rm_temp_dir=os.path.dirname(file_rm_in_temp)
+                if not os.path.isdir(file_rm_temp_dir):
+                    # exist_ok does not exist in Python 2
+                    os.makedirs(file_rm_temp_dir)
                 # Confirm that each file in filelist exists
                 if not os.path.isfile(file_rm):
                     self.log.error("{0} contains the invalid filepath {1}.\n"
