@@ -356,11 +356,6 @@ class Launcher(object):
             for line in file_handle:
                 file_rm=os.path.normpath(os.path.join(".",line))
                 file_rm=file_rm.rstrip("\n")
-                file_rm_in_temp=os.path.join(tempdir,file_rm)
-                file_rm_temp_dir=os.path.dirname(file_rm_in_temp)
-                if not os.path.isdir(file_rm_temp_dir):
-                    # exist_ok does not exist in Python 2
-                    os.makedirs(file_rm_temp_dir)
                 # Confirm that each file in filelist exists
                 if not os.path.isfile(file_rm):
                     self.log.error("{0} contains the invalid filepath {1}.\n"
@@ -373,11 +368,16 @@ class Launcher(object):
                                   .format(self.file_list,file_rm),
                                   CorruptedFileWarning,
                                   stacklevel=2)
+                file_rm_temp=os.path.join(tempdir,file_rm)
+                file_rm_temp_dir=os.path.dirname(file_rm_temp)
+                if not os.path.isdir(file_rm_temp_dir):
+                    # exist_ok does not exist in Python 2
+                    os.makedirs(file_rm_temp_dir)
                 init_dir=file_rm.split(os.path.sep)[0]
                 if init_dir not in [self.updatedir, self.version_doc,
                                     self.version_log]:
                     self.log.debug("Moving {0} to {1}".format(file_rm,tempdir))
-                    shutil.move(file_rm,file_rm_in_temp)
+                    shutil.move(file_rm,file_rm_temp)
                     file_rm_dir=os.path.dirname(file_rm)
                     if os.path.isdir(file_rm_dir):
                         try:
@@ -400,8 +400,9 @@ class Launcher(object):
             for filename in filenames:
                 filepath=os.path.normpath(os.path.join(dirpath,
                                                        filename))
-                relpath_start=os.path.join(tempdir)
+                relpath_start=os.path.join(self.updatedir)
                 filepath=os.path.relpath(filepath,start=relpath_start)
+                filepath=os.path.normpath(filepath)
                 filepath+="\n"
                 filelist_new.append(filepath)
         self.log.debug("New filelist is:\n"+pprint.pformat(filelist_new))
