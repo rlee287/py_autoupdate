@@ -377,22 +377,24 @@ class Launcher(object):
                                   .format(self.file_list,file_rm),
                                   CorruptedFileWarning,
                                   stacklevel=2)
-                file_rm_temp=os.path.join(tempdir,file_rm)
-                file_rm_temp_dir=os.path.dirname(file_rm_temp)
-                if not os.path.isdir(file_rm_temp_dir):
-                    # exist_ok does not exist in Python 2
-                    os.makedirs(file_rm_temp_dir)
-                if file_rm.split(os.path.sep)[0] not in \
-                                        [self.updatedir, self.version_doc,
-                                         self.version_log]:
-                    self.log.debug("Moving {0} to {1}".format(file_rm,tempdir))
-                    shutil.move(file_rm,file_rm_temp)
-                    file_rm_dir=os.path.dirname(file_rm)
-                    if os.path.isdir(file_rm_dir):
-                        if not os.listdir(file_rm_dir):
-                            os.rmdir(file_rm_dir)
-                            self.log.debug("Removing directory {0}"
-                                           .format(file_rm_dir))
+                else:
+                    file_rm_temp=os.path.join(tempdir,file_rm)
+                    file_rm_temp_dir=os.path.dirname(file_rm_temp)
+                    if not os.path.isdir(file_rm_temp_dir):
+                        # exist_ok does not exist in Python 2
+                        os.makedirs(file_rm_temp_dir)
+                    if file_rm.split(os.path.sep)[0] not in \
+                                            [self.updatedir, self.version_doc,
+                                             self.version_log]:
+                        self.log.debug("Moving {0} to {1}".format(file_rm,
+                                                                  tempdir))
+                        shutil.move(file_rm,file_rm_temp)
+                        file_rm_dir=os.path.dirname(file_rm)
+                        if os.path.isdir(file_rm_dir):
+                            if not os.listdir(file_rm_dir):
+                                os.rmdir(file_rm_dir)
+                                self.log.debug("Removing directory {0}"
+                                               .format(file_rm_dir))
         self.log.info("Backing up current filelist")
         filelist_backup=tempfile.NamedTemporaryFile(delete=False)
         try:
