@@ -92,7 +92,7 @@ class Launcher(object):
                           CorruptedFileWarning,
                           stacklevel=2)
         # Check that self.version_log is valid
-        open(self.version_log, 'a').close() # "Touch" self.version_doc
+        open(self.version_log, 'a').close() # "Touch" self.version_log
         if not self.version_log_validator():
             self.log.warning("Log file at {0} is corrupted!\n"
                              "Please check that {0} is "
@@ -117,8 +117,16 @@ class Launcher(object):
             self.url = url
         else:
             self.url = url + "/"
-        self.updatedir = updatedir
-        self.newfiles = newfiles
+        # Check for valid updatedir
+        if len(os.path.normpath(updatedir).split(os.path.sep))>1:
+            raise ValueError("updatedir should be a single directory name")
+        else:
+            self.updatedir = updatedir
+        # Check for valid newfiles
+        if len(os.path.normpath(newfiles).split(os.path.sep))>1:
+            raise ValueError("newfiles should be a single file name")
+        else:
+            self.newfiles = newfiles
         self.update = multiprocessing.Event()
         self.pid = os.getpid()
         self.args = args
@@ -350,7 +358,10 @@ class Launcher(object):
     def _replace_files(self):
         """Replaces the existing files with the downloaded files."""
         self.log.info("Replacing files")
-        # Read in files from filelist
+        # Read in files from filelist and move to tempdir
+        tempdir=tempfile.mkdtemp()
+        self.log.debug("Created tempdir at {0}".format(tempdir))
+        self.log.info("Moving old files to tempdir")
         with open(self.file_list, "r") as file_handle:
             for line in file_handle:
                 file_rm=os.path.normpath(os.path.join(".",line))
@@ -367,43 +378,53 @@ class Launcher(object):
                                   .format(self.file_list,file_rm),
                                   CorruptedFileWarning,
                                   stacklevel=2)
-                if file_rm.split(os.path.sep)[0]!="downloads":
-                    self.log.debug("Removing {0}".format(file_rm))
-                    os.remove(file_rm)
-                    file_rm_dir=os.path.dirname(file_rm)
-                    if os.path.isdir(file_rm_dir):
-                        try:
-                            os.rmdir(file_rm_dir)
-                            self.log.debug("Removing directory {0}"
-                                           .format(file_rm_dir))
-                        except OSError:
-                            # Directory is not empty yet
-                            pass
-        tempdir=tempfile.mkdtemp()
-        self.log.debug("Moving downloads to {0}".format(tempdir))
-        move_glob(os.path.join(self.updatedir,"*"), tempdir)
-        self.log.debug("Backing up current filelist")
+                else:
+                    file_rm_temp=os.path.join(tempdir,file_rm)
+                    file_rm_temp_dir=os.path.dirname(file_rm_temp)
+                    if not os.path.isdir(file_rm_temp_dir):
+                        # exist_ok does not exist in Python 2
+                        os.makedirs(file_rm_temp_dir)
+                    if file_rm.split(os.path.sep)[0] not in \
+                                            [self.updatedir, self.version_doc,
+                                             self.version_log]:
+                        self.log.debug("Moving {0} to {1}".format(file_rm,
+                                                                  tempdir))
+                        shutil.move(file_rm,file_rm_temp)
+                        file_rm_dir=os.path.dirname(file_rm)
+                        if os.path.isdir(file_rm_dir):
+                            if not os.listdir(file_rm_dir):
+                                os.rmdir(file_rm_dir)
+                                self.log.debug("Removing directory {0}"
+                                               .format(file_rm_dir))
+        self.log.info("Backing up current filelist")
         filelist_backup=tempfile.NamedTemporaryFile(delete=False)
-        with open(self.file_list, "r+b") as file_handle:
-            shutil.copyfileobj(file_handle,filelist_backup)
-        filelist_backup.close()
+        try:
+            with open(self.file_list, "r+b") as file_handle:
+                shutil.copyfileobj(file_handle,filelist_backup)
+        except Exception:
+            self.log.exception("Backup of current filelist failed!")
+            raise
+        finally:
+            filelist_backup.close()
+        self.log.info("Removing old filelist")
         os.remove(self.file_list)
+        self.log.info("Creating new filelist")
         filelist_new=list()
-        for dirpath, dirnames, filenames in os.walk(tempdir):
+        for dirpath, dirnames, filenames in os.walk(self.updatedir):
             for filename in filenames:
                 filepath=os.path.normpath(os.path.join(dirpath,
                                                        filename))
-                relpath_start=os.path.join(tempdir)
+                relpath_start=os.path.join(self.updatedir)
                 filepath=os.path.relpath(filepath,start=relpath_start)
+                filepath=os.path.normpath(filepath)
                 filepath+="\n"
                 filelist_new.append(filepath)
-        self.log.debug("New filelist")
-        self.log.debug(pprint.pformat(filelist_new))
-        self.log.info("Writing new filelist to filelist.txt")
+        self.log.debug("New filelist is:\n"+pprint.pformat(filelist_new))
+        self.log.info("Writing new filelist to {0}".format(self.file_list))
         with open(self.file_list, "w") as file_handle:
             file_handle.writelines(filelist_new)
-        self.log.info("Copy tempdir contents to current directory")
-        copy_glob(os.path.join(tempdir,"*"),".")
+        self.log.info("Copy downloaded contents to current directory")
+        copy_glob(os.path.join(self.updatedir,"*"),".")
         self.log.info("Remove backup filelist")
         os.remove(filelist_backup.name)
         self.log.info("Removing tempdir")
