@@ -3,8 +3,8 @@ Pyautoupdate package
 
 .. module:: pyautoupdate
 
-pyautoupdate.Launcher class
----------------------------
+class Launcher
+--------------
 
 .. autoclass:: pyautoupdate.Launcher
     :inherited-members:
@@ -12,3 +12,10 @@ pyautoupdate.Launcher class
     :private-members:
     :undoc-members:
 
+Exceptions
+----------
+
+.. autoexception:: pyautoupdate.PyautoupdateBaseException
+.. autoexception:: pyautoupdate.PyautoupdateBaseWarning
+.. autoexception:: pyautoupdate.ProcessRunningException
+.. autoexception:: pyautoupdate.CorruptedFileWarning
