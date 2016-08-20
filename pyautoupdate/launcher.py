@@ -4,18 +4,19 @@ from datetime import datetime
 from logging import WARNING
 import multiprocessing
 import os
+import pprint
+import re
 import shutil
 import tempfile
-import pprint
 import warnings
-import re
 
 from pkg_resources import parse_version, SetuptoolsVersion, PEP440Warning
 from setuptools.archive_util import unpack_archive
-from ._move_glob import move_glob, copy_glob
-from .exceptions import ProcessRunningException, CorruptedFileWarning
 
 import requests
+
+from ._move_glob import move_glob, copy_glob
+from .exceptions import ProcessRunningException, CorruptedFileWarning
 
 class Launcher(object):
     '''Creates a :class:`Launcher` object.
