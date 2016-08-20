@@ -40,6 +40,7 @@ def fixture_update_setup(request):
     with open("filelist.txt", mode='w') as filelist:
         filelist.write(extradir_blah+"\n")
         filelist.write(extradir_dummy+"\n")
+        filelist.write("28r83rxjfoejfeoifjefs/why_look_for_me.txt\n")
     return fixture_update_setup
 
 @pytest.mark.trylast
