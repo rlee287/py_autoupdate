@@ -373,20 +373,17 @@ class Launcher(object):
                 if not os.path.isdir(file_rm_temp_dir):
                     # exist_ok does not exist in Python 2
                     os.makedirs(file_rm_temp_dir)
-                init_dir=file_rm.split(os.path.sep)[0]
-                if init_dir not in [self.updatedir, self.version_doc,
-                                    self.version_log]:
+                if file_rm.split(os.path.sep)[0] not in \
+                                        [self.updatedir, self.version_doc,
+                                         self.version_log]:
                     self.log.debug("Moving {0} to {1}".format(file_rm,tempdir))
                     shutil.move(file_rm,file_rm_temp)
                     file_rm_dir=os.path.dirname(file_rm)
                     if os.path.isdir(file_rm_dir):
-                        try:
+                        if not os.listdir(file_rm_dir):
                             os.rmdir(file_rm_dir)
                             self.log.debug("Removing directory {0}"
                                            .format(file_rm_dir))
-                        except OSError:
-                            # Directory is not empty yet
-                            pass
         self.log.info("Backing up current filelist")
         filelist_backup=tempfile.NamedTemporaryFile(delete=False)
         with open(self.file_list, "r+b") as file_handle:
