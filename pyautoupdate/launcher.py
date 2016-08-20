@@ -91,7 +91,7 @@ class Launcher(object):
                           CorruptedFileWarning,
                           stacklevel=2)
         # Check that version_history.log is valid
-        open(self.version_log, 'a').close() # "Touch" self.version_doc
+        open(self.version_log, 'a').close() # "Touch" self.version_log
         if not self.version_log_validator():
             self.log.warning("Log file at {0} is corrupted!\n"
                              "Please check that {0} is "
@@ -115,8 +115,14 @@ class Launcher(object):
             self.url = url
         else:
             self.url = url + "/"
-        self.updatedir = updatedir
-        self.newfiles = newfiles
+        if len(os.path.normpath(updatedir).split(os.path.sep))>1:
+            raise ValueError("updatedir should be a single directory name")
+        else:
+            self.updatedir = updatedir
+        if len(os.path.normpath(newfiles).split(os.path.sep))>1:
+            raise ValueError("newfiles should be a single file name")
+        else:
+            self.newfiles = newfiles
         self.update = multiprocessing.Event()
         self.pid = os.getpid()
         self.args = args
@@ -386,9 +392,14 @@ class Launcher(object):
                                            .format(file_rm_dir))
         self.log.info("Backing up current filelist")
         filelist_backup=tempfile.NamedTemporaryFile(delete=False)
-        with open(self.file_list, "r+b") as file_handle:
-            shutil.copyfileobj(file_handle,filelist_backup)
-        filelist_backup.close()
+        try:
+            with open(self.file_list, "r+b") as file_handle:
+                shutil.copyfileobj(file_handle,filelist_backup)
+        except Exception:
+            self.log.exception("Backup of current filelist failed!")
+            raise
+        finally:
+            filelist_backup.close()
         self.log.info("Removing old filelist")
         os.remove(self.file_list)
         self.log.info("Creating new filelist")
