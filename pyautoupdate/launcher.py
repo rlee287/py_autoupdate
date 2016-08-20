@@ -73,13 +73,13 @@ class Launcher(object):
                  log_level=WARNING,
                  *args,**kwargs):
         self.log=multiprocessing.get_logger()
-        #Create handle to self.log only if necessary
         self.log.setLevel(log_level)
+        # Create handle to self.log only if necessary
         if len(self.log.handlers)==0:
             # Create handler to sys.stderr
             multiprocessing.log_to_stderr()
         self.log.info("Initializing launcher")
-        # Check that version.txt is valid and create it if it does not exist
+        # Check that self.version_doc is valid
         open(self.version_doc, 'a').close() # "Touch" self.version_doc
         if not self.version_doc_validator():
             self.log.warning("{0} does not have a valid version number!\n"
@@ -91,7 +91,7 @@ class Launcher(object):
             warnings.warn("{0} is corrupted!".format(self.version_doc),
                           CorruptedFileWarning,
                           stacklevel=2)
-        # Check that version_history.log is valid
+        # Check that self.version_log is valid
         open(self.version_log, 'a').close() # "Touch" self.version_doc
         if not self.version_log_validator():
             self.log.warning("Log file at {0} is corrupted!\n"
@@ -104,6 +104,7 @@ class Launcher(object):
                           CorruptedFileWarning,
                           stacklevel=2)
 
+        # Check that filepath is specified
         if len(filepath) != 0:
             self.filepath = filepath
         else:
