@@ -115,10 +115,12 @@ class Launcher(object):
             self.url = url
         else:
             self.url = url + "/"
+        # Check for valid updatedir
         if len(os.path.normpath(updatedir).split(os.path.sep))>1:
             raise ValueError("updatedir should be a single directory name")
         else:
             self.updatedir = updatedir
+        # Check for valid newfiles
         if len(os.path.normpath(newfiles).split(os.path.sep))>1:
             raise ValueError("newfiles should be a single file name")
         else:
