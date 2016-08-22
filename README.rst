@@ -1,6 +1,6 @@
 |pyautoupdate_logo|
 
-``pyautoupdate`` is a python wrapper that allows the wrapped code to
+Pyautoupdate is a python wrapper that allows the wrapped code to
 automatically update.
 
 |Build_Status| |Codecov_Status| |QuantifiedCode_Status|
@@ -10,21 +10,20 @@ Advantages
 
 -  This module is written in pure python. **This means that there is no
    need to have a C compiler to use this module.**
--  pyautoupdate works with both python 2 and 3
+-  Pyautoupdate works with both python 2 and 3
 -  pypy and pypy3 can also be used
 
 Dependencies
 ------------
 Core Dependencies
 ~~~~~~~~~~~~~~~~~
--  For python 2, python 2.6 or later is required
--  For python 3, python 3.3 or later is required
+-  Python 2.6+ or Python 3.3+
 -  ``requests`` for retrieving updated versions
 
 Development Dependencies
 ~~~~~~~~~~~~~~~~~~~~~~~~
 -  ``pytest`` for running the tests
--  ``pytest_cov`` to measure coverage
+-  ``coverage`` to measure coverage
 -  ``pylint`` for code style checks
 
 License
