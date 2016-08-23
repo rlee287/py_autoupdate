@@ -19,11 +19,12 @@ If you would like Pyautoupdate to have a new feature, please include the followi
  - A detailed description of the new feature
  - Why you think the feature would be useful to others
 
-Please follow the instructions under the [Pull Requests](#pull-requests) header if you would like to implement this feature yourself.
+Please follow the instructions under the [Pull Requests](#pull-requests) header if you would like to implement features or fix bugs.
 
 ## Pull Requests
 The Pyautoupdate project uses [PullApprove](https://pullapprove.com/) to approve pull requests.
-If you have an account on PullApprove, please approve your own pull request on PullApprove once it is ready for consideration.
+
+Authors of a Pull Request must approve it via PullApprove once it is ready for consideration. By approving a Pull Request, the author(s) signify that their contribution satisfies the [Developer Certificate of Origin](http://developercertificate.org/).
 
 When creating a non-release Pull Request, please include the following:
  - An issue number that this Pull Request addresses
