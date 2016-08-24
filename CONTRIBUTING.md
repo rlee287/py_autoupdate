@@ -25,6 +25,10 @@ Please follow the instructions under the [Pull Requests](#pull-requests) header 
 The Pyautoupdate project uses [PullApprove](https://pullapprove.com/) to approve pull requests.
 If you have an account on PullApprove, please approve your own pull request on PullApprove once it is ready for consideration.
 
+When creating a non-release Pull Request, please include the following:
+ - An issue number that this Pull Request addresses
+ - A description of the implementation of the bug fix/feature
+
 All code must be compatible with both Python 2 and 3. To ensure this, all tests on [Travis CI](https://travis-ci.org/) are required to
 pass (which will help to ensure Python 2 and 3 compatibility).
 
