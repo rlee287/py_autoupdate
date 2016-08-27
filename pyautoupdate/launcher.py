@@ -268,7 +268,7 @@ class Launcher(object):
             self.log.info("Process started")
             if not background:
                 self.process_join()
-                #Exit code can be used by program that calls the launcher
+                # Exit code can be used by program that calls the launcher
                 return self.process_exitcode
         else:
             # Process has started
@@ -418,16 +418,15 @@ class Launcher(object):
                                                        filename))
                 relpath_start=os.path.join(self.updatedir)
                 filepath=os.path.relpath(filepath,start=relpath_start)
-                filepath=os.path.normpath(filepath)
                 filepath+="\n"
                 filelist_new.append(filepath)
         self.log.debug("New filelist is:\n"+pprint.pformat(filelist_new))
         self.log.info("Writing new filelist to {0}".format(self.file_list))
         with open(self.file_list, "w") as file_handle:
             file_handle.writelines(filelist_new)
-        self.log.info("Copy downloaded contents to current directory")
+        self.log.info("Copying downloaded contents to current directory")
         copy_glob(os.path.join(self.updatedir,"*"),".")
-        self.log.info("Remove backup filelist")
+        self.log.info("Removing backup filelist")
         os.remove(filelist_backup.name)
         self.log.info("Removing tempdir")
         shutil.rmtree(tempdir)
