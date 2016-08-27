@@ -361,6 +361,18 @@ class Launcher(object):
         # Read in files from filelist and move to tempdir
         tempdir=tempfile.mkdtemp()
         self.log.debug("Created tempdir at {0}".format(tempdir))
+        self.log.info("Backing up current filelist")
+        filelist_backup=None
+        try:
+            filelist_backup=tempfile.NamedTemporaryFile(delete=False)
+            with open(self.file_list, "r+b") as file_handle:
+                shutil.copyfileobj(file_handle,filelist_backup)
+        except Exception:
+            self.log.exception("Backup of current filelist failed!")
+            raise
+        finally:
+            if filelist_backup is not None:
+                filelist_backup.close()
         self.log.info("Moving old files to tempdir")
         with open(self.file_list, "r") as file_handle:
             for line in file_handle:
@@ -396,16 +408,6 @@ class Launcher(object):
                                 os.rmdir(file_rm_dir)
                                 self.log.debug("Removing directory {0}"
                                                .format(file_rm_dir))
-        self.log.info("Backing up current filelist")
-        filelist_backup=tempfile.NamedTemporaryFile(delete=False)
-        try:
-            with open(self.file_list, "r+b") as file_handle:
-                shutil.copyfileobj(file_handle,filelist_backup)
-        except Exception:
-            self.log.exception("Backup of current filelist failed!")
-            raise
-        finally:
-            filelist_backup.close()
         self.log.info("Removing old filelist")
         os.remove(self.file_list)
         self.log.info("Creating new filelist")
