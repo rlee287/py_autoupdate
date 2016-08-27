@@ -42,7 +42,7 @@ To ensure this, all tests on [Travis CI](https://travis-ci.org/) are required to
 This will help to ensure Python 2 and 3 compatibility.
 
 In addition, please make sure that test coverage, as measured on [CodeCov](https://codecov.io/),
-does not decrease significantly and that no new significant issues are raised in QuantifiedCode.
+does not decrease significantly.
 
 Although exceptions may be made depending on circumstances,
 a pull request is less likely to be merged if code coverage decreases significantly.
