@@ -1,6 +1,7 @@
 # Contributing
 Thank you for taking your time to contribute to Pyautoupdate. When contributing, please follow the
-[PSF Code of Conduct](https://www.python.org/psf/codeofconduct/).
+[PSF Code of Conduct](https://www.python.org/psf/codeofconduct/),
+a copy of which is included in `PSFCodeOfConduct.rst`.
 
 Github's issues are used for bugtracking and feature requests. Please see the details below:
 
@@ -24,7 +25,10 @@ Please follow the instructions under the [Pull Requests](#pull-requests) header 
 ## Pull Requests
 The Pyautoupdate project uses [PullApprove](https://pullapprove.com/) to approve pull requests.
 
-Authors of a Pull Request must approve it via PullApprove once it is ready for consideration. By approving a Pull Request, the author(s) signify that their contribution satisfies the [Developer Certificate of Origin](http://developercertificate.org/).
+Authors of a Pull Request must approve it via PullApprove once it is ready for consideration.
+By approving a Pull Request, the author(s) signify that their contribution satisfies the
+[Developer Certificate of Origin](http://developercertificate.org/),
+a copy of which has been included in `DeveloperCertificateOrigin.txt`.
 
 When creating a non-release Pull Request, please include the following:
  - An issue number that this Pull Request addresses
