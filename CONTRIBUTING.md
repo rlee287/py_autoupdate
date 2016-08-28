@@ -6,6 +6,7 @@ a copy of which is included in `PSFCodeOfConduct.rst`.
 
 Github's issues are used for bugtracking and feature requests. Please see the details below:
 
+# Filing an Issue
 ## Reporting Bugs
 If you have run into issues with Pyautoupdate,
 please ensure that the problem is not with the application that uses Pyautoupdate.
@@ -25,7 +26,7 @@ If you would like Pyautoupdate to have a new feature, please include the followi
 Please follow the instructions under [Pull Requests](#pull-requests)
 if you would like to implement features or fix bugs.
 
-## Pull Requests
+# Pull Requests
 The Pyautoupdate project uses [PullApprove](https://pullapprove.com/) to approve pull requests.
 
 Authors of a Pull Request must approve it via PullApprove once it is ready for consideration.
