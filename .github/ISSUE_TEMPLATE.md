@@ -8,6 +8,10 @@
 
 **Description of the problem:**
 
+*Expected Behavior:*
+
+*Actual Behavior:*
+
 **Instructions to reliably reproduce the problem:**
 
 Even if it is a glitch that occurs unreliably, please try to include instructions here.

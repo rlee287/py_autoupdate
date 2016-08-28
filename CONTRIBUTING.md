@@ -16,8 +16,10 @@ that has not been already reported, please file a bug report including:
  - Python version
  - Operating System
  - Description of the problem
- - (If possible) instructions to reliably reproduce the problem
-
+    - Expected behavior
+    - Actual behavior
+ - Instructions to reliably reproduce the problem
+*Even if it is a glitch that occurs unreliably, please try to include some instructions*
 ## Requesting Features
 If you would like Pyautoupdate to have a new feature, please include the following:
  - A detailed description of the new feature
