@@ -42,7 +42,6 @@ def fixture_update_setup(request):
         filelist.write("28r83rxjfoejfeoifjefs/why_look_for_me.txt\n")
     return fixture_update_setup
 
-@pytest.mark.trylast
 def test_check_update(fixture_update_setup):
     """Checks the ability of program to upload new code"""
     assert os.path.isfile("filelist.txt")
