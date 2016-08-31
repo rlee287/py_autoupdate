@@ -4,8 +4,6 @@ from ..pyautoupdate.launcher import Launcher
 from .pytest_skipif import needinternet
 from .pytest_makevers import fixture_update_dir
 
-import os
-
 @needinternet
 def test_check_vers_noupdate(fixture_update_dir):
     """Tests that check that updates do not occur when unnecessary"""

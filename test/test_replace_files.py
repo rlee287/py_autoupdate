@@ -1,7 +1,6 @@
 from __future__ import absolute_import, print_function
 
 from ..pyautoupdate.launcher import Launcher
-from .pytest_skipif import needinternet
 
 from logging import DEBUG
 import os
