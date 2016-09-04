@@ -412,11 +412,11 @@ class Launcher(object):
         os.remove(self.file_list)
         self.log.info("Creating new filelist")
         filelist_new=list()
+        relpath_start=os.path.join(self.updatedir)
         for dirpath, dirnames, filenames in os.walk(self.updatedir):
             for filename in filenames:
                 filepath=os.path.normpath(os.path.join(dirpath,
                                                        filename))
-                relpath_start=os.path.join(self.updatedir)
                 filepath=os.path.relpath(filepath,start=relpath_start)
                 filepath+="\n"
                 filelist_new.append(filepath)
