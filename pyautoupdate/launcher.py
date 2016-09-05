@@ -27,7 +27,7 @@ class Launcher(object):
      site
     :param str updatedir: Directory in which new versions are downloaded into
     :param int log_level: Logging level for the built in logger
-    :param list args: ``args`` passed to the launched code
+    :param tuple args: ``args`` passed to the launched code
     :param dict kwargs: ``kwargs`` passed to the launched code
 
     .. note::
