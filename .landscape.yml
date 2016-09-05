@@ -4,6 +4,9 @@ strictness: high
 max-line-length: 79
 ignore-paths:
  - docs
+ignore-patterns:
+ - (^|/)__init__\.py
+ - pyautoupdate/.+commonpath.py
 python-targets:
  - 2
  - 3
