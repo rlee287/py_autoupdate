@@ -124,7 +124,9 @@ class Launcher(object):
             self.updatedir = updatedir
         # Check for valid newfiles
         if len(os.path.normpath(newfiles).split(os.path.sep))>1:
-            raise ValueError("newfiles should be a single file name")
+            raise ValueError("newfiles should be a single archive name")
+        elif not newfiles.endswith((".zip",".tar.gz",".tar.bz2")):
+            raise ValueError("newfiles must be a zip, gzip, or bzip file")
         else:
             self.newfiles = newfiles
         self.update = multiprocessing.Event()
