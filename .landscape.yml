@@ -6,7 +6,7 @@ pylint:
   disable:
     - exec-used
 pyroma:
-  - run: true
+  run: true
 ignore-paths:
  - docs
 ignore-patterns:
