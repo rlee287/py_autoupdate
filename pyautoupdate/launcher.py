@@ -19,7 +19,7 @@ from ._move_glob import move_glob, copy_glob
 from .exceptions import ProcessRunningException, CorruptedFileWarning
 
 class Launcher(object):
-    '''Creates a :class:`Launcher` object.
+    """Creates a :class:`Launcher` object.
 
     :param str filepath: Path to file to execute
     :param str url: Base URL from which to download new versions
@@ -65,7 +65,7 @@ class Launcher(object):
        The :class:`Launcher` uses :class:`multiprocessing.Process`
        to run the code.
 
-       Please ensure that all ``args`` and ``kwargs`` can be pickled.'''
+       Please ensure that all ``args`` and ``kwargs`` can be pickled."""
 
     def __init__(self, filepath, url,
                  newfiles='project.zip',
@@ -211,7 +211,7 @@ class Launcher(object):
 ########################### Code execution methods ###########################
 
     def _call_code(self, *args, **kwargs):
-        '''Method that executes the wrapped code.
+        """Method that executes the wrapped code.
 
            This is internally used as target of a
            :py:class:`multiprocessing.Process` instance.
@@ -222,7 +222,7 @@ class Launcher(object):
            .. warning::
 
               End users should never call this directly.
-              Please use the :meth:`run` method instead.'''
+              Please use the :meth:`run` method instead."""
         # Open code file
         with open(self.filepath, mode='r') as code_file:
             code = code_file.read()
@@ -243,14 +243,14 @@ class Launcher(object):
         exec(code, dict(), localvar)
 
     def run(self, background=False):
-        '''Method used to run code.
+        """Method used to run code.
 
            If background is ``False``, returns the Process's exitcode.
 
            :param bool background: Whether to run code in background
 
            :return: the exit code if background is ``False``
-           :rtype: :class:`int` or :class:`None`'''
+           :rtype: :class:`int` or :class:`None`"""
         # Find the right error to raise depending on python version
         self.log.info("Starting code")
         try:
@@ -288,7 +288,7 @@ class Launcher(object):
 ######################### New code retrieval methods #########################
 
     def check_new(self):
-        '''Retrieves the latest version number from the remote host.
+        """Retrieves the latest version number from the remote host.
 
            :return: Whether a newer version is available
            :rtype: bool
@@ -297,7 +297,7 @@ class Launcher(object):
               This function internally uses setuptool's ``parse_version``
               to compare versions.
 
-              Any versioning scheme described in :pep:`440` can be used.'''
+              Any versioning scheme described in :pep:`440` can be used."""
         self.log.info("Checking for updates")
         versionurl=self.url+self.version_doc
         # Get new files
@@ -325,9 +325,9 @@ class Launcher(object):
 
 
     def _reset_update_dir(self):
-        '''Resets the update directory to its default state.
+        """Resets the update directory to its default state.
 
-           It also creates a new update directory if one doesn't exist.'''
+           It also creates a new update directory if one doesn't exist."""
         self.log.debug("Resetting update directory")
         if os.path.isdir(self.updatedir):
             # Remove old contents
@@ -337,8 +337,8 @@ class Launcher(object):
         os.mkdir(self.updatedir)
 
     def _get_new(self):
-        '''Retrieves the new archive and extracts it to the downloads
-           directory.'''
+        """Retrieves the new archive and extracts it to the downloads
+           directory."""
         self.log.info("Retrieving new version")
         # Remove old archive
         if os.path.isfile(self.newfiles):
