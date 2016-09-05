@@ -5,8 +5,6 @@ max-line-length: 79
 pylint:
   disable:
     - exec-used
-uses:
-  - pytest
 pyroma:
   - run: true
 ignore-paths:
