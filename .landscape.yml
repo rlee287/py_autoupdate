@@ -2,6 +2,11 @@ doc-warnings: true
 test-warnings: true
 strictness: high
 max-line-length: 79
+pylint:
+  disable:
+    - exec-used
+uses:
+  - pytest
 ignore-paths:
  - docs
 ignore-patterns:
