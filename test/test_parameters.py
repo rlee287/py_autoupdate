@@ -63,12 +63,17 @@ def test_check_corrupted_vers(fixture_corrupt_vers):
             launch=Launcher("123","456")
 
 def test_invalid_updatedir():
-    """Test that checks for invalid updatdir"""
+    """Test that checks for invalid updatdir with multiple directories"""
     with pytest.raises(ValueError):
         launch=Launcher("123","456",newfiles="project.zip",
                         updatedir='downloads/extradir')
 
-def test_invalid_newfiles():
-    """Test that checks for invalid newfiles"""
+def test_invalid_multdir_newfiles():
+    """Test that checks for invalid newfiles with multiple directories"""
     with pytest.raises(ValueError):
         launch=Launcher("123","456",newfiles="project.zip/hahaha")
+
+def test_invalid_ext_newfiles():
+    """Test that checks for invalid newfiles with wrong file extension"""
+    Launcher("qwe","rty",newfiles='project.txt')
+
