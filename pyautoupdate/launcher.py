@@ -65,7 +65,8 @@ class Launcher(object):
        The :class:`Launcher` uses :class:`multiprocessing.Process`
        to run the code.
 
-       Please ensure that all ``args`` and ``kwargs`` can be pickled."""
+       Please ensure that all ``args`` and ``kwargs`` can be pickled.
+    """
 
     def __init__(self, filepath, url,
                  newfiles='project.zip',
@@ -224,7 +225,8 @@ class Launcher(object):
            .. warning::
 
               End users should never call this directly.
-              Please use the :meth:`run` method instead."""
+              Please use the :meth:`run` method instead.
+        """
         # Open code file
         with open(self.filepath, mode='r') as code_file:
             code = code_file.read()
@@ -252,7 +254,8 @@ class Launcher(object):
            :param bool background: Whether to run code in background
 
            :return: the exit code if background is ``False``
-           :rtype: :class:`int` or :class:`None`"""
+           :rtype: :class:`int` or :class:`None`
+        """
         # Find the right error to raise depending on python version
         self.log.info("Starting code")
         try:
@@ -299,7 +302,8 @@ class Launcher(object):
               This function internally uses setuptool's ``parse_version``
               to compare versions.
 
-              Any versioning scheme described in :pep:`440` can be used."""
+              Any versioning scheme described in :pep:`440` can be used.
+        """
         self.log.info("Checking for updates")
         versionurl=self.url+self.version_doc
         # Get new files
@@ -329,7 +333,8 @@ class Launcher(object):
     def _reset_update_dir(self):
         """Resets the update directory to its default state.
 
-           It also creates a new update directory if one doesn't exist."""
+           It also creates a new update directory if one doesn't exist.
+        """
         self.log.debug("Resetting update directory")
         if os.path.isdir(self.updatedir):
             # Remove old contents
@@ -339,8 +344,7 @@ class Launcher(object):
         os.mkdir(self.updatedir)
 
     def _get_new(self):
-        """Retrieves the new archive and extracts it to the downloads
-           directory."""
+        """Retrieves the new archive and extracts it to self.updatedir."""
         self.log.info("Retrieving new version")
         # Remove old archive
         if os.path.isfile(self.newfiles):
