@@ -75,5 +75,6 @@ def test_invalid_multdir_newfiles():
 
 def test_invalid_ext_newfiles():
     """Test that checks for invalid newfiles with wrong file extension"""
-    Launcher("qwe","rty",newfiles='project.txt')
+    with pytest.raises(ValueError):
+        Launcher("qwe","rty",newfiles='project.txt')
 
