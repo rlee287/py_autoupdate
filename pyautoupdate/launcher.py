@@ -80,13 +80,13 @@ class Launcher(object):
             # Create handler to sys.stderr
             multiprocessing.log_to_stderr()
         self.log.info("Initializing launcher")
+        self.log.debug("Validating files")
         # Check that self.version_doc is valid
-        open(self.version_doc, 'a').close() # "Touch" self.version_doc
         if not self.version_doc_validator():
             self.log.warning("{0} does not have a valid version number!\n"
                              "Please check that {0} is not being used!\n"
                              "It will be overwritten by this program!\n"
-                             "If the {0} is corrupted,"
+                             "If the {0} is corrupted,\n"
                              "Please use the logfile at {1} to restore it."
                              .format(self.version_doc,self.version_log))
             warnings.warn("{0} is corrupted!".format(self.version_doc),
@@ -105,6 +105,7 @@ class Launcher(object):
                           CorruptedFileWarning,
                           stacklevel=2)
 
+        self.log.debug("Validating arguments")
         # Check that filepath is specified
         if len(filepath) != 0:
             self.filepath = filepath
@@ -159,9 +160,8 @@ class Launcher(object):
         :return: Whether the version_doc is a proper version
         :rtype: bool
         """
-        version_valid=True
-        with warnings.catch_warnings():
-            warnings.simplefilter("error",category=PEP440Warning)
+        version_valid=os.path.isfile(self.version_doc)
+        if version_valid:
             try:
                 with open(self.version_doc,"r") as version_check:
                     vers=version_check.read()
