@@ -368,8 +368,11 @@ class Launcher(object):
                            .format(oldver,request_time)
         with open(self.version_log, "a") as log_file:
             log_file.write(version_to_add)
-        with open(self.version_doc, 'w') as new_version:
-            new_version.write(newver)
+        if not invalid:
+            with open(self.version_doc, 'w') as new_version:
+                new_version.write(newver)
+        else:
+            raise CorruptedFileWarning
         return has_new
 
 
