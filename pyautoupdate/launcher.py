@@ -189,25 +189,35 @@ class Launcher(object):
                 valid_log=bool(has_match)
         return bool(valid_log)
 
-######################### Process attribute getters  #########################
+########################### Process manipulation #############################
 
     @property
     def process_is_alive(self):
+        """Whether the process is alive"""
         return self.__process.is_alive()
 
     @property
     def process_pid(self):
+        """The process PID, if it exists"""
         return self.__process.pid
 
     @property
     def process_exitcode(self):
+        """The process exitcode, if it exists"""
         return self.__process.exitcode
 
     def process_join(self,timeout=None):
+        """Joins the process"""
         self.log.info("Joining process")
         self.__process.join(timeout)
 
     def process_terminate(self):
+        """Terminates the process.
+
+        .. warning::
+           All the provisos of :meth:`multiprocessing.Process.terminate`
+           apply.
+        """
         self.log.warning("Terminating Process")
         self.__process.terminate()
 
@@ -217,7 +227,7 @@ class Launcher(object):
         """Method that executes the wrapped code.
 
            This is internally used as target of a
-           :py:class:`multiprocessing.Process` instance.
+           :class:`multiprocessing.Process` instance.
 
            :param tuple args: ``*args`` tuple from self.args
            :param dict kwargs: ``**kwargs`` dict from self.kwargs
