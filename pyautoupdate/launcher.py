@@ -243,17 +243,19 @@ class Launcher(object):
         localvar = vars(self).copy()
         # Manipulate __dict__ attribute to add handle to check_new
         localvar["check_new"] = self.check_new
-        # Remove handle to process
+        # Remove handle to process object
         del localvar["_Launcher__process"]
         # Pass in args, kwargs, and logger
         localvar["args"]=args
         localvar["kwargs"]=kwargs
         # multiprocessing.get_logger again since this is not pickleable
-        localvar["log"]=multiprocessing.get_logger()
-        localvar["log"].debug("Starting process with"
-                              " the following local variables:\n"+\
-                              pprint.pformat(localvar))
+        local_log=multiprocessing.get_logger()
+        localvar["log"]=local_log
+        local_log.debug("Starting process with"
+                        " the following local variables:\n"+\
+                        pprint.pformat(localvar))
         # Execute code in file
+        local_log.info("Starting code from file")
         exec(code, dict(), localvar)
 
     def run(self, background=False):
@@ -267,15 +269,18 @@ class Launcher(object):
            :rtype: :class:`int` or :class:`None`
         """
         # Find the right error to raise depending on python version
-        self.log.info("Starting code")
+        self.log.info("Checking file existence")
         try:
             error_to_raise=FileNotFoundError
         except NameError:
             error_to_raise=IOError
         if not os.path.isfile(self.filepath):
             raise error_to_raise("No file at {0}".format(self.filepath))
+        self.log.info("Checking process status")
         if self.process_pid is None:
             # Process has not run yet
+            self.log.info("Process has not run yet")
+            self.log.info("Starting process")
             _backup_log=self.log
             del self.log
             self.__process.start()
@@ -290,6 +295,8 @@ class Launcher(object):
             if self.process_exitcode is not None:
                 # Process has already terminated
                 # Reinitialize the process instance
+                self.log.info("Process has already finished")
+                self.log.info("Reinitializing process object")
                 self.__process = None
                 self.__process = multiprocessing.Process(target=
                                                          self._call_code,
@@ -298,6 +305,7 @@ class Launcher(object):
                 # Recursion, since this will reset @property properties
                 self.run(background)
             else:
+                self.log.error("Process is already running")
                 raise ProcessRunningException
 
 ######################### New code retrieval methods #########################
