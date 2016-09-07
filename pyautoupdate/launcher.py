@@ -182,7 +182,7 @@ class Launcher(object):
         valid_log=True
         with open(self.version_log,"r") as log_file:
             log_syntax=re.compile(
-                r"Old .+?\|(New .+?|Up to date)\|Time .+?")
+                r"Old .+?\|(New .+?|Up to date|Server invalid)\|Time .+?")
             version=log_file.read()
             if version!="\n" and len(version)>0:
                 has_match=re.match(log_syntax,version)
@@ -327,20 +327,45 @@ class Launcher(object):
         # Get new files
         get_new=requests.get(versionurl, allow_redirects=True)
         get_new.raise_for_status()
+        request_time=datetime.utcnow()
         newver=get_new.text
         newver=newver.rstrip("\n")
         # Read in old version and compare to new version
         with open(self.version_doc, 'r') as old_version:
             oldver=old_version.read()
-            oldver=oldver.rstrip("\n")
-        has_new=(parse_version(newver)>parse_version(oldver))
+        oldver=oldver.rstrip("\n")
+        newver_obj=parse_version(newver)
+        invalid=False
+        if not isinstance("newver_obj",SetuptoolsVersion):
+            invalid=True
+            self.log.error("Retrieved version is invalid!\n"
+                           "Please contact the software authors.\n"
+                           "Please include the generated data dump"
+                           "in a bug report.")
+            newver_dump=None
+            try:
+                newver_dump=tempfile.NamedTemporaryFile(prefix="newverdump",
+                                                        delete=False)
+                self.log.error("Writing invalid version into {}"\
+                                   .format(newver_dump))
+                invalid_version_file.write(newver)
+            except Exception:
+                self.log.exception("Unable to write data dump")
+                raise
+            finally:
+                if newver_dump is not None:
+                    invalid_version_file.close()
+        has_new=(newver_obj>parse_version(oldver))
         # Add entry to the logfile and update version.txt
         if has_new:
             version_to_add="Old {0}|New {1}|Time {2}\n"\
-                           .format(oldver,newver,datetime.utcnow())
-        else:
+                           .format(oldver,newver,request_time)
+        elif invalid=False:
             version_to_add="Old {0}|Up to date|Time {1}\n"\
-                           .format(oldver,datetime.utcnow())
+                           .format(oldver,request_time)
+        else:
+            version_to_add="Old {0}|Server Invalid|Time {1}\n"\
+                           .format(oldver,request_time)
         with open(self.version_log, "a") as log_file:
             log_file.write(version_to_add)
         with open(self.version_doc, 'w') as new_version:
