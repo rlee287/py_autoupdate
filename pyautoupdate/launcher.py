@@ -360,7 +360,7 @@ class Launcher(object):
         if has_new:
             version_to_add="Old {0}|New {1}|Time {2}\n"\
                            .format(oldver,newver,request_time)
-        elif invalid=False:
+        elif invalid==False:
             version_to_add="Old {0}|Up to date|Time {1}\n"\
                            .format(oldver,request_time)
         else:
