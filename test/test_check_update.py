@@ -1,6 +1,7 @@
 from __future__ import absolute_import, print_function
 
 from ..pyautoupdate.launcher import Launcher
+from ..pyautoupdate.exceptions import CorruptedFileWarning
 from .pytest_skipif import needinternet
 from .pytest_makevers import fixture_update_dir
 
@@ -46,3 +47,18 @@ def test_check_update_nourl(fixture_update_dir):
         launch = Launcher('ANNOYING',
                           r'http://rlee287.github.io/pyautoupdate/')
         launch.check_new()
+
+@needinternet
+def test_check_update_invalidvers(fixture_update_dir):
+    """Test that ensures that updates occur when needed"""
+    package=fixture_update_dir("0.0.1")
+    launch = Launcher('blah',
+                      r'http://rlee287.github.io/pyautoupdate/testing2/')
+    with pytest.raises(CorruptedFileWarning):
+        launch.check_new()
+    assert os.path.isfile("version.txt")
+    assert os.path.isfile("version_history.log")
+    with open("version_history.log","r") as log_handle:
+        log=log_handle.read()
+    assert "Server Invalid" in log
+
