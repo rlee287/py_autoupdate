@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="534"
+   height="256"
+   viewBox="0 0 533.99998 256"
+   id="svg3363"
+   version="1.1"
+   inkscape:version="0.91 r13725"
+   sodipodi:docname="pyautoupdate_logo_v3_export.svg"
+   inkscape:export-filename="C:\Users\Ryan\Pictures\pyautoupdate logo v2\pyautoupdate_logo_v2_try.png"
+   inkscape:export-xdpi="90"
+   inkscape:export-ydpi="90">
+  <title
+     id="title7317">pyautoupdate_logo</title>
+  <defs
+     id="defs3365">
+    <linearGradient
+       id="linearGradient4671">
+      <stop
+         id="stop4673"
+         offset="0"
+         style="stop-color:#ffd43b;stop-opacity:1;" />
+      <stop
+         id="stop4675"
+         offset="1"
+         style="stop-color:#ffe873;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient
+       id="linearGradient4689">
+      <stop
+         id="stop4691"
+         offset="0"
+         style="stop-color:#5a9fd4;stop-opacity:1;" />
+      <stop
+         id="stop4693"
+         offset="1"
+         style="stop-color:#306998;stop-opacity:1;" />
+    </linearGradient>
+    <linearGradient
+       y2="137.27299"
+       x2="112.03144"
+       y1="192.35176"
+       x1="150.96111"
+       gradientTransform="matrix(0.562541,0,0,0.567972,-14.99112,-11.70237)"
+       gradientUnits="userSpaceOnUse"
+       id="linearGradient1475"
+       xlink:href="#linearGradient4671"
+       inkscape:collect="always" />
+    <linearGradient
+       y2="114.39767"
+       x2="135.66525"
+       y1="20.603781"
+       x1="26.648937"
+       gradientTransform="matrix(0.562541,0,0,0.567972,-14.99112,-11.70237)"
+       gradientUnits="userSpaceOnUse"
+       id="linearGradient1478"
+       xlink:href="#linearGradient4689"
+       inkscape:collect="always" />
+  </defs>
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="2.5070818"
+     inkscape:cx="166.38486"
+     inkscape:cy="157.20421"
+     inkscape:document-units="px"
+     inkscape:current-layer="layer1"
+     showgrid="false"
+     units="px"
+     inkscape:window-width="1366"
+     inkscape:window-height="684"
+     inkscape:window-x="-8"
+     inkscape:window-y="-8"
+     inkscape:window-maximized="1">
+    <inkscape:grid
+       type="xygrid"
+       id="grid4176" />
+  </sodipodi:namedview>
+  <metadata
+     id="metadata3368">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title>pyautoupdate_logo</dc:title>
+        <dc:creator>
+          <cc:Agent>
+            <dc:title>Ryan Lee</dc:title>
+          </cc:Agent>
+        </dc:creator>
+        <dc:subject>
+          <rdf:Bag>
+            <rdf:li>python</rdf:li>
+            <rdf:li>pyautoupdate</rdf:li>
+          </rdf:Bag>
+        </dc:subject>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(0,-796.36216)">
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:250px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#00ffff;fill-opacity:0.46153846;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="5.75"
+       y="967.73718"
+       id="text3375"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         id="tspan3377"
+         x="5.75"
+         y="967.73718"
+         style="font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;font-size:250px;font-family:Ubuntu;-inkscape-font-specification:'Ubuntu Medium';fill:#00ffff;fill-opacity:0.46153846"
+         dy="0 0"
+         dx="0 0">py</tspan></text>
+    <g
+       id="g4267">
+      <path
+         inkscape:connector-curvature="0"
+         id="path4201"
+         d="m 304.8517,924.34825 a 70.400141,70.400198 0 0 1 70.40014,-70.4002 70.400141,70.400198 0 0 1 70.40014,70.4002"
+         style="opacity:0;fill:#ff0000;fill-opacity:1" />
+      <path
+         style="opacity:0;fill:#0000ff;fill-opacity:1"
+         d="m 445.65198,924.34825 a 70.400141,70.400198 0 0 1 -70.40014,70.4002 70.400141,70.400198 0 0 1 -70.40014,-70.4002"
+         id="path4207"
+         inkscape:connector-curvature="0" />
+    </g>
+    <g
+       id="g4331"
+       transform="translate(25.696261,-1.288923)">
+      <g
+         id="g4259">
+        <text
+           xml:space="preserve"
+           style="font-style:normal;font-weight:normal;font-size:45px;line-height:0%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+           id="text4193"
+           sodipodi:linespacing="0%"
+           transform="matrix(1.1000022,0,0,1.1000031,-36.148979,-92.45299)"><textPath
+             xlink:href="#path4201"
+             id="textPath4226"
+             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:50px;line-height:0%;font-family:Ubuntu;-inkscape-font-specification:Ubuntu;fill:#4dda5f;fill-opacity:1"
+             dx="0 0 0 5 -0.5 0.5 2 3 -4">   auto-&gt;</textPath></text>
+        <text
+           xml:space="preserve"
+           style="font-style:normal;font-weight:normal;font-size:45px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#4dda5f;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+           id="text4197"
+           sodipodi:linespacing="125%"
+           transform="matrix(1.1000022,0,0,1.1000031,-36.148979,-92.45299)"><textPath
+             xlink:href="#path4207"
+             id="textPath4238"
+             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:50px;font-family:Ubuntu;-inkscape-font-specification:Ubuntu;word-spacing:0px"
+             dx="0 -5 2 -3.5 1.5 1.5 3 3 -4"
+             rotate="0 0 350 5 0"> update-&gt;</textPath></text>
+      </g>
+      <g
+         id="g3372"
+         transform="matrix(1.1514793,0,0,1.1389016,311.25183,860.34825)">
+        <path
+           inkscape:connector-curvature="0"
+           id="path1948"
+           d="M 54.918785,9.1918365e-4 C 50.335132,0.02221918 45.957846,0.41313718 42.106285,1.0946692 30.760069,3.0991732 28.700036,7.2947712 28.700035,15.032169 l 0,10.21875 26.8125,0 0,3.40625 -26.8125,0 -10.0625,0 c -7.792459,0 -14.615759,4.683717 -16.75,13.59375 -2.46181971,10.212966 -2.57101481,16.586023 0,27.25 1.905929,7.937852 6.457543,13.593748 14.25,13.59375 l 9.21875,0 0,-12.25 c 0,-8.849902 7.657144,-16.656248 16.75,-16.65625 l 26.78125,0 c 7.454951,0 13.406253,-6.138164 13.40625,-13.625 l 0,-25.53125 c 0,-7.2663388 -6.12998,-12.7247768 -13.40625,-13.9374998 C 64.281548,0.32794418 59.502438,-0.02037802 54.918785,9.1918365e-4 Z m -14.5,8.21875001635 c 2.769547,0 5.03125,2.2986458 5.03125,5.1249998 -2e-6,2.816336 -2.261703,5.09375 -5.03125,5.09375 -2.779476,-1e-6 -5.03125,-2.277415 -5.03125,-5.09375 -10e-7,-2.826353 2.251774,-5.1249998 5.03125,-5.1249998 z"
+           style="fill:url(#linearGradient1478);fill-opacity:1" />
+        <path
+           inkscape:connector-curvature="0"
+           id="path1950"
+           d="m 85.637535,28.65717 0,11.90625 c 0,9.230755 -7.825895,16.999999 -16.75,17 l -26.78125,0 c -7.335833,0 -13.406249,6.278483 -13.40625,13.625 l 0,25.53124 c 0,7.26634 6.318588,11.54032 13.40625,13.625 8.487331,2.49561 16.626237,2.94663 26.78125,0 6.750155,-1.95439 13.406253,-5.88761 13.40625,-13.625 l 0,-10.21874 -26.78125,0 0,-3.40625 26.78125,0 13.406255,0 c 7.79246,0 10.69625,-5.435408 13.40624,-13.59375 2.79933,-8.398886 2.68022,-16.475776 0,-27.25 -1.92578,-7.757441 -5.60387,-13.59375 -13.40624,-13.59375 l -10.062505,0 z m -15.0625,64.65625 c 2.779478,0 5.03125,2.27741 5.03125,5.09374 -2e-6,2.82635 -2.251775,5.125 -5.03125,5.125 -2.76955,0 -5.03125,-2.29865 -5.03125,-5.125 2e-6,-2.81633 2.261697,-5.09374 5.03125,-5.09374 z"
+           style="fill:url(#linearGradient1475);fill-opacity:1" />
+      </g>
+    </g>
+    <path
+       style="opacity:1;fill:#ffdf57;fill-opacity:1"
+       d="m 25.294317,131.37856 0.255553,-86.225858 7.5,-1.756677 c 21.828832,-5.112826 48.682363,-6.309654 62.590037,-2.78956 11.879123,3.006657 19.848333,7.431147 27.909963,15.495547 12.07894,12.083093 17.46697,25.429776 18.27274,45.263368 1.4685,36.14637 -12.23645,60.84264 -38.77274,69.86834 -4.311542,1.46647 -8.309082,1.85786 -18.5,1.81128 -12.050601,-0.0551 -13.602503,-0.28733 -21.25,-3.18015 l -8.25,-3.12072 0,25.43014 0,25.43015 -15.005553,0 -15.005554,0 0.255554,-86.22586 z m 69.4452,13.62992 C 105.52804,139.61629 112.07138,125.30817 112.03251,107.19446 111.98657,85.793268 104.25266,71.407508 89.941265,66.102807 85.658912,64.515498 82.0814,64.104418 72.54987,64.104418 c -6.6,0 -13.2375,0.346073 -14.75,0.769052 l -2.75,0.769052 0,37.797078 0,37.79708 5.75,2.6938 c 7.881464,3.69235 12.521969,4.64223 20.939647,4.28617 5.521385,-0.23355 8.537861,-0.97796 13,-3.20817 z"
+       id="path4170"
+       inkscape:connector-curvature="0"
+       transform="translate(0,796.36216)"
+       sodipodi:nodetypes="ccsccssssccsccccccscsccscccsccs" />
+    <path
+       style="opacity:1;fill:#4383b6;fill-opacity:1"
+       d="m 165.04987,216.91461 c -4.27446,-0.71374 -13,-3.33836 -13,-3.91036 0,-0.84142 5.11343,-22.84659 5.36814,-23.10131 0.12385,-0.12384 2.4132,0.43332 5.08745,1.23815 6.37097,1.91738 18.00801,1.86544 23.79447,-0.10621 5.50364,-1.87528 12.38604,-8.80543 16.1798,-16.29204 l 2.59812,-5.12716 -3.96612,-7.88822 C 184.74788,129.18136 168.8335,89.056201 158.12899,53.354418 l -3.82285,-12.75 15.7204,0 15.7204,0 2.28276,8.75 c 7.78311,29.833236 28.95111,88.805062 31.06859,86.553822 2.2021,-2.34119 17.55236,-54.248924 25.22624,-85.303822 l 2.34751,-9.5 15.18891,-0.276046 c 8.35391,-0.151825 15.18892,0.02476 15.18892,0.39242 0,0.367657 -2.06313,7.916877 -4.58473,16.776046 -10.77616,37.859928 -31.05774,94.067902 -43.37255,120.201772 -10.95693,23.25226 -21.79398,34.01404 -38.12935,37.86453 -5.89714,1.39004 -19.92713,1.85104 -25.91337,0.85147 z"
+       id="path4172"
+       inkscape:connector-curvature="0"
+       transform="translate(0,796.36216)" />
+  </g>
+</svg>
