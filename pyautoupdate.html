@@ -42,8 +42,8 @@
             
   <div class="section" id="module-pyautoupdate">
 <span id="pyautoupdate-package"></span><h1>Pyautoupdate package<a class="headerlink" href="#module-pyautoupdate" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="pyautoupdate-launcher-class">
-<h2>pyautoupdate.Launcher class<a class="headerlink" href="#pyautoupdate-launcher-class" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="class-launcher">
+<h2>class Launcher<a class="headerlink" href="#class-launcher" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="pyautoupdate.Launcher">
 <em class="property">class </em><code class="descclassname">pyautoupdate.</code><code class="descname">Launcher</code><span class="sig-paren">(</span><em>filepath</em>, <em>url</em>, <em>newfiles='project.zip'</em>, <em>updatedir='downloads'</em>, <em>log_level=30</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyautoupdate/launcher.html#Launcher"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyautoupdate.Launcher" title="Permalink to this definition">¶</a></dt>
@@ -59,7 +59,7 @@
 site</li>
 <li><strong>updatedir</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.5)"><em>str</em></a>) &#8211; Directory in which new versions are downloaded into</li>
 <li><strong>log_level</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.5)"><em>int</em></a>) &#8211; Logging level for the built in logger</li>
-<li><strong>args</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.5)"><em>list</em></a>) &#8211; <code class="docutils literal"><span class="pre">args</span></code> passed to the launched code</li>
+<li><strong>args</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.5)"><em>tuple</em></a>) &#8211; <code class="docutils literal"><span class="pre">args</span></code> passed to the launched code</li>
 <li><strong>kwargs</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.5)"><em>dict</em></a>) &#8211; <code class="docutils literal"><span class="pre">kwargs</span></code> passed to the launched code</li>
 </ul>
 </td>
@@ -147,8 +147,7 @@ Please use the <a class="reference internal" href="#pyautoupdate.Launcher.run" t
 <dl class="method">
 <dt id="pyautoupdate.Launcher._get_new">
 <code class="descname">_get_new</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyautoupdate/launcher.html#Launcher._get_new"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyautoupdate.Launcher._get_new" title="Permalink to this definition">¶</a></dt>
-<dd><p>Retrieves the new archive and extracts it to the downloads
-directory.</p>
+<dd><p>Retrieves the new archive and extracts it to self.updatedir.</p>
 </dd></dl>
 
 <dl class="method">
@@ -194,27 +193,37 @@ to compare versions.</p>
 <dl class="attribute">
 <dt id="pyautoupdate.Launcher.process_exitcode">
 <code class="descname">process_exitcode</code><a class="headerlink" href="#pyautoupdate.Launcher.process_exitcode" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>The process exitcode, if it exists</p>
+</dd></dl>
 
 <dl class="attribute">
 <dt id="pyautoupdate.Launcher.process_is_alive">
 <code class="descname">process_is_alive</code><a class="headerlink" href="#pyautoupdate.Launcher.process_is_alive" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Whether the process is alive</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="pyautoupdate.Launcher.process_join">
 <code class="descname">process_join</code><span class="sig-paren">(</span><em>timeout=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyautoupdate/launcher.html#Launcher.process_join"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyautoupdate.Launcher.process_join" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Joins the process</p>
+</dd></dl>
 
 <dl class="attribute">
 <dt id="pyautoupdate.Launcher.process_pid">
 <code class="descname">process_pid</code><a class="headerlink" href="#pyautoupdate.Launcher.process_pid" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>The process PID, if it exists</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="pyautoupdate.Launcher.process_terminate">
 <code class="descname">process_terminate</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyautoupdate/launcher.html#Launcher.process_terminate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyautoupdate.Launcher.process_terminate" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Terminates the process.</p>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">All the provisos of <a class="reference external" href="https://docs.python.org/3/library/multiprocessing.html#multiprocessing.Process.terminate" title="(in Python v3.5)"><code class="xref py py-meth docutils literal"><span class="pre">multiprocessing.Process.terminate()</span></code></a>
+apply.</p>
+</div>
+</dd></dl>
 
 <dl class="method">
 <dt id="pyautoupdate.Launcher.run">
@@ -286,6 +295,33 @@ to compare versions.</p>
 </dd></dl>
 
 </div>
+<div class="section" id="exceptions">
+<h2>Exceptions<a class="headerlink" href="#exceptions" title="Permalink to this headline">¶</a></h2>
+<dl class="exception">
+<dt id="pyautoupdate.PyautoupdateBaseException">
+<em class="property">exception </em><code class="descclassname">pyautoupdate.</code><code class="descname">PyautoupdateBaseException</code><a class="reference internal" href="_modules/pyautoupdate/exceptions.html#PyautoupdateBaseException"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyautoupdate.PyautoupdateBaseException" title="Permalink to this definition">¶</a></dt>
+<dd><p>Base exception for all pyautoupdate errors</p>
+</dd></dl>
+
+<dl class="exception">
+<dt id="pyautoupdate.PyautoupdateBaseWarning">
+<em class="property">exception </em><code class="descclassname">pyautoupdate.</code><code class="descname">PyautoupdateBaseWarning</code><a class="reference internal" href="_modules/pyautoupdate/exceptions.html#PyautoupdateBaseWarning"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyautoupdate.PyautoupdateBaseWarning" title="Permalink to this definition">¶</a></dt>
+<dd><p>Base warning for all pyautoupdate errors</p>
+</dd></dl>
+
+<dl class="exception">
+<dt id="pyautoupdate.ProcessRunningException">
+<em class="property">exception </em><code class="descclassname">pyautoupdate.</code><code class="descname">ProcessRunningException</code><a class="reference internal" href="_modules/pyautoupdate/exceptions.html#ProcessRunningException"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyautoupdate.ProcessRunningException" title="Permalink to this definition">¶</a></dt>
+<dd><p>Exception when process is already running</p>
+</dd></dl>
+
+<dl class="exception">
+<dt id="pyautoupdate.CorruptedFileWarning">
+<em class="property">exception </em><code class="descclassname">pyautoupdate.</code><code class="descname">CorruptedFileWarning</code><a class="reference internal" href="_modules/pyautoupdate/exceptions.html#CorruptedFileWarning"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyautoupdate.CorruptedFileWarning" title="Permalink to this definition">¶</a></dt>
+<dd><p>Warning that critical files are corrupted</p>
+</dd></dl>
+
+</div>
 </div>
 
 
@@ -346,7 +382,8 @@ to compare versions.</p>
 <h3>Navigation</h3>
 <ul class="current">
 <li class="toctree-l1 current"><a class="current reference internal" href="">Pyautoupdate package</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#pyautoupdate-launcher-class">pyautoupdate.Launcher class</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#class-launcher">class Launcher</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#exceptions">Exceptions</a></li>
 </ul>
 </li>
 </ul>
