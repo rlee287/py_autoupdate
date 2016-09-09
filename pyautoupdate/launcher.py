@@ -336,7 +336,7 @@ class Launcher(object):
         oldver=oldver.rstrip("\n")
         newver_obj=parse_version(newver)
         invalid=False
-        if not isinstance("newver_obj",SetuptoolsVersion):
+        if not isinstance(newver_obj,SetuptoolsVersion):
             invalid=True
             self.log.error("Retrieved version is invalid!\n"
                            "Please contact the software authors.\n"
@@ -348,7 +348,7 @@ class Launcher(object):
                                                         delete=False)
                 self.log.error("Writing invalid version into {}"\
                                    .format(newver_dump))
-                newver_dump.write(newver)
+                newver_dump.write(bytes(newver,"utf-8"))
             except Exception:
                 self.log.exception("Unable to write data dump")
                 raise
