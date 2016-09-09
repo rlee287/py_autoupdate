@@ -348,13 +348,13 @@ class Launcher(object):
                                                         delete=False)
                 self.log.error("Writing invalid version into {}"\
                                    .format(newver_dump))
-                invalid_version_file.write(newver)
+                newver_dump.write(newver)
             except Exception:
                 self.log.exception("Unable to write data dump")
                 raise
             finally:
                 if newver_dump is not None:
-                    invalid_version_file.close()
+                    newver_dump.close()
         has_new=(newver_obj>parse_version(oldver))
         # Add entry to the logfile and update version.txt
         if has_new:
