@@ -466,7 +466,8 @@ class Launcher(object):
         self.log.info("Creating new filelist")
         filelist_new=list()
         relpath_start=os.path.join(self.updatedir)
-        for dirpath, dirnames, filenames in os.walk(self.updatedir):
+        for dirpath, _, filenames in os.walk(self.updatedir):
+            # _ is dirnames, but it is unused
             for filename in filenames:
                 filepath=os.path.normpath(os.path.join(dirpath,
                                                        filename))
