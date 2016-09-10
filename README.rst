@@ -31,7 +31,8 @@ License
 
 LGPL 2.1
 
-.. |pyautoupdate_logo| image:: https://cloud.githubusercontent.com/assets/14067959/13902076/25e8305e-edf7-11e5-873c-8a4e0fc2780f.png
+.. |pyautoupdate_logo| image:: https://rlee287.github.io/pyautoupdate/_static/images/pyautoupdate_logo.svg
+   :alt: Pyautoupdate Logo
 .. |Build_Status| image:: https://travis-ci.org/rlee287/pyautoupdate.svg?branch=develop
    :target: https://travis-ci.org/rlee287/pyautoupdate
    :alt: Travis CI results
