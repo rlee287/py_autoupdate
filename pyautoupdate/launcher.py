@@ -18,6 +18,7 @@ import requests
 from ._move_glob import move_glob, copy_glob
 from .exceptions import ProcessRunningException, CorruptedFileWarning
 
+
 class Launcher(object):
     """Creates a :class:`Launcher` object.
 
@@ -252,7 +253,7 @@ class Launcher(object):
         local_log=multiprocessing.get_logger()
         localvar["log"]=local_log
         local_log.debug("Starting process with"
-                        " the following local variables:\n"+\
+                        " the following local variables:\n"+
                         pprint.pformat(localvar))
         # Execute code in file
         local_log.info("Starting code from file")
@@ -347,7 +348,7 @@ class Launcher(object):
                 newver_dump=tempfile.NamedTemporaryFile(prefix="newverdump",
                                                         delete=False,
                                                         mode="wt")
-                self.log.error("Writing invalid version into {0}"\
+                self.log.error("Writing invalid version into {0}"
                                    .format(newver_dump.name))
                 newver_dump.write(newver)
             except Exception:
@@ -375,7 +376,6 @@ class Launcher(object):
         else:
             raise CorruptedFileWarning
         return has_new
-
 
     def _reset_update_dir(self):
         """Resets the update directory to its default state.
