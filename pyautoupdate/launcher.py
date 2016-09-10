@@ -347,7 +347,8 @@ class Launcher(object):
             try:
                 newver_dump=tempfile.NamedTemporaryFile(prefix="newverdump",
                                                         delete=False,
-                                                        mode="wt")
+                                                        mode="wt",
+                                                        dir=os.getcwd())
                 self.log.error("Writing invalid version into {0}"
                                    .format(newver_dump.name))
                 newver_dump.write(newver)
