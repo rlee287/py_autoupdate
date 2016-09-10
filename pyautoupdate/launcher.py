@@ -345,10 +345,11 @@ class Launcher(object):
             newver_dump=None
             try:
                 newver_dump=tempfile.NamedTemporaryFile(prefix="newverdump",
-                                                        delete=False)
+                                                        delete=False,
+                                                        mode="r+w")
                 self.log.error("Writing invalid version into {}"\
-                                   .format(newver_dump))
-                newver_dump.write(bytes(newver,"utf-8"))
+                                   .format(newver_dump.name))
+                newver_dump.write(newver)
             except Exception:
                 self.log.exception("Unable to write data dump")
                 raise
