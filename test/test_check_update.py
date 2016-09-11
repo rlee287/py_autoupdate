@@ -52,8 +52,8 @@ def test_check_update_nourl(fixture_update_dir):
 @pytest.fixture(scope="function")
 def remove_dump(request):
     def teardown():
-        for glob in glob.iglob("newverdump*"):
-            os.remove(glob)
+        for glob_file in glob.iglob("newverdump*"):
+            os.remove(glob_file)
     request.addfinalizer(teardown)
     return remove_dump
 
