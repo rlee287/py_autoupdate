@@ -48,8 +48,16 @@ def test_check_update_nourl(fixture_update_dir):
                           r'http://rlee287.github.io/pyautoupdate/')
         launch.check_new()
 
+@pytest.fixture(scope="function")
+def remove_dump(request):
+    def teardown():
+        for glob in glob.iglob("newverdump*"):
+            os.remove(glob)
+    requests.addfinalizer(teardown)
+    return remove_dump
+
 @needinternet
-def test_check_update_invalidvers(fixture_update_dir):
+def test_check_update_invalidvers(fixture_update_dir,remove_dump):
     """Test that ensures that updates occur when needed"""
     package=fixture_update_dir("0.0.1")
     launch = Launcher('blah',
