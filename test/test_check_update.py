@@ -54,7 +54,7 @@ def remove_dump(request):
     def teardown(requests):
         for glob in glob.iglob("newverdump*"):
             os.remove(glob)
-    requests.addfinalizer(teardown)
+    request.addfinalizer(teardown)
     return remove_dump
 
 @needinternet
