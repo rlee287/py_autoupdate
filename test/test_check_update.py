@@ -5,6 +5,7 @@ from ..pyautoupdate.exceptions import CorruptedFileWarning
 from .pytest_skipif import needinternet
 from .pytest_makevers import fixture_update_dir
 
+import glob
 import os
 
 import pytest
@@ -50,7 +51,7 @@ def test_check_update_nourl(fixture_update_dir):
 
 @pytest.fixture(scope="function")
 def remove_dump(request):
-    def teardown():
+    def teardown(requests):
         for glob in glob.iglob("newverdump*"):
             os.remove(glob)
     requests.addfinalizer(teardown)
