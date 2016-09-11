@@ -341,7 +341,7 @@ class Launcher(object):
             invalid=True
             self.log.error("Retrieved version is invalid!\n"
                            "Please contact the software authors.\n"
-                           "Please include the generated data dump"
+                           "Please include the generated data dump "
                            "in a bug report.")
             newver_dump=None
             try:
