@@ -282,32 +282,29 @@ class Launcher(object):
             # Process has not run yet
             self.log.info("Process has not run yet")
             self.log.info("Starting process")
-            _backup_log=self.log
             del self.log
             self.__process.start()
-            self.log=_backup_log
+            self.log=multiprocessing.get_logger()
             self.log.info("Process started")
             if not background:
                 self.process_join()
                 # Exit code can be used by program that calls the launcher
                 return self.process_exitcode
+        elif self.process_exitcode is not None:
+            # Process has started and has terminated
+            # Reinitialize the process instance
+            self.log.info("Process has already finished")
+            self.log.info("Reinitializing process object")
+            self.__process = None
+            self.__process = multiprocessing.Process(target=
+                                                     self._call_code,
+                                                     args=self.args,
+                                                     kwargs=self.kwargs)
+            # Recursion, since this will reset @property properties
+            self.run(background)
         else:
-            # Process has started
-            if self.process_exitcode is not None:
-                # Process has already terminated
-                # Reinitialize the process instance
-                self.log.info("Process has already finished")
-                self.log.info("Reinitializing process object")
-                self.__process = None
-                self.__process = multiprocessing.Process(target=
-                                                         self._call_code,
-                                                         args=self.args,
-                                                         kwargs=self.kwargs)
-                # Recursion, since this will reset @property properties
-                self.run(background)
-            else:
-                self.log.error("Process is already running")
-                raise ProcessRunningException
+            self.log.error("Process is already running")
+            raise ProcessRunningException
 
 ######################### New code retrieval methods #########################
 
