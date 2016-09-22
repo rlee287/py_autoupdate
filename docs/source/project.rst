@@ -32,7 +32,7 @@ which initializes the :class:`Launcher` object.
    of code needed in that file.
 
 ``version.txt``
-****************
+***************
 This file contains a version number for the code.
 It is used to as a comparison to check for newer versions.
 
