@@ -11,7 +11,7 @@ import tempfile
 import warnings
 
 from pkg_resources import parse_version, SetuptoolsVersion, PEP440Warning
-from setuptools.archive_util import unpack_archive
+from setuptools.archive_util import unpack_archive, UnrecognizedFormat
 
 import requests
 
@@ -84,12 +84,12 @@ class Launcher(object):
         self.log.debug("Validating files")
         # Check that self.version_doc is valid
         if not self.version_doc_validator():
-            self.log.warning("{0} does not have a valid version number!\n"
-                             "Please check that {0} is not being used!\n"
-                             "It will be overwritten by this program!\n"
-                             "If the {0} is corrupted,\n"
-                             "Please use the logfile at {1} to restore it."
-                             .format(self.version_doc,self.version_log))
+            self.log.error("{0} does not have a valid version number!\n"
+                           "{0} is a reserved file name.\n"
+                           "It will be overwritten by this program!\n"
+                           "If the {0} is corrupted,\n"
+                           "Please use the logfile at {1} to restore it."
+                           .format(self.version_doc,self.version_log))
             warnings.warn("{0} is corrupted!".format(self.version_doc),
                           CorruptedFileWarning,
                           stacklevel=2)
@@ -97,10 +97,9 @@ class Launcher(object):
         open(self.version_log, 'a').close() # "Touch" self.version_log
         if not self.version_log_validator():
             self.log.warning("Log file at {0} is corrupted!\n"
-                             "Please check that {0} is "
-                             "not being used!\n"
-                             "It will be overwritten "
-                             "by this program!".format(self.version_log))
+                             "{0} is a reserved file name.\n"
+                             "Please ensure that your program is "
+                             "not using it.".format(self.version_log))
             warnings.warn("{0} is corrupted!"
                           .format(self.version_log),
                           CorruptedFileWarning,
@@ -139,7 +138,7 @@ class Launcher(object):
         self.__process = multiprocessing.Process(target=self._call_code,
                                                  args=self.args,
                                                  kwargs=self.kwargs)
-        self.log.info("Launcher initialized")
+        self.log.info("Launcher initialized successfully")
 
 ####################### Filename getters and validators ######################
 
@@ -323,6 +322,7 @@ class Launcher(object):
         self.log.info("Checking for updates")
         versionurl=self.url+self.version_doc
         # Get new files
+        self.log.debug("Retrieving new version from {0}".format(versionurl))
         get_new=requests.get(versionurl, allow_redirects=True)
         get_new.raise_for_status()
         request_time=datetime.utcnow()
@@ -336,7 +336,7 @@ class Launcher(object):
         invalid=False
         if not isinstance(newver_obj,SetuptoolsVersion):
             invalid=True
-            self.log.error("Retrieved version is invalid!\n"
+            self.log.error("Retrieved version number is invalid!\n"
                            "Please contact the software authors.\n"
                            "Please include the generated data dump "
                            "in a bug report.")
@@ -403,8 +403,15 @@ class Launcher(object):
                 if chunk:
                     filehandle.write(chunk)
         # Unpack archive and remove it after extraction
-        unpack_archive(self.newfiles, self.updatedir)
-        os.remove(self.newfiles)
+        try:
+            unpack_archive(self.newfiles, self.updatedir)
+            os.remove(self.newfiles)
+        except UnrecognizedFormat:
+            self.log.error("Retrieved version archive is invalid!\n"
+                           "Please contact the software authors.\n"
+                           "Please include the invalid archive "
+                           "in a bug report.")
+            os.rename(self.newfiles,self.newfiles+".dump")
 
     def _replace_files(self):
         """Replaces the existing files with the downloaded files."""
