@@ -73,7 +73,6 @@ class Launcher(object):
                  newfiles='project.zip',
                  updatedir='downloads',
                  log_level=WARNING,
-                 timeout=None,
                  *args,**kwargs):
         self.log=multiprocessing.get_logger()
         self.log.setLevel(log_level)
@@ -134,7 +133,6 @@ class Launcher(object):
             self.newfiles = newfiles
         self.update = multiprocessing.Lock()
         self.pid = os.getpid()
-        self.locktimeout=timeout
         self.args = args
         self.kwargs = kwargs
         self.__process = multiprocessing.Process(target=self._call_code,
@@ -265,7 +263,7 @@ class Launcher(object):
         local_log.info("Starting code from file")
         try:
             local_log.debug("Acquiring code lock")
-            self.update.acquire(self.locktimeout)
+            self.update.acquire()
             exec(code, dict(), localvar)
         finally:
             local_log.debug("Releasing code lock")
@@ -433,7 +431,7 @@ class Launcher(object):
     def _replace_files(self):
         """Replaces the existing files with the downloaded files."""
         try:
-            self.update.acquire(self.locktimeout)
+            self.update.acquire()
             self.log.info("Replacing files")
             # Read in files from filelist and move to tempdir
             tempdir=tempfile.mkdtemp()
