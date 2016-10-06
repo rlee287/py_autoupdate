@@ -403,7 +403,7 @@ class Launcher(object):
         # shutil.rmtree would have deleted the directory
         os.mkdir(self.updatedir)
 
-    def _get_new(self):
+    def _get_new(self, allow_redirects=True, chunk_size=512):
         """Retrieves the new archive and extracts it to self.updatedir."""
         self.log.info("Retrieving new version")
         # Remove old archive
@@ -411,10 +411,11 @@ class Launcher(object):
             os.remove(self.newfiles)
         newurl = self.url+self.newfiles
         # Get new files
-        http_get = requests.get(newurl, stream=True, allow_redirects=True)
+        http_get = requests.get(newurl, stream=True,
+                                allow_redirects=allow_redirects)
         http_get.raise_for_status()
         with open(self.newfiles, 'wb') as filehandle:
-            for chunk in http_get.iter_content(chunk_size=1024*50):
+            for chunk in http_get.iter_content(chunk_size=chunk_size):
                 if chunk:
                     filehandle.write(chunk)
         # Unpack archive and remove it after extraction
