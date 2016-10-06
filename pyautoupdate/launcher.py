@@ -49,7 +49,7 @@ class Launcher(object):
     +-------------+-------------------------------------------------+
     |``updatedir``|Directory into which the new archive is extracted|
     +-------------+-------------------------------------------------+
-    |``update``   |:class:`multiprocessing.Event` that can be set to|
+    |``update``   |:class:`multiprocessing.Lock` that can be set to |
     |             |signal an update event                           |
     +-------------+-------------------------------------------------+
     |``pid``      |PID of parent process that spawns the code       |
@@ -131,7 +131,7 @@ class Launcher(object):
             raise ValueError("newfiles must be a zip, gzip, or bzip file")
         else:
             self.newfiles = newfiles
-        self.update = multiprocessing.Event()
+        self.update = multiprocessing.Lock()
         self.pid = os.getpid()
         self.args = args
         self.kwargs = kwargs
