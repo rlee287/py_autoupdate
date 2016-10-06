@@ -282,8 +282,10 @@ class Launcher(object):
             self.log.info("Process has not run yet")
             self.log.info("Starting process")
             del self.log
-            self.__process.start()
-            self.log=multiprocessing.get_logger()
+            try:
+                self.__process.start()
+            finally:
+                self.log=multiprocessing.get_logger()
             self.log.info("Process started")
             if not background:
                 self.process_join()
