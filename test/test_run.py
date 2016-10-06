@@ -25,10 +25,7 @@ class TestRunProgram(object):
         '    l=[i**2 for i in range(20)]\n'+\
         '    number_file.write(str(l))\n'+\
         'print(update)\n'+\
-        'update.set()\n'+\
-        'print(update.is_set())\n'+\
-        'update.clear()\n'+\
-        'print(update.is_set())\n'+\
+        'print(type(update))\n'+\
         'pprint.pprint(locals())'
         codepid='import os\n'+\
                 'a=os.getpid()\n'+\
