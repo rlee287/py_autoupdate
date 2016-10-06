@@ -111,15 +111,14 @@ class TestRunProgram(object):
                    |             |Windows|    |        |-------
               "is_alive"         |Kills  | "is_dead"   |Test
                                  |Process|             |Checks
-
         """
         fileback = 'test_run_base_back.py'
         launch = Launcher(fileback,'URL')
         launch.run(True)
         time.sleep(1)
         assert launch.process_is_alive
-        time.sleep(3)
-        #Really takes at least 2 seconds for windows to kill process
+        launch.process_join(timeout=5)
+        # Really takes up to 5 seconds for windows to kill process
         assert not launch.process_is_alive
 
     def test_run_twice(self):
