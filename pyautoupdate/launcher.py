@@ -430,9 +430,20 @@ class Launcher(object):
             os.rename(self.newfiles,self.newfiles+".dump")
 
     def _replace_files(self):
-        """Replaces the existing files with the downloaded files."""
+        """Replaces the existing files with the downloaded files.
+
+           :return: Whether update succeeded
+           :rtype: bool
+        """
         try:
-            self.update.acquire()
+            has_lock=self.update.acquire(False)
+            if not has_lock:
+                semaphore=open(".queue","w")
+                semaphore.close()
+                return False
+            else:
+                if os.path.isfile(".queue"):
+                    os.remove(".queue")
             self.log.info("Replacing files")
             # Read in files from filelist and move to tempdir
             tempdir=tempfile.mkdtemp()
@@ -513,15 +524,31 @@ class Launcher(object):
             shutil.rmtree(tempdir)
         finally:
             self.update.release()
+        return has_lock
 
     def update_code(self):
-        """Updates the code if necessary"""
+        """Updates the code if necessary.
+           :return: Whether update succeeded
+           :rtype: bool
+        """
         if self.check_new():
             self.log.info("Beginning update process")
             self._reset_update_dir()
             self._get_new()
-            self._replace_files()
-            self._reset_update_dir()
-            self.log.info("Update successful")
+            update_successful=self._replace_files()
+            if update_successful:
+                self._reset_update_dir()
+                self.log.info("Update successful")
+            else:
+                self.log.info("Update failed")
+        elif os.path.isfile(".queue"):
+            update_successful=self._replace_files()
+            if update_successful:
+                self._reset_update_dir()
+                self.log.info("Update successful")
+            else:
+                self.log.info("Update failed")
         else:
             self.log.info("Already up to date")
+            update_successful=False
+        return update_successful
