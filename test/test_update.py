@@ -37,7 +37,7 @@ def fixture_update_setup(request):
 
 @pytest.mark.trylast
 @needinternet
-def test_check_update(fixture_update_setup):
+def test_update(fixture_update_setup):
     """Checks the ability of program to upload new code"""
     assert os.path.isfile("filelist.txt")
     launch = Launcher('extradir/blah.py',
