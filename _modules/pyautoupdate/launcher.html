@@ -54,12 +54,13 @@
 <span class="kn">import</span> <span class="nn">warnings</span>
 
 <span class="kn">from</span> <span class="nn">pkg_resources</span> <span class="kn">import</span> <span class="n">parse_version</span><span class="p">,</span> <span class="n">SetuptoolsVersion</span><span class="p">,</span> <span class="n">PEP440Warning</span>
-<span class="kn">from</span> <span class="nn">setuptools.archive_util</span> <span class="kn">import</span> <span class="n">unpack_archive</span>
+<span class="kn">from</span> <span class="nn">setuptools.archive_util</span> <span class="kn">import</span> <span class="n">unpack_archive</span><span class="p">,</span> <span class="n">UnrecognizedFormat</span>
 
 <span class="kn">import</span> <span class="nn">requests</span>
 
 <span class="kn">from</span> <span class="nn">._move_glob</span> <span class="kn">import</span> <span class="n">move_glob</span><span class="p">,</span> <span class="n">copy_glob</span>
 <span class="kn">from</span> <span class="nn">.exceptions</span> <span class="kn">import</span> <span class="n">ProcessRunningException</span><span class="p">,</span> <span class="n">CorruptedFileWarning</span>
+
 
 <div class="viewcode-block" id="Launcher"><a class="viewcode-back" href="../../pyautoupdate.html#pyautoupdate.Launcher">[docs]</a><span class="k">class</span> <span class="nc">Launcher</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Creates a :class:`Launcher` object.</span>
@@ -126,12 +127,12 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Validating files&quot;</span><span class="p">)</span>
         <span class="c1"># Check that self.version_doc is valid</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">version_doc_validator</span><span class="p">():</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;{0} does not have a valid version number!</span><span class="se">\n</span><span class="s2">&quot;</span>
-                             <span class="s2">&quot;Please check that {0} is not being used!</span><span class="se">\n</span><span class="s2">&quot;</span>
-                             <span class="s2">&quot;It will be overwritten by this program!</span><span class="se">\n</span><span class="s2">&quot;</span>
-                             <span class="s2">&quot;If the {0} is corrupted,</span><span class="se">\n</span><span class="s2">&quot;</span>
-                             <span class="s2">&quot;Please use the logfile at {1} to restore it.&quot;</span>
-                             <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">version_doc</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">version_log</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;{0} does not have a valid version number!</span><span class="se">\n</span><span class="s2">&quot;</span>
+                           <span class="s2">&quot;{0} is a reserved file name.</span><span class="se">\n</span><span class="s2">&quot;</span>
+                           <span class="s2">&quot;It will be overwritten by this program!</span><span class="se">\n</span><span class="s2">&quot;</span>
+                           <span class="s2">&quot;If the {0} is corrupted,</span><span class="se">\n</span><span class="s2">&quot;</span>
+                           <span class="s2">&quot;Please use the logfile at {1} to restore it.&quot;</span>
+                           <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">version_doc</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">version_log</span><span class="p">))</span>
             <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;{0} is corrupted!&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">version_doc</span><span class="p">),</span>
                           <span class="n">CorruptedFileWarning</span><span class="p">,</span>
                           <span class="n">stacklevel</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
@@ -139,10 +140,9 @@
         <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">version_log</span><span class="p">,</span> <span class="s1">&#39;a&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">close</span><span class="p">()</span> <span class="c1"># &quot;Touch&quot; self.version_log</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">version_log_validator</span><span class="p">():</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;Log file at {0} is corrupted!</span><span class="se">\n</span><span class="s2">&quot;</span>
-                             <span class="s2">&quot;Please check that {0} is &quot;</span>
-                             <span class="s2">&quot;not being used!</span><span class="se">\n</span><span class="s2">&quot;</span>
-                             <span class="s2">&quot;It will be overwritten &quot;</span>
-                             <span class="s2">&quot;by this program!&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">version_log</span><span class="p">))</span>
+                             <span class="s2">&quot;{0} is a reserved file name.</span><span class="se">\n</span><span class="s2">&quot;</span>
+                             <span class="s2">&quot;Please ensure that your program is &quot;</span>
+                             <span class="s2">&quot;not using it.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">version_log</span><span class="p">))</span>
             <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;{0} is corrupted!&quot;</span>
                           <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">version_log</span><span class="p">),</span>
                           <span class="n">CorruptedFileWarning</span><span class="p">,</span>
@@ -181,7 +181,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">__process</span> <span class="o">=</span> <span class="n">multiprocessing</span><span class="o">.</span><span class="n">Process</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_call_code</span><span class="p">,</span>
                                                  <span class="n">args</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="p">,</span>
                                                  <span class="n">kwargs</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">kwargs</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Launcher initialized&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Launcher initialized successfully&quot;</span><span class="p">)</span>
 
 <span class="c1">####################### Filename getters and validators ######################</span>
 
@@ -295,7 +295,7 @@
         <span class="n">local_log</span><span class="o">=</span><span class="n">multiprocessing</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span>
         <span class="n">localvar</span><span class="p">[</span><span class="s2">&quot;log&quot;</span><span class="p">]</span><span class="o">=</span><span class="n">local_log</span>
         <span class="n">local_log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Starting process with&quot;</span>
-                        <span class="s2">&quot; the following local variables:</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">+</span>\
+                        <span class="s2">&quot; the following local variables:</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">+</span>
                         <span class="n">pprint</span><span class="o">.</span><span class="n">pformat</span><span class="p">(</span><span class="n">localvar</span><span class="p">))</span>
         <span class="c1"># Execute code in file</span>
         <span class="n">local_log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Starting code from file&quot;</span><span class="p">)</span>
@@ -324,10 +324,11 @@
             <span class="c1"># Process has not run yet</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Process has not run yet&quot;</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Starting process&quot;</span><span class="p">)</span>
-            <span class="n">_backup_log</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">log</span>
             <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">log</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">__process</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">=</span><span class="n">_backup_log</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">__process</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+            <span class="k">finally</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">=</span><span class="n">multiprocessing</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Process started&quot;</span><span class="p">)</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="n">background</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">process_join</span><span class="p">()</span>
@@ -368,6 +369,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Checking for updates&quot;</span><span class="p">)</span>
         <span class="n">versionurl</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">url</span><span class="o">+</span><span class="bp">self</span><span class="o">.</span><span class="n">version_doc</span>
         <span class="c1"># Get new files</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Retrieving new version from {0}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">versionurl</span><span class="p">))</span>
         <span class="n">get_new</span><span class="o">=</span><span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">versionurl</span><span class="p">,</span> <span class="n">allow_redirects</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
         <span class="n">get_new</span><span class="o">.</span><span class="n">raise_for_status</span><span class="p">()</span>
         <span class="n">request_time</span><span class="o">=</span><span class="n">datetime</span><span class="o">.</span><span class="n">utcnow</span><span class="p">()</span>
@@ -379,18 +381,20 @@
         <span class="n">oldver</span><span class="o">=</span><span class="n">oldver</span><span class="o">.</span><span class="n">rstrip</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
         <span class="n">newver_obj</span><span class="o">=</span><span class="n">parse_version</span><span class="p">(</span><span class="n">newver</span><span class="p">)</span>
         <span class="n">invalid</span><span class="o">=</span><span class="bp">False</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="s2">&quot;newver_obj&quot;</span><span class="p">,</span><span class="n">SetuptoolsVersion</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">newver_obj</span><span class="p">,</span><span class="n">SetuptoolsVersion</span><span class="p">):</span>
             <span class="n">invalid</span><span class="o">=</span><span class="bp">True</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Retrieved version is invalid!</span><span class="se">\n</span><span class="s2">&quot;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Retrieved version number is invalid!</span><span class="se">\n</span><span class="s2">&quot;</span>
                            <span class="s2">&quot;Please contact the software authors.</span><span class="se">\n</span><span class="s2">&quot;</span>
-                           <span class="s2">&quot;Please include the generated data dump&quot;</span>
+                           <span class="s2">&quot;Please include the generated data dump &quot;</span>
                            <span class="s2">&quot;in a bug report.&quot;</span><span class="p">)</span>
             <span class="n">newver_dump</span><span class="o">=</span><span class="bp">None</span>
             <span class="k">try</span><span class="p">:</span>
                 <span class="n">newver_dump</span><span class="o">=</span><span class="n">tempfile</span><span class="o">.</span><span class="n">NamedTemporaryFile</span><span class="p">(</span><span class="n">prefix</span><span class="o">=</span><span class="s2">&quot;newverdump&quot;</span><span class="p">,</span>
-                                                        <span class="n">delete</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Writing invalid version into {}&quot;</span>\
-                                   <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">newver_dump</span><span class="p">))</span>
+                                                        <span class="n">delete</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span>
+                                                        <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;wt&quot;</span><span class="p">,</span>
+                                                        <span class="nb">dir</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">())</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Writing invalid version into {0}&quot;</span>
+                                   <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">newver_dump</span><span class="o">.</span><span class="n">name</span><span class="p">))</span>
                 <span class="n">newver_dump</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">newver</span><span class="p">)</span>
             <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="s2">&quot;Unable to write data dump&quot;</span><span class="p">)</span>
@@ -417,7 +421,6 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">CorruptedFileWarning</span>
         <span class="k">return</span> <span class="n">has_new</span>
-
 </div>
 <div class="viewcode-block" id="Launcher._reset_update_dir"><a class="viewcode-back" href="../../pyautoupdate.html#pyautoupdate.Launcher._reset_update_dir">[docs]</a>    <span class="k">def</span> <span class="nf">_reset_update_dir</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Resets the update directory to its default state.</span>
@@ -432,7 +435,7 @@
         <span class="c1"># shutil.rmtree would have deleted the directory</span>
         <span class="n">os</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">updatedir</span><span class="p">)</span>
 </div>
-<div class="viewcode-block" id="Launcher._get_new"><a class="viewcode-back" href="../../pyautoupdate.html#pyautoupdate.Launcher._get_new">[docs]</a>    <span class="k">def</span> <span class="nf">_get_new</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="Launcher._get_new"><a class="viewcode-back" href="../../pyautoupdate.html#pyautoupdate.Launcher._get_new">[docs]</a>    <span class="k">def</span> <span class="nf">_get_new</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">allow_redirects</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">chunk_size</span><span class="o">=</span><span class="mi">512</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Retrieves the new archive and extracts it to self.updatedir.&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Retrieving new version&quot;</span><span class="p">)</span>
         <span class="c1"># Remove old archive</span>
@@ -440,15 +443,23 @@
             <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">newfiles</span><span class="p">)</span>
         <span class="n">newurl</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">url</span><span class="o">+</span><span class="bp">self</span><span class="o">.</span><span class="n">newfiles</span>
         <span class="c1"># Get new files</span>
-        <span class="n">http_get</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">newurl</span><span class="p">,</span> <span class="n">stream</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">allow_redirects</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+        <span class="n">http_get</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">newurl</span><span class="p">,</span> <span class="n">stream</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
+                                <span class="n">allow_redirects</span><span class="o">=</span><span class="n">allow_redirects</span><span class="p">)</span>
         <span class="n">http_get</span><span class="o">.</span><span class="n">raise_for_status</span><span class="p">()</span>
         <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">newfiles</span><span class="p">,</span> <span class="s1">&#39;wb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">filehandle</span><span class="p">:</span>
-            <span class="k">for</span> <span class="n">chunk</span> <span class="ow">in</span> <span class="n">http_get</span><span class="o">.</span><span class="n">iter_content</span><span class="p">(</span><span class="n">chunk_size</span><span class="o">=</span><span class="mi">1024</span><span class="o">*</span><span class="mi">50</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">chunk</span> <span class="ow">in</span> <span class="n">http_get</span><span class="o">.</span><span class="n">iter_content</span><span class="p">(</span><span class="n">chunk_size</span><span class="o">=</span><span class="n">chunk_size</span><span class="p">):</span>
                 <span class="k">if</span> <span class="n">chunk</span><span class="p">:</span>
                     <span class="n">filehandle</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">chunk</span><span class="p">)</span>
         <span class="c1"># Unpack archive and remove it after extraction</span>
-        <span class="n">unpack_archive</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">newfiles</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">updatedir</span><span class="p">)</span>
-        <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">newfiles</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">unpack_archive</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">newfiles</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">updatedir</span><span class="p">)</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">newfiles</span><span class="p">)</span>
+        <span class="k">except</span> <span class="n">UnrecognizedFormat</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Retrieved version archive is invalid!</span><span class="se">\n</span><span class="s2">&quot;</span>
+                           <span class="s2">&quot;Please contact the software authors.</span><span class="se">\n</span><span class="s2">&quot;</span>
+                           <span class="s2">&quot;Please include the invalid archive &quot;</span>
+                           <span class="s2">&quot;in a bug report.&quot;</span><span class="p">)</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">newfiles</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">newfiles</span><span class="o">+</span><span class="s2">&quot;.dump&quot;</span><span class="p">)</span>
 </div>
 <div class="viewcode-block" id="Launcher._replace_files"><a class="viewcode-back" href="../../pyautoupdate.html#pyautoupdate.Launcher._replace_files">[docs]</a>    <span class="k">def</span> <span class="nf">_replace_files</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Replaces the existing files with the downloaded files.&quot;&quot;&quot;</span>
@@ -508,7 +519,8 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Creating new filelist&quot;</span><span class="p">)</span>
         <span class="n">filelist_new</span><span class="o">=</span><span class="nb">list</span><span class="p">()</span>
         <span class="n">relpath_start</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">updatedir</span><span class="p">)</span>
-        <span class="k">for</span> <span class="n">dirpath</span><span class="p">,</span> <span class="n">dirnames</span><span class="p">,</span> <span class="n">filenames</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">walk</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">updatedir</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">dirpath</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">filenames</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">walk</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">updatedir</span><span class="p">):</span>
+            <span class="c1"># _ is dirnames, but it is unused</span>
             <span class="k">for</span> <span class="n">filename</span> <span class="ow">in</span> <span class="n">filenames</span><span class="p">:</span>
                 <span class="n">filepath</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">normpath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">dirpath</span><span class="p">,</span>
                                                        <span class="n">filename</span><span class="p">))</span>
