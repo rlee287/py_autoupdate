@@ -390,7 +390,7 @@ class Launcher(object):
             raise CorruptedFileWarning
         return has_new
 
-    def _reset_update_dir(self):
+    def _reset_update_files(self):
         """Resets the update directory to its default state.
 
            It also creates a new update directory if one doesn't exist.
@@ -402,13 +402,13 @@ class Launcher(object):
         # Make new empty directory
         # shutil.rmtree would have deleted the directory
         os.mkdir(self.updatedir)
+        # Remove old archive
+        if os.path.isfile(self.newfiles):
+            os.remove(self.newfiles)
 
     def _get_new(self, allow_redirects=True, chunk_size=512):
         """Retrieves the new archive and extracts it to self.updatedir."""
         self.log.info("Retrieving new version")
-        # Remove old archive
-        if os.path.isfile(self.newfiles):
-            os.remove(self.newfiles)
         newurl = self.url+self.newfiles
         # Get new files
         http_get = requests.get(newurl, stream=True,
@@ -533,18 +533,18 @@ class Launcher(object):
         """
         if self.check_new():
             self.log.info("Beginning update process")
-            self._reset_update_dir()
+            self._reset_update_files()
             self._get_new()
             update_successful=self._replace_files()
             if update_successful:
-                self._reset_update_dir()
+                self._reset_update_files()
                 self.log.info("Update successful")
             else:
                 self.log.info("Update failed")
         elif os.path.isfile(".queue"):
             update_successful=self._replace_files()
             if update_successful:
-                self._reset_update_dir()
+                self._reset_update_files()
                 self.log.info("Update successful")
             else:
                 self.log.info("Update failed")
