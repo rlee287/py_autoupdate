@@ -69,6 +69,10 @@ class Launcher(object):
        Please ensure that all ``args`` and ``kwargs`` can be pickled.
     """
 
+    version_doc="version.txt"
+    version_check_log="version_check.log"
+    file_list="filelist.txt"
+
     def __init__(self, filepath, url,
                  newfiles='project.zip',
                  updatedir='downloads',
@@ -89,19 +93,19 @@ class Launcher(object):
                            "It will be overwritten by this program!\n"
                            "If the {0} is corrupted,\n"
                            "Please use the logfile at {1} to restore it."
-                           .format(self.version_doc,self.version_log))
+                           .format(self.version_doc,self.version_check_log))
             warnings.warn("{0} is corrupted!".format(self.version_doc),
                           CorruptedFileWarning,
                           stacklevel=2)
         # Check that self.version_log is valid
-        open(self.version_log, 'a').close() # "Touch" self.version_log
+        open(self.version_check_log, 'a').close() # "Touch" self.version_log
         if not self.version_log_validator():
             self.log.warning("Log file at {0} is corrupted!\n"
                              "{0} is a reserved file name.\n"
                              "Please ensure that your program is "
-                             "not using it.".format(self.version_log))
+                             "not using it.".format(self.version_check_log))
             warnings.warn("{0} is corrupted!"
-                          .format(self.version_log),
+                          .format(self.version_check_log),
                           CorruptedFileWarning,
                           stacklevel=2)
 
@@ -142,18 +146,6 @@ class Launcher(object):
 
 ####################### Filename getters and validators ######################
 
-    @property
-    def version_doc(self):
-        return "version.txt"
-
-    @property
-    def version_log(self):
-        return "version_history.log"
-
-    @property
-    def file_list(self):
-        return "filelist.txt"
-
     def version_doc_validator(self):
         """Validates the file containing the current version number.
 
@@ -180,7 +172,7 @@ class Launcher(object):
         :rtype: bool
         """
         valid_log=True
-        with open(self.version_log,"r") as log_file:
+        with open(self.version_check_log,"r") as log_file:
             log_syntax=re.compile(
                 r"Old .+?\|(New .+?|Up to date|Server invalid)\|Time .+?")
             version=log_file.read()
@@ -381,7 +373,7 @@ class Launcher(object):
         else:
             version_to_add="Old {0}|Server Invalid|Time {1}\n"\
                            .format(oldver,request_time)
-        with open(self.version_log, "a") as log_file:
+        with open(self.version_check_log, "a") as log_file:
             log_file.write(version_to_add)
         if not invalid:
             with open(self.version_doc, 'w') as new_version:
@@ -489,7 +481,7 @@ class Launcher(object):
                         if file_rm.split(os.path.sep)[0] not in \
                                                 [self.updatedir,
                                                  self.version_doc,
-                                                 self.version_log]:
+                                                 self.version_check_log]:
                             self.log.debug("Moving {0} to {1}".format(file_rm,
                                                                       tempdir))
                             shutil.move(file_rm,file_rm_temp)
