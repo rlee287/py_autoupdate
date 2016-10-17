@@ -6,7 +6,6 @@ from .pytest_skipif import needinternet
 from logging import DEBUG
 import os
 import shutil
-import time
 
 import pytest
 
