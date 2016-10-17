@@ -20,8 +20,8 @@ def test_check_update_needed(fixture_update_dir):
     isnew=launch.check_new()
     assert isnew
     assert os.path.isfile("version.txt")
-    assert os.path.isfile("version_history.log")
-    with open("version_history.log","r") as log_handle:
+    assert os.path.isfile(Launcher.version_check_log)
+    with open(Launcher.version_check_log,"r") as log_handle:
         log=log_handle.read()
     assert "New" in log
 
@@ -34,8 +34,8 @@ def test_check_update_notneeded(fixture_update_dir):
     isnew=launch.check_new()
     assert not isnew
     assert os.path.isfile("version.txt")
-    assert os.path.isfile("version_history.log")
-    with open("version_history.log","r") as log_handle:
+    assert os.path.isfile(Launcher.version_check_log)
+    with open(Launcher.version_check_log,"r") as log_handle:
         log=log_handle.read()
     assert "Up to date" in log
 
@@ -66,8 +66,7 @@ def test_check_update_invalidvers(fixture_update_dir,remove_dump):
     with pytest.raises(CorruptedFileWarning):
         launch.check_new()
     assert os.path.isfile("version.txt")
-    assert os.path.isfile("version_history.log")
-    with open("version_history.log","r") as log_handle:
+    assert os.path.isfile(Launcher.version_check_log)
+    with open(Launcher.version_check_log,"r") as log_handle:
         log=log_handle.read()
     assert "Server Invalid" in log
-
