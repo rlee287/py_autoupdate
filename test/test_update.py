@@ -13,14 +13,14 @@ import pytest
 def fixture_update_setup(request):
     """Sets up and tears down version docs and code files"""
     def teardown():
-        if os.path.isfile('version_history.log'):
-            os.remove('version_history.log')
-        if os.path.isfile('version.txt'):
-            os.remove('version.txt')
+        if os.path.isfile(Launcher.version_check_log):
+            os.remove(Launcher.version_check_log)
+        if os.path.isfile(Launcher.version_doc):
+            os.remove(Launcher.version_doc)
         if os.path.isdir("extradir"):
             shutil.rmtree("extradir")
-        if os.path.isfile("filelist.txt"):
-            os.remove("filelist.txt")
+        if os.path.isfile(Launcher.file_list):
+            os.remove(Launcher.file_list)
         if os.path.isdir("downloads"):
             shutil.rmtree("downloads")
         if os.path.isfile(".queue"):
@@ -39,7 +39,7 @@ def fixture_update_setup(request):
                    "os.remove('.lck')\n")
     with open(os.path.join("extradir","dummy.txt"), mode='w') as extra_file:
         extra_file.write("1984: 2+2=5")
-    with open("filelist.txt", mode='w') as filelist:
+    with open(Launcher.file_list, mode='w') as filelist:
         filelist.write("extradir/blah.py")
     return fixture_update_setup
 
@@ -47,7 +47,7 @@ def fixture_update_setup(request):
 @needinternet
 def test_update(fixture_update_setup):
     """Checks the ability of program to upload new code"""
-    assert os.path.isfile("filelist.txt")
+    assert os.path.isfile(Launcher.file_list)
     launch = Launcher('extradir/blah.py',
                       r'http://rlee287.github.io/pyautoupdate/testing/',
                       'project.zip','downloads',DEBUG)
@@ -57,7 +57,7 @@ def test_update(fixture_update_setup):
     with open(os.path.abspath("extradir/blah.py"), "r") as file_code:
         file_text=file_code.read()
     assert "new version" in file_text
-    assert os.path.isfile("filelist.txt")
+    assert os.path.isfile(Launcher.file_list)
     excode=launch.run()
     assert excode==0
 
@@ -65,7 +65,7 @@ def test_update(fixture_update_setup):
 @needinternet
 def test_run_lock_update(fixture_update_setup):
     """Checks the ability of program to upload new code"""
-    assert os.path.isfile("filelist.txt")
+    assert os.path.isfile(Launcher.file_list)
     launch = Launcher('extradir/blah.py',
                       r'http://rlee287.github.io/pyautoupdate/testing/',
                       'project.zip','downloads',DEBUG)

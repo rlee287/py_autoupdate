@@ -12,14 +12,14 @@ import pytest
 def fixture_update_setup(request):
     """Sets up and tears down version docs and code files"""
     def teardown():
-        if os.path.isfile('version_history.log'):
-            os.remove('version_history.log')
-        if os.path.isfile('version.txt'):
-            os.remove('version.txt')
+        if os.path.isfile(Launcher.version_check_log):
+            os.remove(Launcher.version_check_log)
+        if os.path.isfile(Launcher.version_doc):
+            os.remove(Launcher.version_doc)
         if os.path.isdir("extradir"):
             shutil.rmtree("extradir")
-        if os.path.isfile("filelist.txt"):
-            os.remove("filelist.txt")
+        if os.path.isfile(Launcher.file_list):
+            os.remove(Launcher.file_list)
         if os.path.isdir("downloads"):
             shutil.rmtree("downloads")
     request.addfinalizer(teardown)

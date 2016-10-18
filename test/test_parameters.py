@@ -8,7 +8,13 @@ import warnings
 
 import pytest
 
-def test_check_urlslash():
+@pytest.fixture(scope='function')
+def fixture_rm_log(request):
+    def teardown():
+        os.remove(Launcher.version_check_log)
+    request.addfinalizer(teardown)
+
+def test_check_urlslash(fixture_rm_log):
     """Test that checks that leading slash is properly added to URL"""
     launch = Launcher('not here',
                       r'http://rlee287.github.io/pyautoupdate/testing/')
@@ -16,12 +22,12 @@ def test_check_urlslash():
                        r'http://rlee287.github.io/pyautoupdate/testing')
     assert launch.url == launch2.url
 
-def test_check_emptyfilepath():
+def test_check_emptyfilepath(fixture_rm_log):
     """Check that error is raised with empty file"""
     with pytest.raises(ValueError):
         Launcher('','a url')
 
-def test_check_emptyURL():
+def test_check_emptyURL(fixture_rm_log):
     """Check that error is raised with empty URL"""
     with pytest.raises(ValueError):
         Launcher('a filepath','')
@@ -29,22 +35,21 @@ def test_check_emptyURL():
 @pytest.fixture(scope="function")
 def fixture_corrupt_log(request):
     """Fixture that creates corrupted log"""
-    with open("version_history.log","w") as log:
+    with open(Launcher.version_check_log,"w") as log:
         log.write("invalid!gibberish")
     def teardown():
-        if os.path.isfile("version_history.log"):
-            os.remove("version_history.log")
+        os.remove(Launcher.version_check_log)
     request.addfinalizer(teardown)
     return fixture_corrupt_log
 
 @pytest.fixture(scope="function")
 def fixture_corrupt_vers(request):
     """Fixture that creates invalid version file"""
-    with open("version.txt","w") as vers_file:
+    with open(Launcher.version_doc,"w") as vers_file:
         vers_file.write("invalid?version")
     def teardown():
-        if os.path.isfile("version.txt"):
-            os.remove("version.txt")
+        if os.path.isfile(Launcher.version_doc):
+            os.remove(Launcher.version_doc)
     request.addfinalizer(teardown)
     return fixture_corrupt_vers
 
@@ -62,19 +67,18 @@ def test_check_corrupted_vers(fixture_corrupt_vers):
             warnings.simplefilter("error",category=CorruptedFileWarning)
             launch=Launcher("123","456")
 
-def test_invalid_updatedir():
+def test_invalid_updatedir(fixture_rm_log):
     """Test that checks for invalid updatdir with multiple directories"""
     with pytest.raises(ValueError):
         Launcher("123","456",newfiles="project.zip",
                         updatedir='downloads/extradir')
 
-def test_invalid_multdir_newfiles():
+def test_invalid_multdir_newfiles(fixture_rm_log):
     """Test that checks for invalid newfiles with multiple directories"""
     with pytest.raises(ValueError):
         Launcher("123","456",newfiles="project.zip/hahaha")
 
-def test_invalid_ext_newfiles():
+def test_invalid_ext_newfiles(fixture_rm_log):
     """Test that checks for invalid newfiles with wrong file extension"""
     with pytest.raises(ValueError):
         Launcher("qwe","rty",newfiles='project.txt')
-

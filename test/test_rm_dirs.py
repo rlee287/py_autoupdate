@@ -33,6 +33,7 @@ def create_update_dir(request):
                 # Perhaps move into main test?
                 raise AssertionError# fail test if files exist
         os.rmdir('downloads')
+        os.remove(Launcher.version_check_log)
         if os.path.isfile("project.zip"):
             os.remove("project.zip")
     request.addfinalizer(teardown)
