@@ -453,7 +453,7 @@ class Launcher(object):
                         os.makedirs(file_rm_temp_dir)
                     if file_rm.split(os.path.sep)[0] not in \
                                             [self.updatedir, self.version_doc,
-                                             self.version_log]:
+                                             self.version_check_log]:
                         self.log.debug("Moving {0} to {1}".format(file_rm,
                                                                   tempdir))
                         shutil.move(file_rm,file_rm_temp)
