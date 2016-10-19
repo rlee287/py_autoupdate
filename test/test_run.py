@@ -121,8 +121,8 @@ class TestRunProgram(object):
         launch.run(True)
         time.sleep(1)
         assert launch.process_is_alive
-        time.sleep(3)
-        #Really takes at least 2 seconds for windows to kill process
+        launch.process_join()
+        #Really takes over least 2 seconds for windows to kill process
         assert not launch.process_is_alive
 
     def test_run_twice(self):
