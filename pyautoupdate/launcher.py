@@ -72,6 +72,7 @@ class Launcher(object):
     version_doc="version.txt"
     version_check_log="version_check.log"
     file_list="filelist.txt"
+    queue_update=".queue"
 
     def __init__(self, filepath, url,
                  newfiles='project.zip',
@@ -375,11 +376,11 @@ class Launcher(object):
                            .format(oldver,request_time)
         with open(self.version_check_log, "a") as log_file:
             log_file.write(version_to_add)
-        if not invalid:
-            with open(self.version_doc, 'w') as new_version:
-                new_version.write(newver)
-        else:
+        if invalid:
             raise CorruptedFileWarning
+        elif has_new:
+            with open(self.queue_update, 'w') as new_version:
+                new_version.write(newver)
         return has_new
 
     def _reset_update_files(self):
@@ -427,15 +428,18 @@ class Launcher(object):
            :return: Whether update succeeded
            :rtype: bool
         """
+        if not os.path.isfile(self.queue_update):
+            return False
         try:
             has_lock=self.update.acquire(False)
             if not has_lock:
-                semaphore=open(".queue","w")
-                semaphore.close()
                 return False
-            else:
-                if os.path.isfile(".queue"):
-                    os.remove(".queue")
+            elif os.path.isfile(self.queue_update):
+                # TODO: Make this code safer and possibly leave diagnostics
+                # if the update operation errors out in the middle
+                os.rename(self.version_doc,self.version_doc+".bak")
+                os.rename(self.queue_update,self.version_doc)
+                os.remove(self.version_doc+".bak")
             self.log.info("Replacing files")
             # Read in files from filelist and move to tempdir
             tempdir=tempfile.mkdtemp()
@@ -533,7 +537,7 @@ class Launcher(object):
                 self.log.info("Update successful")
             else:
                 self.log.info("Update failed")
-        elif os.path.isfile(".queue"):
+        elif os.path.isfile(self.queue_update):
             update_successful=self._replace_files()
             if update_successful:
                 self._reset_update_files()

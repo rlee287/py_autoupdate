@@ -23,8 +23,8 @@ def fixture_update_setup(request):
             os.remove(Launcher.file_list)
         if os.path.isdir("downloads"):
             shutil.rmtree("downloads")
-        if os.path.isfile(".queue"):
-            os.remove(".queue")
+        if os.path.isfile(Launcher.queue_update):
+            os.remove(Launcher.queue_update)
     request.addfinalizer(teardown)
     with open('version.txt', mode='w') as version_file:
         version_file.write("0.0.1")
@@ -53,6 +53,7 @@ def test_update(fixture_update_setup):
                       'project.zip','downloads',DEBUG)
     could_update=launch.update_code()
     assert could_update
+    assert not os.path.isfile(Launcher.queue_update)
     assert os.path.isfile("extradir/blah.py")
     with open(os.path.abspath("extradir/blah.py"), "r") as file_code:
         file_text=file_code.read()
@@ -77,4 +78,5 @@ def test_run_lock_update(fixture_update_setup):
     launch.process_join()
     could_update=launch.update_code()
     assert could_update
+    assert not os.path.isfile(Launcher.queue_update)
     assert os.path.isfile("extradir/blah.py")

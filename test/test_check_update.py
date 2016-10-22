@@ -21,6 +21,8 @@ def test_check_update_needed(fixture_update_dir):
     assert isnew
     assert os.path.isfile("version.txt")
     assert os.path.isfile(Launcher.version_check_log)
+    assert os.path.isfile(Launcher.queue_update)
+    os.remove(Launcher.queue_update)
     with open(Launcher.version_check_log,"r") as log_handle:
         log=log_handle.read()
     assert "New" in log

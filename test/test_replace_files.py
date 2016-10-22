@@ -23,8 +23,10 @@ def fixture_update_setup(request):
         if os.path.isdir("downloads"):
             shutil.rmtree("downloads")
     request.addfinalizer(teardown)
-    with open('version.txt', mode='w') as version_file:
+    with open(Launcher.version_doc, mode='w') as version_file:
         version_file.write("0.0.1")
+    with open(Launcher.queue_update, mode='w') as new_version:
+        new_version.write("0.1.0")
     os.mkdir("extradir")
     os.makedirs(os.path.join("downloads","extradir"))
     extradir_blah=os.path.join("extradir","blah.py")
@@ -36,13 +38,12 @@ def fixture_update_setup(request):
         extra_file.write("1984: 2+2=5")
     with open(downloads_extradir_blah, mode='w') as new_code:
         new_code.write("print('This is the new version')")
+    list_files=[extradir_blah+"\n",extradir_dummy+"\n","shine/johnny.txt\n"]
     with open("filelist.txt", mode='w') as filelist:
-        filelist.write(extradir_blah+"\n")
-        filelist.write(extradir_dummy+"\n")
-        filelist.write("28r83rxjfoejfeoifjefs/why_look_for_me.txt\n")
+        filelist.writelines(list_files)
     return fixture_update_setup
 
-def test_check_update(fixture_update_setup):
+def test_replace_files(fixture_update_setup):
     """Checks the ability of program to upload new code"""
     assert os.path.isfile("filelist.txt")
     launch = Launcher('extradir/blah.py',
@@ -54,3 +55,4 @@ def test_check_update(fixture_update_setup):
         file_text=file_code.read()
     assert "new version" in file_text
     assert os.path.isfile("filelist.txt")
+    assert not os.path.isfile(Launcher.queue_update)
