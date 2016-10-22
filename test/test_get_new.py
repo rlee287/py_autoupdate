@@ -9,7 +9,6 @@ import sys
 
 import pytest
 
-@pytest.mark.trylast
 @needinternet
 def test_check_get_new(fixture_update_dir):
     """Test that gets new version from internet"""
@@ -20,3 +19,14 @@ def test_check_get_new(fixture_update_dir):
     with open(os.path.abspath("downloads/extradir/blah.py"), "r") as file_code:
         file_text=file_code.read()
     assert "new version" in file_text
+
+@needinternet
+def test_check_get_invalid_archive(fixture_update_dir):
+    """Test that gets new version from internet"""
+    package=fixture_update_dir("0.0.1")
+    launch = Launcher('what file? hahahaha',
+                      r'http://rlee287.github.io/pyautoupdate/testing2/',
+                      newfiles="project.tar.gz")
+    launch._get_new()
+    assert os.path.isfile("project.tar.gz.dump")
+    os.remove("project.tar.gz.dump")
