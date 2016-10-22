@@ -1,2 +1,2 @@
 @echo off
-py.test .
+pytest .
