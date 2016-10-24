@@ -69,10 +69,11 @@ class Launcher(object):
        Please ensure that all ``args`` and ``kwargs`` can be pickled.
     """
 
-    version_doc="version.txt"
-    version_check_log="version_check.log"
-    file_list="filelist.txt"
-    queue_update=".queue"
+    version_doc = "version.txt"
+    version_check_log = "version_check.log"
+    file_list = "filelist.txt"
+    queue_update = ".queue"
+    queue_replace = ".replace"
 
     def __init__(self, filepath, url,
                  newfiles='project.zip',
@@ -414,13 +415,18 @@ class Launcher(object):
         # Unpack archive and remove it after extraction
         try:
             unpack_archive(self.newfiles, self.updatedir)
-            os.remove(self.newfiles)
         except UnrecognizedFormat:
             self.log.error("Retrieved version archive is invalid!\n"
                            "Please contact the software authors.\n"
                            "Please include the invalid archive "
                            "in a bug report.")
             os.rename(self.newfiles,self.newfiles+".dump")
+        else:
+            # Remove archive only if unpack operation succeeded
+            os.remove(self.newfiles)
+            # Signal that update is ready
+            self.log.debug("Creating downloaded file marker")
+            open(self.queue_replace,"w").close()
 
     def _replace_files(self):
         """Replaces the existing files with the downloaded files.
@@ -428,18 +434,21 @@ class Launcher(object):
            :return: Whether update succeeded
            :rtype: bool
         """
-        if not os.path.isfile(self.queue_update):
+        if not (os.path.isfile(self.queue_update) and os.path.isfile(self.queue_replace)):
             return False
         try:
             has_lock=self.update.acquire(False)
             if not has_lock:
                 return False
-            elif os.path.isfile(self.queue_update):
+            else: # os.path.isfile(self.queue_update) and os.path.isfile(self.queue_replace)
                 # TODO: Make this code safer and possibly leave diagnostics
                 # if the update operation errors out in the middle
+                self.log.debug("Writing new version into {0}".format(self.version_doc))
                 os.rename(self.version_doc,self.version_doc+".bak")
                 os.rename(self.queue_update,self.version_doc)
                 os.remove(self.version_doc+".bak")
+                self.log.debug("Removing downloaded file marker")
+                os.remove(self.queue_replace)
             self.log.info("Replacing files")
             # Read in files from filelist and move to tempdir
             tempdir=tempfile.mkdtemp()
