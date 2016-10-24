@@ -551,7 +551,7 @@ class Launcher(object):
                 self.log.info("Update successful")
             else:
                 self.log.info("Update failed")
-        elif os.path.isfile(self.queue_update)
+        elif os.path.isfile(self.queue_update):
             if not os.path.isfile(self.queue_replace):
                 self._get_new()
             update_successful=self._replace_files()
