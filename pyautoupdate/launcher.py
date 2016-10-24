@@ -329,13 +329,18 @@ class Launcher(object):
               Any versioning scheme described in :pep:`440` can be used.
         """
         self.log.info("Checking for updates")
-        versionurl=self.url+self.version_doc
-        # Get new files
-        self.log.debug("Retrieving new version from {0}".format(versionurl))
-        get_new=requests.get(versionurl, allow_redirects=True)
-        get_new.raise_for_status()
         request_time=datetime.utcnow()
-        newver=get_new.text
+        # If self.queue_update is already present, use this for comparison
+        if os.path.isfile(self.queue_update):
+            with open(self.queue_update, 'r') as new_version:
+                newver=new_version.read()
+        else:
+            versionurl=self.url+self.version_doc
+            # Get new files
+            self.log.debug("Retrieving new version from {0}".format(versionurl))
+            get_new=requests.get(versionurl, allow_redirects=True)
+            get_new.raise_for_status()
+            newver=get_new.text
         newver=newver.rstrip("\n")
         # Read in old version and compare to new version
         with open(self.version_doc, 'r') as old_version:
@@ -546,7 +551,9 @@ class Launcher(object):
                 self.log.info("Update successful")
             else:
                 self.log.info("Update failed")
-        elif os.path.isfile(self.queue_update):
+        elif os.path.isfile(self.queue_update)
+            if not os.path.isfile(self.queue_replace):
+                self._get_new()
             update_successful=self._replace_files()
             if update_successful:
                 self._reset_update_files()
