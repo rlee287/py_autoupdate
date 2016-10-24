@@ -22,8 +22,8 @@ def fixture_update_setup(request):
             os.remove(Launcher.file_list)
         if os.path.isdir("downloads"):
             shutil.rmtree("downloads")
-        if os.path.isfile(Launcher.queue_ready):
-            os.remove(Launcher.queue_ready)
+        if os.path.isfile(Launcher.queue_replace):
+            os.remove(Launcher.queue_replace)
     request.addfinalizer(teardown)
     with open(Launcher.version_doc, mode='w') as version_file:
         version_file.write("0.0.1")
