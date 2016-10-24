@@ -72,3 +72,18 @@ def test_check_update_invalidvers(fixture_update_dir,remove_dump):
     with open(Launcher.version_check_log,"r") as log_handle:
         log=log_handle.read()
     assert "Server Invalid" in log
+
+@needinternet
+def test_check_update_needed_twice(fixture_update_dir):
+    """Test that ensures that updates occur when needed"""
+    package=fixture_update_dir("0.0.1")
+    launch = Launcher('blah',
+                      r'http://rlee287.github.io/pyautoupdate/testing/')
+    isnew1=launch.check_new()
+    isnew2=launch.check_new()
+    assert isnew1
+    assert not isnew2
+    assert os.path.isfile("version.txt")
+    assert os.path.isfile(Launcher.version_check_log)
+    assert os.path.isfile(Launcher.queue_update)
+    os.remove(Launcher.queue_update)
