@@ -48,7 +48,7 @@ def fixture_update_setup(request):
 
 def test_replace_files(fixture_update_setup):
     """Checks the ability of program to upload new code"""
-    assert os.path.isfile("filelist.txt")
+    assert os.path.isfile(Launcher.file_list)
     launch = Launcher('extradir/blah.py',
                       r'http://rlee287.github.io/pyautoupdate/testing/',
                       'project.zip','downloads',DEBUG)
