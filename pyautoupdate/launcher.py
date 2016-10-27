@@ -330,10 +330,13 @@ class Launcher(object):
         """
         self.log.info("Checking for updates")
         request_time=datetime.utcnow()
-        # If self.queue_update is already present, use this for comparison
+        # If self.queue_update is already present, return false
         if os.path.isfile(self.queue_update):
             with open(self.queue_update, 'r') as new_version:
                 newver=new_version.read()
+            newver_obj=parse_version(newver)
+            newver=newver.rstrip("\n")
+            return isinstance(newver_obj,SetuptoolsVersion)
         else:
             versionurl=self.url+self.version_doc
             # Get new files
@@ -341,12 +344,13 @@ class Launcher(object):
             get_new=requests.get(versionurl, allow_redirects=True)
             get_new.raise_for_status()
             newver=get_new.text
-        newver=newver.rstrip("\n")
-        # Read in old version and compare to new version
+            newver=newver.rstrip("\n")
+            newver_obj=parse_version(newver)
+        # Read in old version
         with open(self.version_doc, 'r') as old_version:
             oldver=old_version.read()
         oldver=oldver.rstrip("\n")
-        newver_obj=parse_version(newver)
+        # Compare old version with new version
         invalid=False
         if not isinstance(newver_obj,SetuptoolsVersion):
             invalid=True
@@ -542,24 +546,25 @@ class Launcher(object):
            :rtype: bool
         """
         if self.check_new():
-            self.log.info("Beginning update process")
-            self._reset_update_files()
-            self._get_new()
-            update_successful=self._replace_files()
-            if update_successful:
+            if not os.path.isfile(self.queue_update):
+                self.log.info("Beginning update process")
                 self._reset_update_files()
-                self.log.info("Update successful")
-            else:
-                self.log.info("Update failed")
-        elif os.path.isfile(self.queue_update):
-            if not os.path.isfile(self.queue_replace):
                 self._get_new()
-            update_successful=self._replace_files()
-            if update_successful:
-                self._reset_update_files()
-                self.log.info("Update successful")
+                update_successful=self._replace_files()
+                if update_successful:
+                    self._reset_update_files()
+                    self.log.info("Update successful")
+                else:
+                    self.log.info("Update failed")
             else:
-                self.log.info("Update failed")
+                if not os.path.isfile(self.queue_replace):
+                    self._get_new()
+                update_successful=self._replace_files()
+                if update_successful:
+                    self._reset_update_files()
+                    self.log.info("Update successful")
+                else:
+                    self.log.info("Update failed")
         else:
             self.log.info("Already up to date")
             update_successful=False
