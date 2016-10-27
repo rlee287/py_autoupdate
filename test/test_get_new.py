@@ -5,9 +5,6 @@ from .pytest_skipif import needinternet
 from .pytest_makevers import fixture_update_dir
 
 import os
-import sys
-
-import pytest
 
 @needinternet
 def test_check_get_new(fixture_update_dir):
