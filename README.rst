@@ -3,15 +3,15 @@
 Pyautoupdate is a python wrapper that allows the wrapped code to
 automatically update.
 
-|Build_Status| |Codecov_Status| |QuantifiedCode_Status|
+|Build_Status| |Codecov_Status| |QuantifiedCode_Status| |LandscapeIO_Status|
 
 Advantages
 ----------
 
 -  This module is written in pure python. **This means that there is no
-   need to have a C compiler to use this module.**
--  Pyautoupdate works with both python 2 and 3
--  pypy and pypy3 can also be used
+   need to invoke a C compiler to build this module.**
+-  Python 2 and 3 are both supported
+-  Pyautoupdate also works with pypy and pypy3
 
 Dependencies
 ------------
@@ -24,7 +24,7 @@ Development Dependencies
 ~~~~~~~~~~~~~~~~~~~~~~~~
 -  ``pytest`` for running the tests
 -  ``coverage`` to measure coverage
--  ``pylint`` for code style checks
+-  ``pylint`` for local code style checks
 
 License
 -------
@@ -42,3 +42,6 @@ LGPL 2.1
 .. |QuantifiedCode_Status| image:: https://www.quantifiedcode.com/api/v1/project/e70a21e3928a4cce87655a17fd853765/badge.svg
   :target: https://www.quantifiedcode.com/app/project/e70a21e3928a4cce87655a17fd853765
   :alt: QuantifiedCode issues
+.. |LandscapeIO_Status| image:: https://landscape.io/github/rlee287/pyautoupdate/develop/landscape.svg?style=flat
+   :target: https://landscape.io/github/rlee287/pyautoupdate/develop
+   :alt: Code Health
