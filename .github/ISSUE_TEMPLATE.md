@@ -20,3 +20,13 @@ Even if it is a glitch that occurs unreliably, please try to include instruction
 **Description of feature:**
 
 **Rationale for feature:**
+
+# Code Review
+[//]: # (Please add a "code review feedback" tag to the issue if you are using this template.)
+[//]: # (If you are not already a heavy contributor, please use another template or comment on an existing issue.)
+
+**Potential Bugs:**
+
+**Other Issues:**
+
+**Possible Resolutions to Issues:**
