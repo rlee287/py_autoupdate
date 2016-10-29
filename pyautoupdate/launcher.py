@@ -458,14 +458,14 @@ class Launcher(object):
                 return False
         try:
             # else # os.path.isfile(self.queue_update) and os.path.isfile(self.queue_replace)
-                # TODO: Make this code safer and possibly leave diagnostics
-                # if the update operation errors out in the middle
-                self.log.debug("Writing new version into {0}".format(self.version_doc))
-                os.rename(self.version_doc,self.version_doc+".bak")
-                os.rename(self.queue_update,self.version_doc)
-                os.remove(self.version_doc+".bak")
-                self.log.debug("Removing downloaded file marker")
-                os.remove(self.queue_replace)
+            # TODO: Make this code safer and possibly leave diagnostics
+            # if the update operation errors out in the middle
+            self.log.debug("Writing new version into {0}".format(self.version_doc))
+            os.rename(self.version_doc,self.version_doc+".bak")
+            os.rename(self.queue_update,self.version_doc)
+            os.remove(self.version_doc+".bak")
+            self.log.debug("Removing downloaded file marker")
+            os.remove(self.queue_replace)
             self.log.info("Replacing files")
             # Read in files from filelist and move to tempdir
             tempdir=tempfile.mkdtemp()
