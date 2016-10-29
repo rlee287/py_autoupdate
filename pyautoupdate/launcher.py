@@ -256,11 +256,12 @@ class Launcher(object):
         # Execute code in file
         local_log.info("Starting code from file")
         try:
-            local_log.debug("Acquiring code lock")
+            # TODO: move up?
+            local_log.debug("Acquiring code lock to run code")
             self.update.acquire()
             exec(code, dict(), localvar)
         finally:
-            local_log.debug("Releasing code lock")
+            local_log.debug("Releasing code lock after running code")
             self.update.release()
 
     def run(self, background=False):
@@ -446,8 +447,10 @@ class Launcher(object):
         if not (os.path.isfile(self.queue_update) and os.path.isfile(self.queue_replace)):
             return False
         try:
+            self.log.debug("Acquiring code log to update files")
             has_lock=self.update.acquire(False)
             if not has_lock:
+                self.log.debug("Could not acquire lock to update files")
                 return False
             else: # os.path.isfile(self.queue_update) and os.path.isfile(self.queue_replace)
                 # TODO: Make this code safer and possibly leave diagnostics
@@ -537,6 +540,7 @@ class Launcher(object):
             self.log.info("Removing tempdir")
             shutil.rmtree(tempdir)
         finally:
+            self.log.debug("Releasing lock after updating files")
             self.update.release()
         return has_lock
 
