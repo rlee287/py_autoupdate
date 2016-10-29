@@ -446,13 +446,18 @@ class Launcher(object):
         """
         if not (os.path.isfile(self.queue_update) and os.path.isfile(self.queue_replace)):
             return False
-        try:
+        # Attempt to acquire code lock here and exit if unable to
+        # The finally block runs after the "return" statement
+        # This can cause a double-release under some circumstances
+        # Acquiring the lock here prevents this from happening
+        else:
             self.log.debug("Acquiring code log to update files")
             has_lock=self.update.acquire(False)
             if not has_lock:
                 self.log.debug("Could not acquire lock to update files")
                 return False
-            else: # os.path.isfile(self.queue_update) and os.path.isfile(self.queue_replace)
+        try:
+            # else # os.path.isfile(self.queue_update) and os.path.isfile(self.queue_replace)
                 # TODO: Make this code safer and possibly leave diagnostics
                 # if the update operation errors out in the middle
                 self.log.debug("Writing new version into {0}".format(self.version_doc))
