@@ -144,6 +144,7 @@ class Launcher(object):
         self.__process = multiprocessing.Process(target=self._call_code,
                                                  args=self.args,
                                                  kwargs=self.kwargs)
+        self.past_terminated=False
         self.log.info("Launcher initialized successfully")
 
 ####################### Filename getters and validators ######################
@@ -198,7 +199,12 @@ class Launcher(object):
     @property
     def process_exitcode(self):
         """The process exitcode, if it exists"""
-        return self.__process.exitcode
+        if self.past_terminated:
+            # SIGTERM is signal 15 on Linux
+            # Preserve compatibility on Windows
+            return -15
+        else:
+            return self.__process.exitcode
 
     def process_join(self,timeout=None):
         """Joins the process"""
@@ -211,14 +217,25 @@ class Launcher(object):
         .. warning::
            All the provisos of :meth:`multiprocessing.Process.terminate`
            apply.
+
+           Attempts are made in the code to ensure that internal variables
+           inside the Launcher class are properly cleaned up. However, there is
+           little protection for the supplied code in case of termination.
+
+        :return: Whether process was terminated
+        :rtype: bool
         """
-        self.log.warning("Terminating Process")
-        self.__process.terminate()
-        # Release lock to avoid update deadlock later
-        try:
+        if self.process_is_alive:
+            self.log.warning("Terminating Process")
+            self.__process.terminate()
+            # Release lock to avoid update deadlock later
+            self.log.debug("Releasing code lock after termination")
             self.update.release()
-        except ValueError:
-            pass
+            self.past_terminated=True
+            return True
+        else:
+            self.log.warning("Attempted to terminate dead process")
+            return False
 
 ########################### Code execution methods ###########################
 
