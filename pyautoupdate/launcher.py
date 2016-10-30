@@ -283,7 +283,10 @@ class Launcher(object):
         if not os.path.isfile(self.filepath):
             raise error_to_raise("No file at {0}".format(self.filepath))
         self.log.info("Checking process status")
-        if self.process_pid is None:
+        if self.process_is_alive:
+            self.log.error("Process is already running")
+            raise ProcessRunningException
+        elif self.process_pid is None:
             # Process has not run yet
             self.log.info("Process has not run yet")
             self.log.info("Starting process")
@@ -297,23 +300,22 @@ class Launcher(object):
                 self.process_join()
                 # Exit code can be used by program that calls the launcher
                 return self.process_exitcode
+        elif self.process_exitcode is not None:
+            # Process has already terminated
+            # Reinitialize the process instance
+            self.log.info("Process has already finished")
+            self.log.info("Reinitializing process object")
+            self.__process = None
+            self.__process = multiprocessing.Process(target=
+                                                     self._call_code,
+                                                     args=self.args,
+                                                     kwargs=self.kwargs)
+            # Recursion, since this will reset @property properties
+            self.run(background)
         else:
-            # Process has started
-            if self.process_exitcode is not None:
-                # Process has already terminated
-                # Reinitialize the process instance
-                self.log.info("Process has already finished")
-                self.log.info("Reinitializing process object")
-                self.__process = None
-                self.__process = multiprocessing.Process(target=
-                                                         self._call_code,
-                                                         args=self.args,
-                                                         kwargs=self.kwargs)
-                # Recursion, since this will reset @property properties
-                self.run(background)
-            else:
-                self.log.error("Process is already running")
-                raise ProcessRunningException
+            # Should never happening
+            self.log.error("Process exitcode exists without PID!")
+            self.log.error("The application is probably in an unstable state.")
 
 ######################### New code retrieval methods #########################
 
