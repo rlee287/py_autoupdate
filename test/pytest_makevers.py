@@ -1,5 +1,8 @@
 import os
+import shutil
 import pytest
+
+from ..pyautoupdate.launcher import Launcher
 
 @pytest.fixture(scope='function')
 def fixture_update_dir(request):
@@ -16,3 +19,11 @@ def fixture_update_dir(request):
         return fixture_update_dir
     return create_update_dir
 
+@pytest.fixture(scope='function')
+def create_update_dir(request):
+    """Fixture that tears down downloads directory"""
+    def teardown():
+        shutil.rmtree('downloads')
+        os.remove(Launcher.version_check_log)
+    request.addfinalizer(teardown)
+    return create_update_dir
