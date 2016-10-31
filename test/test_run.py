@@ -21,12 +21,12 @@ class TestRunProgram(object):
         fileback=filebase+'_back'+'.py'
         filelog=filebase+'_log'+'.py'
         codebasic='import pprint\n'+\
+        'pprint.pprint(locals())\n'+\
         'with open("'+filetext+'", mode="w") as number_file:\n'+\
         '    l=[i**2 for i in range(20)]\n'+\
         '    number_file.write(str(l))\n'+\
         'print(update)\n'+\
-        'print(type(update))\n'+\
-        'pprint.pprint(locals())'
+        'print(type(update))\n'
         codepid='import os\n'+\
                 'a=os.getpid()\n'+\
                 'b=os.getppid()\n'+\
