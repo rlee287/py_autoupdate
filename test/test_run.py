@@ -126,6 +126,23 @@ class TestRunProgram(object):
         assert isinstance(launch.process_pid,int)
         assert launch.process_exitcode==-15
         assert can_terminate
+    
+    def test_terminate_rerun(self):
+        """Test that attempts to rerun process after termination"""
+        fileback = "test_run_base_back.py"
+        launch = Launcher(fileback,"NonUniform Resource Locator",
+                          'project.zip','downloads',DEBUG)
+        launch.run(True)
+        while not os.path.isfile(".lck"):
+            pass
+        time.sleep(0.5)
+        can_terminate=launch.process_terminate()
+        os.remove(".lck")
+        assert isinstance(launch.process_pid,int)
+        assert launch.process_exitcode==-15
+        assert can_terminate
+        exitcode=launch.run()
+        assert exitcode==0
 
     def test_background(self):
         """Test that runs code in the background
