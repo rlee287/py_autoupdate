@@ -280,6 +280,9 @@ class Launcher(object):
         finally:
             local_log.debug("Releasing code lock after running code")
             self.update.release()
+            # Reset past_terminated to False
+            # (if terminated and rerun, past_terminated should be false)
+            self.past_terminated=False
 
     def run(self, background=False):
         """Method used to run code.
