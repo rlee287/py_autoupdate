@@ -5,30 +5,9 @@ from .pytest_skipif import needinternet
 from .pytest_makevers import fixture_update_dir,create_update_dir
 
 import os
-import sys
 
-import pytest
-
-@pytest.fixture("function")
-def create_zip(request):
-    """Fixture that creates an empty .zip file"""
-    def teardown():
-        if os.path.isfile("project.zip"):
-            os.remove("project.zip")
-    request.addfinalizer(teardown)
-    if sys.version_info[0]==2:
-        empty_zip_data = 'PK\x05\x06\x00\x00\x00\x00\x00\x00\x00\x00\x00'+\
-                         '\x00\x00\x00\x00\x00\x00\x00\x00\x00'
-    else:
-        empty_zip_data = b'PK\x05\x06\x00\x00\x00\x00\x00\x00\x00\x00\x00'+\
-                         b'\x00\x00\x00\x00\x00\x00\x00\x00\x00'
-    with open('project.zip', 'wb') as zip_file:
-        zip_file.write(empty_zip_data)
-
-
-@pytest.mark.trylast
 @needinternet
-def test_check_get_new(create_zip, fixture_update_dir,create_update_dir):
+def test_check_get_new(fixture_update_dir,create_update_dir):
     """Test that gets new version from internet"""
     package=fixture_update_dir("0.0.1")
     launch = Launcher('filling up the boring replacements',

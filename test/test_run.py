@@ -3,7 +3,7 @@ from __future__ import absolute_import, print_function
 import os
 import time
 import pytest
-from logging import INFO
+from logging import INFO, DEBUG
 from ..pyautoupdate.launcher import Launcher
 from ..pyautoupdate.exceptions import ProcessRunningException
 
@@ -26,10 +26,7 @@ class TestRunProgram(object):
         '    l=[i**2 for i in range(20)]\n'+\
         '    number_file.write(str(l))\n'+\
         'print(update)\n'+\
-        'update.set()\n'+\
-        'print(update.is_set())\n'+\
-        'update.clear()\n'+\
-        'print(update.is_set())\n'
+        'print(type(update))\n'
         codepid='import os\n'+\
                 'a=os.getpid()\n'+\
                 'b=os.getppid()\n'+\
@@ -41,9 +38,12 @@ class TestRunProgram(object):
                 'assert a!=c\n'
         codefail='nonexistent_eiofjeoifjdoijfkldsjf'
         codeback='import time\n'+\
+                 'import os\n'+\
+                 'open(".lck","w").close()\n'+\
                  'print("start")\n'+\
                  'time.sleep(2)\n'+\
-                 'print("end")'
+                 'print("end")\n'+\
+                 'os.remove(".lck")\n'
         codelog='log.error("This should be an error")\n'
         for name,code in zip([filecode, filepid, filefail,
                               fileback, filelog],
@@ -55,6 +55,7 @@ class TestRunProgram(object):
             for name in [filecode, filetext, filepid,
                          filefail, fileback, filelog]:
                 os.remove(name)
+            os.remove(Launcher.version_check_log)
         request.addfinalizer(teardown)
         return self.create_test_file
 
@@ -63,7 +64,7 @@ class TestRunProgram(object):
         filebase = 'test_run_base'
         filecode = filebase+'.py'
         filetext = filebase+'.txt'
-        launch = Launcher(filecode,'Must','project.zip','downloads',INFO,
+        launch = Launcher(filecode,'Must','project.zip','downloads',DEBUG,
                           "extra_args",extra="extra_kwargs")
         excode = launch.run()
         assert excode == 0
@@ -77,6 +78,15 @@ class TestRunProgram(object):
         launch = Launcher(filecode,'have')
         excode = launch.run()
         assert excode==0
+
+    def test_terminante_notrun(self,create_test_file):
+        """Test that attempts to access attributes from the parent object"""
+        filecode = 'test_run_base_pid.py'
+        launch = Launcher(filecode,'have')
+        excode = launch.run()
+        assert excode==0
+        can_terminate=launch.process_terminate()
+        assert not can_terminate
 
     def test_run_fail(self,create_test_file):
         """Test that runs errored code and checks exit status"""
@@ -98,11 +108,42 @@ class TestRunProgram(object):
     def test_run_log(self):
         """Test that attempts to access attributes from the parent object"""
         filelog = 'test_run_base_log.py'
-        launch = Launcher(filelog,'logs made out of wood!',
-                          'project.zip','downloads',INFO)
+        launch = Launcher(filelog,'logs made out of wood!')
         excode = launch.run()
         assert excode==0
 
+    def test_terminate_running(self):
+        """Test that attempts to terminate process"""
+        fileback = "test_run_base_back.py"
+        launch = Launcher(fileback,"NonUniform Resource Locator",
+                          'project.zip','downloads',DEBUG)
+        launch.run(True)
+        while not os.path.isfile(".lck"):
+            pass
+        time.sleep(0.5)
+        can_terminate=launch.process_terminate()
+        os.remove(".lck")
+        assert isinstance(launch.process_pid,int)
+        assert launch.process_exitcode==-15
+        assert can_terminate
+
+    @pytest.mark.xfail
+    def test_terminate_rerun(self):
+        """Test that attempts to rerun process after termination"""
+        fileback = "test_run_base_back.py"
+        launch = Launcher(fileback,"NonUniform Resource Locator",
+                          'project.zip','downloads',DEBUG)
+        launch.run(True)
+        while not os.path.isfile(".lck"):
+            pass
+        time.sleep(0.5)
+        can_terminate=launch.process_terminate()
+        os.remove(".lck")
+        assert isinstance(launch.process_pid,int)
+        assert launch.process_exitcode==-15
+        assert can_terminate
+        exitcode=launch.run()
+        assert exitcode==0
 
     def test_background(self):
         """Test that runs code in the background
@@ -114,15 +155,14 @@ class TestRunProgram(object):
                    |             |Windows|    |        |-------
               "is_alive"         |Kills  | "is_dead"   |Test
                                  |Process|             |Checks
-
         """
         fileback = 'test_run_base_back.py'
         launch = Launcher(fileback,'URL')
         launch.run(True)
         time.sleep(1)
         assert launch.process_is_alive
-        launch.process_join()
-        #Really takes over least 2 seconds for windows to kill process
+        launch.process_join(timeout=5)
+        # Really takes up to 5 seconds for windows to kill process
         assert not launch.process_is_alive
 
     def test_run_twice(self):

@@ -11,3 +11,4 @@ def test_check_vers_noupdate(fixture_update_dir):
     launch = Launcher('pypipypipypipypi',
                       r'http://rlee287.github.io/pyautoupdate/testing/')
     isnew=launch.update_code()
+    assert not isnew

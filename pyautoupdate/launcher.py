@@ -49,7 +49,7 @@ class Launcher(object):
     +-------------+-------------------------------------------------+
     |``updatedir``|Directory into which the new archive is extracted|
     +-------------+-------------------------------------------------+
-    |``update``   |:class:`multiprocessing.Event` that can be set to|
+    |``update``   |:class:`multiprocessing.Lock` that can be set to |
     |             |signal an update event                           |
     +-------------+-------------------------------------------------+
     |``pid``      |PID of parent process that spawns the code       |
@@ -69,9 +69,11 @@ class Launcher(object):
        Please ensure that all ``args`` and ``kwargs`` can be pickled.
     """
 
-    version_doc="version.txt"
-    version_check_log="version_check.log"
-    file_list="filelist.txt"
+    version_doc = "version.txt"
+    version_check_log = "version_check.log"
+    file_list = "filelist.txt"
+    queue_update = ".queue"
+    queue_replace = ".replace"
 
     def __init__(self, filepath, url,
                  newfiles='project.zip',
@@ -135,13 +137,14 @@ class Launcher(object):
             raise ValueError("newfiles must be a zip, gzip, or bzip file")
         else:
             self.newfiles = newfiles
-        self.update = multiprocessing.Event()
+        self.update = multiprocessing.Lock()
         self.pid = os.getpid()
         self.args = args
         self.kwargs = kwargs
         self.__process = multiprocessing.Process(target=self._call_code,
                                                  args=self.args,
                                                  kwargs=self.kwargs)
+        self.past_terminated=False
         self.log.info("Launcher initialized successfully")
 
 ####################### Filename getters and validators ######################
@@ -196,7 +199,12 @@ class Launcher(object):
     @property
     def process_exitcode(self):
         """The process exitcode, if it exists"""
-        return self.__process.exitcode
+        if self.past_terminated:
+            # SIGTERM is signal 15 on Linux
+            # Preserve compatibility on Windows
+            return -15
+        else:
+            return self.__process.exitcode
 
     def process_join(self,timeout=None):
         """Joins the process"""
@@ -209,9 +217,25 @@ class Launcher(object):
         .. warning::
            All the provisos of :meth:`multiprocessing.Process.terminate`
            apply.
+
+           Attempts are made in the code to ensure that internal variables
+           inside the Launcher class are properly cleaned up. However, there is
+           little protection for the supplied code in case of termination.
+
+        :return: Whether process was terminated
+        :rtype: bool
         """
-        self.log.warning("Terminating Process")
-        self.__process.terminate()
+        if self.process_is_alive:
+            self.log.warning("Terminating Process")
+            self.__process.terminate()
+            # Release lock to avoid update deadlock later
+            self.log.debug("Releasing code lock after termination")
+            self.update.release()
+            self.past_terminated=True
+            return True
+        else:
+            self.log.warning("Attempted to terminate dead process")
+            return False
 
 ########################### Code execution methods ###########################
 
@@ -248,7 +272,17 @@ class Launcher(object):
                         pprint.pformat(localvar))
         # Execute code in file
         local_log.info("Starting code from file")
-        exec(code, dict(), localvar)
+        try:
+            # TODO: move up?
+            local_log.debug("Acquiring code lock to run code")
+            self.update.acquire()
+            exec(code, dict(), localvar)
+        finally:
+            local_log.debug("Releasing code lock after running code")
+            self.update.release()
+            # Reset past_terminated to False
+            # (if terminated and rerun, past_terminated should be false)
+            self.past_terminated=False
 
     def run(self, background=False):
         """Method used to run code.
@@ -269,7 +303,10 @@ class Launcher(object):
         if not os.path.isfile(self.filepath):
             raise error_to_raise("No file at {0}".format(self.filepath))
         self.log.info("Checking process status")
-        if self.process_pid is None:
+        if self.process_is_alive:
+            self.log.error("Process is already running")
+            raise ProcessRunningException
+        elif self.process_pid is None:
             # Process has not run yet
             self.log.info("Process has not run yet")
             self.log.info("Starting process")
@@ -283,23 +320,22 @@ class Launcher(object):
                 self.process_join()
                 # Exit code can be used by program that calls the launcher
                 return self.process_exitcode
+        elif self.process_exitcode is not None:
+            # Process has already terminated
+            # Reinitialize the process instance
+            self.log.info("Process has already finished")
+            self.log.info("Reinitializing process object")
+            self.__process = None
+            self.__process = multiprocessing.Process(target=
+                                                     self._call_code,
+                                                     args=self.args,
+                                                     kwargs=self.kwargs)
+            # Recursion, since this will reset @property properties
+            self.run(background)
         else:
-            # Process has started
-            if self.process_exitcode is not None:
-                # Process has already terminated
-                # Reinitialize the process instance
-                self.log.info("Process has already finished")
-                self.log.info("Reinitializing process object")
-                self.__process = None
-                self.__process = multiprocessing.Process(target=
-                                                         self._call_code,
-                                                         args=self.args,
-                                                         kwargs=self.kwargs)
-                # Recursion, since this will reset @property properties
-                self.run(background)
-            else:
-                self.log.error("Process is already running")
-                raise ProcessRunningException
+            # Should never happening
+            self.log.error("Process exitcode exists without PID!")
+            self.log.error("The application is probably in an unstable state.")
 
 ######################### New code retrieval methods #########################
 
@@ -316,19 +352,28 @@ class Launcher(object):
               Any versioning scheme described in :pep:`440` can be used.
         """
         self.log.info("Checking for updates")
-        versionurl=self.url+self.version_doc
-        # Get new files
-        self.log.debug("Retrieving new version from {0}".format(versionurl))
-        get_new=requests.get(versionurl, allow_redirects=True)
-        get_new.raise_for_status()
         request_time=datetime.utcnow()
-        newver=get_new.text
-        newver=newver.rstrip("\n")
-        # Read in old version and compare to new version
+        # If self.queue_update is already present, return false
+        if os.path.isfile(self.queue_update):
+            with open(self.queue_update, 'r') as new_version:
+                newver=new_version.read()
+            newver_obj=parse_version(newver)
+            newver=newver.rstrip("\n")
+            return isinstance(newver_obj,SetuptoolsVersion)
+        else:
+            versionurl=self.url+self.version_doc
+            # Get new files
+            self.log.debug("Retrieving new version from {0}".format(versionurl))
+            get_new=requests.get(versionurl, allow_redirects=True)
+            get_new.raise_for_status()
+            newver=get_new.text
+            newver=newver.rstrip("\n")
+            newver_obj=parse_version(newver)
+        # Read in old version
         with open(self.version_doc, 'r') as old_version:
             oldver=old_version.read()
         oldver=oldver.rstrip("\n")
-        newver_obj=parse_version(newver)
+        # Compare old version with new version
         invalid=False
         if not isinstance(newver_obj,SetuptoolsVersion):
             invalid=True
@@ -364,14 +409,14 @@ class Launcher(object):
                            .format(oldver,request_time)
         with open(self.version_check_log, "a") as log_file:
             log_file.write(version_to_add)
-        if not invalid:
-            with open(self.version_doc, 'w') as new_version:
-                new_version.write(newver)
-        else:
+        if invalid:
             raise CorruptedFileWarning
+        elif has_new:
+            with open(self.queue_update, 'w') as new_version:
+                new_version.write(newver)
         return has_new
 
-    def _reset_update_dir(self):
+    def _reset_update_files(self):
         """Resets the update directory to its default state.
 
            It also creates a new update directory if one doesn't exist.
@@ -383,13 +428,13 @@ class Launcher(object):
         # Make new empty directory
         # shutil.rmtree would have deleted the directory
         os.mkdir(self.updatedir)
+        # Remove old archive
+        if os.path.isfile(self.newfiles):
+            os.remove(self.newfiles)
 
     def _get_new(self, allow_redirects=True, chunk_size=512):
         """Retrieves the new archive and extracts it to self.updatedir."""
         self.log.info("Retrieving new version")
-        # Remove old archive
-        if os.path.isfile(self.newfiles):
-            os.remove(self.newfiles)
         newurl = self.url+self.newfiles
         # Get new files
         http_get = requests.get(newurl, stream=True,
@@ -402,99 +447,156 @@ class Launcher(object):
         # Unpack archive and remove it after extraction
         try:
             unpack_archive(self.newfiles, self.updatedir)
-            os.remove(self.newfiles)
         except UnrecognizedFormat:
             self.log.error("Retrieved version archive is invalid!\n"
                            "Please contact the software authors.\n"
                            "Please include the invalid archive "
                            "in a bug report.")
             os.rename(self.newfiles,self.newfiles+".dump")
+        else:
+            # Remove archive only if unpack operation succeeded
+            os.remove(self.newfiles)
+            # Signal that update is ready
+            self.log.debug("Creating downloaded file marker")
+            open(self.queue_replace,"w").close()
 
     def _replace_files(self):
-        """Replaces the existing files with the downloaded files."""
-        self.log.info("Replacing files")
-        # Read in files from filelist and move to tempdir
-        tempdir=tempfile.mkdtemp()
-        self.log.debug("Created tempdir at {0}".format(tempdir))
-        self.log.info("Backing up current filelist")
-        filelist_backup=None
+        """Replaces the existing files with the downloaded files.
+
+           :return: Whether update succeeded
+           :rtype: bool
+        """
+        if not (os.path.isfile(self.queue_update) and os.path.isfile(self.queue_replace)):
+            return False
+        # Attempt to acquire code lock here and exit if unable to
+        # The finally block runs after the "return" statement
+        # This can cause a double-release under some circumstances
+        # Acquiring the lock here prevents this from happening
+        else:
+            self.log.debug("Acquiring code log to update files")
+            has_lock=self.update.acquire(False)
+            if not has_lock:
+                self.log.debug("Could not acquire lock to update files")
+                return False
         try:
-            filelist_backup=tempfile.NamedTemporaryFile(delete=False)
-            with open(self.file_list, "r+b") as file_handle:
-                shutil.copyfileobj(file_handle,filelist_backup)
-        except Exception:
-            self.log.exception("Backup of current filelist failed!")
-            raise
+            # else # os.path.isfile(self.queue_update) and os.path.isfile(self.queue_replace)
+            # TODO: Make this code safer and possibly leave diagnostics
+            # if the update operation errors out in the middle
+            self.log.debug("Writing new version into {0}".format(self.version_doc))
+            os.rename(self.version_doc,self.version_doc+".bak")
+            os.rename(self.queue_update,self.version_doc)
+            os.remove(self.version_doc+".bak")
+            self.log.debug("Removing downloaded file marker")
+            os.remove(self.queue_replace)
+            self.log.info("Replacing files")
+            # Read in files from filelist and move to tempdir
+            tempdir=tempfile.mkdtemp()
+            self.log.debug("Created tempdir at {0}".format(tempdir))
+            self.log.info("Backing up current filelist")
+            filelist_backup=None
+            try:
+                filelist_backup=tempfile.NamedTemporaryFile(delete=False)
+                with open(self.file_list, "r+b") as file_handle:
+                    shutil.copyfileobj(file_handle,filelist_backup)
+            except Exception:
+                self.log.exception("Backup of current filelist failed!")
+                raise
+            finally:
+                if filelist_backup is not None:
+                    filelist_backup.close()
+            self.log.info("Moving old files to tempdir")
+            with open(self.file_list, "r") as file_handle:
+                for line in file_handle:
+                    file_rm=os.path.normpath(os.path.join(".",line))
+                    file_rm=file_rm.rstrip("\n")
+                    # Confirm that each file in filelist exists
+                    if not os.path.isfile(file_rm):
+                        self.log.error("{0} contains the invalid "
+                                       "filepath {1}.\n"
+                                       "Please check that {0} is not being "
+                                       "used!\n"
+                                       "Otherwise the {0} is corrupted.\n"
+                                       "Updates will fail until this is "
+                                       "restored."
+                                       .format(self.file_list,file_rm))
+                        warnings.warn("{0} is corrupted and contains the "
+                                      "invalid path {1}!"
+                                      .format(self.file_list,file_rm),
+                                      CorruptedFileWarning,
+                                      stacklevel=2)
+                    else:
+                        file_rm_temp=os.path.join(tempdir,file_rm)
+                        file_rm_temp_dir=os.path.dirname(file_rm_temp)
+                        if not os.path.isdir(file_rm_temp_dir):
+                            # exist_ok does not exist in Python 2
+                            os.makedirs(file_rm_temp_dir)
+                        if file_rm.split(os.path.sep)[0] not in \
+                                                [self.updatedir,
+                                                 self.version_doc,
+                                                 self.version_check_log]:
+                            self.log.debug("Moving {0} to {1}".format(file_rm,
+                                                                      tempdir))
+                            shutil.move(file_rm,file_rm_temp)
+                            file_rm_dir=os.path.dirname(file_rm)
+                            if os.path.isdir(file_rm_dir):
+                                if not os.listdir(file_rm_dir):
+                                    os.rmdir(file_rm_dir)
+                                    self.log.debug("Removing directory {0}"
+                                                   .format(file_rm_dir))
+            self.log.info("Removing old filelist")
+            os.remove(self.file_list)
+            self.log.info("Creating new filelist")
+            filelist_new=list()
+            relpath_start=os.path.join(self.updatedir)
+            for dirpath, _, filenames in os.walk(self.updatedir):
+                # _ is dirnames, but it is unused
+                for filename in filenames:
+                    filepath=os.path.normpath(os.path.join(dirpath,
+                                                           filename))
+                    filepath=os.path.relpath(filepath,start=relpath_start)
+                    filepath+="\n"
+                    filelist_new.append(filepath)
+            self.log.debug("New filelist is:\n"+pprint.pformat(filelist_new))
+            self.log.info("Writing new filelist to {0}".format(self.file_list))
+            with open(self.file_list, "w") as file_handle:
+                file_handle.writelines(filelist_new)
+            self.log.info("Copying downloaded contents to current directory")
+            copy_glob(os.path.join(self.updatedir,"*"),".")
+            self.log.info("Removing backup filelist")
+            os.remove(filelist_backup.name)
+            self.log.info("Removing tempdir")
+            shutil.rmtree(tempdir)
         finally:
-            if filelist_backup is not None:
-                filelist_backup.close()
-        self.log.info("Moving old files to tempdir")
-        with open(self.file_list, "r") as file_handle:
-            for line in file_handle:
-                file_rm=os.path.normpath(os.path.join(".",line))
-                file_rm=file_rm.rstrip("\n")
-                # Confirm that each file in filelist exists
-                if not os.path.isfile(file_rm):
-                    self.log.error("{0} contains the invalid filepath {1}.\n"
-                                   "Please check that {0} is not being used!\n"
-                                   "Otherwise the {0} is corrupted.\n"
-                                   "Updates will fail until this is restored."
-                                   .format(self.file_list,file_rm))
-                    warnings.warn("{0} is corrupted and contains the "
-                                  "invalid path {1}!"
-                                  .format(self.file_list,file_rm),
-                                  CorruptedFileWarning,
-                                  stacklevel=2)
-                else:
-                    file_rm_temp=os.path.join(tempdir,file_rm)
-                    file_rm_temp_dir=os.path.dirname(file_rm_temp)
-                    if not os.path.isdir(file_rm_temp_dir):
-                        # exist_ok does not exist in Python 2
-                        os.makedirs(file_rm_temp_dir)
-                    if file_rm.split(os.path.sep)[0] not in \
-                                            [self.updatedir, self.version_doc,
-                                             self.version_check_log]:
-                        self.log.debug("Moving {0} to {1}".format(file_rm,
-                                                                  tempdir))
-                        shutil.move(file_rm,file_rm_temp)
-                        file_rm_dir=os.path.dirname(file_rm)
-                        if os.path.isdir(file_rm_dir):
-                            if not os.listdir(file_rm_dir):
-                                os.rmdir(file_rm_dir)
-                                self.log.debug("Removing directory {0}"
-                                               .format(file_rm_dir))
-        self.log.info("Removing old filelist")
-        os.remove(self.file_list)
-        self.log.info("Creating new filelist")
-        filelist_new=list()
-        relpath_start=os.path.join(self.updatedir)
-        for dirpath, _, filenames in os.walk(self.updatedir):
-            # _ is dirnames, but it is unused
-            for filename in filenames:
-                filepath=os.path.normpath(os.path.join(dirpath,
-                                                       filename))
-                filepath=os.path.relpath(filepath,start=relpath_start)
-                filepath+="\n"
-                filelist_new.append(filepath)
-        self.log.debug("New filelist is:\n"+pprint.pformat(filelist_new))
-        self.log.info("Writing new filelist to {0}".format(self.file_list))
-        with open(self.file_list, "w") as file_handle:
-            file_handle.writelines(filelist_new)
-        self.log.info("Copying downloaded contents to current directory")
-        copy_glob(os.path.join(self.updatedir,"*"),".")
-        self.log.info("Removing backup filelist")
-        os.remove(filelist_backup.name)
-        self.log.info("Removing tempdir")
-        shutil.rmtree(tempdir)
+            self.log.debug("Releasing lock after updating files")
+            self.update.release()
+        return has_lock
 
     def update_code(self):
-        """Updates the code if necessary"""
+        """Updates the code if necessary.
+           :return: Whether update succeeded
+           :rtype: bool
+        """
         if self.check_new():
-            self.log.info("Beginning update process")
-            self._reset_update_dir()
-            self._get_new()
-            self._replace_files()
-            self._reset_update_dir()
-            self.log.info("Update successful")
+            if not os.path.isfile(self.queue_update):
+                self.log.info("Beginning update process")
+                self._reset_update_files()
+                self._get_new()
+                update_successful=self._replace_files()
+                if update_successful:
+                    self._reset_update_files()
+                    self.log.info("Update successful")
+                else:
+                    self.log.info("Update failed")
+            else:
+                if not os.path.isfile(self.queue_replace):
+                    self._get_new()
+                update_successful=self._replace_files()
+                if update_successful:
+                    self._reset_update_files()
+                    self.log.info("Update successful")
+                else:
+                    self.log.info("Update failed")
         else:
             self.log.info("Already up to date")
+            update_successful=False
+        return update_successful
