@@ -333,7 +333,7 @@ class Launcher(object):
             # Recursion, since this will reset @property properties
             self.run(background)
         else:
-            # Should never happening
+            # Should never happen
             self.log.error("Process exitcode exists without PID!")
             self.log.error("The application is probably in an unstable state.")
 
@@ -363,7 +363,8 @@ class Launcher(object):
         else:
             versionurl=self.url+self.version_doc
             # Get new files
-            self.log.debug("Retrieving new version from {0}".format(versionurl))
+            self.log.debug("Retrieving new version from {0}"
+                           .format(versionurl))
             get_new=requests.get(versionurl, allow_redirects=True)
             get_new.raise_for_status()
             newver=get_new.text
@@ -466,7 +467,8 @@ class Launcher(object):
            :return: Whether update succeeded
            :rtype: bool
         """
-        if not (os.path.isfile(self.queue_update) and os.path.isfile(self.queue_replace)):
+        if not (os.path.isfile(self.queue_update) and
+                os.path.isfile(self.queue_replace)):
             return False
         # Attempt to acquire code lock here and exit if unable to
         # The finally block runs after the "return" statement
@@ -479,10 +481,12 @@ class Launcher(object):
                 self.log.debug("Could not acquire lock to update files")
                 return False
         try:
-            # else # os.path.isfile(self.queue_update) and os.path.isfile(self.queue_replace)
+            # else (os.path.isfile(self.queue_update) and
+            # os.path.isfile(self.queue_replace))
             # TODO: Make this code safer and possibly leave diagnostics
             # if the update operation errors out in the middle
-            self.log.debug("Writing new version into {0}".format(self.version_doc))
+            self.log.debug("Writing new version into {0}"
+                           .format(self.version_doc))
             os.rename(self.version_doc,self.version_doc+".bak")
             os.rename(self.queue_update,self.version_doc)
             os.remove(self.version_doc+".bak")
