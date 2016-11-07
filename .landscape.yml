@@ -5,6 +5,7 @@ max-line-length: 79
 pylint:
   disable:
     - exec-used
+    - protected-access
 pep8:
   disable:
     - E302
