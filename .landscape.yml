@@ -5,6 +5,9 @@ max-line-length: 79
 pylint:
   disable:
     - exec-used
+pep8:
+  disable:
+    - E302
 pyroma:
   run: true
 ignore-paths:
