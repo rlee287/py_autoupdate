@@ -3,7 +3,7 @@
 Pyautoupdate is a python wrapper that allows the wrapped code to
 automatically update.
 
-|Build_Status| |Codecov_Status| |QuantifiedCode_Status| |LandscapeIO_Status|
+|Build_Status| |Codecov_Status| |QuantifiedCode_Status| |LandscapeIO_Status| |Gitter_Badge|
 
 Advantages
 ----------
@@ -45,3 +45,7 @@ LGPL 2.1
 .. |LandscapeIO_Status| image:: https://landscape.io/github/rlee287/pyautoupdate/develop/landscape.svg?style=flat
    :target: https://landscape.io/github/rlee287/pyautoupdate/develop
    :alt: Code Health
+
+.. |Gitter_Badge| image:: https://badges.gitter.im/pyautoupdate_chat/Lobby.svg
+   :alt: Join the chat at https://gitter.im/pyautoupdate_chat/Lobby
+   :target: https://gitter.im/pyautoupdate_chat/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge
