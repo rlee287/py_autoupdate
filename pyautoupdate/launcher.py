@@ -581,25 +581,17 @@ class Launcher(object):
            :rtype: bool
         """
         if self.check_new():
-            if not os.path.isfile(self.queue_update):
-                self.log.info("Beginning update process")
+            # self.check_new will create a self.queue_update file
+            self.log.info("Beginning update process")
+            if not os.path.isfile(self.queue_replace):
                 self._reset_update_files()
                 self._get_new()
-                update_successful=self._replace_files()
-                if update_successful:
-                    self._reset_update_files()
-                    self.log.info("Update successful")
-                else:
-                    self.log.info("Update failed")
+            update_successful=self._replace_files()
+            if update_successful:
+                self._reset_update_files()
+                self.log.info("Update successful")
             else:
-                if not os.path.isfile(self.queue_replace):
-                    self._get_new()
-                update_successful=self._replace_files()
-                if update_successful:
-                    self._reset_update_files()
-                    self.log.info("Update successful")
-                else:
-                    self.log.info("Update failed")
+                self.log.info("Update failed")
         else:
             self.log.info("Already up to date")
             update_successful=False
