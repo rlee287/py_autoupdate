@@ -29,6 +29,7 @@
    
   <link rel="stylesheet" href="_static/custom.css" type="text/css" />
   
+  
   <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 
   </head>
@@ -96,7 +97,7 @@ follows:</p>
 <td>Directory into which the new archive is extracted</td>
 </tr>
 <tr class="row-even"><td><code class="docutils literal"><span class="pre">update</span></code></td>
-<td><a class="reference external" href="https://docs.python.org/3/library/multiprocessing.html#multiprocessing.Event" title="(in Python v3.5)"><code class="xref py py-class docutils literal"><span class="pre">multiprocessing.Event</span></code></a> that can be set to
+<td><a class="reference external" href="https://docs.python.org/3/library/multiprocessing.html#multiprocessing.Lock" title="(in Python v3.5)"><code class="xref py py-class docutils literal"><span class="pre">multiprocessing.Lock</span></code></a> that can be set to
 signal an update event</td>
 </tr>
 <tr class="row-odd"><td><code class="docutils literal"><span class="pre">pid</span></code></td>
@@ -154,11 +155,21 @@ Please use the <a class="reference internal" href="#pyautoupdate.Launcher.run" t
 <dt id="pyautoupdate.Launcher._replace_files">
 <code class="descname">_replace_files</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyautoupdate/launcher.html#Launcher._replace_files"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyautoupdate.Launcher._replace_files" title="Permalink to this definition">¶</a></dt>
 <dd><p>Replaces the existing files with the downloaded files.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Whether update succeeded</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.5)">bool</a></td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
-<dt id="pyautoupdate.Launcher._reset_update_dir">
-<code class="descname">_reset_update_dir</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyautoupdate/launcher.html#Launcher._reset_update_dir"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyautoupdate.Launcher._reset_update_dir" title="Permalink to this definition">¶</a></dt>
+<dt id="pyautoupdate.Launcher._reset_update_files">
+<code class="descname">_reset_update_files</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyautoupdate/launcher.html#Launcher._reset_update_files"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyautoupdate.Launcher._reset_update_files" title="Permalink to this definition">¶</a></dt>
 <dd><p>Resets the update directory to its default state.</p>
 <p>It also creates a new update directory if one doesn&#8217;t exist.</p>
 </dd></dl>
@@ -187,8 +198,19 @@ to compare versions.</p>
 
 <dl class="attribute">
 <dt id="pyautoupdate.Launcher.file_list">
-<code class="descname">file_list</code><a class="headerlink" href="#pyautoupdate.Launcher.file_list" title="Permalink to this definition">¶</a></dt>
+<code class="descname">file_list</code><em class="property"> = 'filelist.txt'</em><a class="headerlink" href="#pyautoupdate.Launcher.file_list" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
+
+<dl class="attribute">
+<dt id="pyautoupdate.Launcher.process_code_running">
+<code class="descname">process_code_running</code><a class="headerlink" href="#pyautoupdate.Launcher.process_code_running" title="Permalink to this definition">¶</a></dt>
+<dd><p>Whether the user code is alive</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">This is diferent from <cite>Launcher.process_is_alive</cite> because the
+process takes time to start up before running the user code.</p>
+</div>
+</dd></dl>
 
 <dl class="attribute">
 <dt id="pyautoupdate.Launcher.process_exitcode">
@@ -199,7 +221,7 @@ to compare versions.</p>
 <dl class="attribute">
 <dt id="pyautoupdate.Launcher.process_is_alive">
 <code class="descname">process_is_alive</code><a class="headerlink" href="#pyautoupdate.Launcher.process_is_alive" title="Permalink to this definition">¶</a></dt>
-<dd><p>Whether the process is alive</p>
+<dd><p>Returns whether the process is alive</p>
 </dd></dl>
 
 <dl class="method">
@@ -220,10 +242,33 @@ to compare versions.</p>
 <dd><p>Terminates the process.</p>
 <div class="admonition warning">
 <p class="first admonition-title">Warning</p>
-<p class="last">All the provisos of <a class="reference external" href="https://docs.python.org/3/library/multiprocessing.html#multiprocessing.Process.terminate" title="(in Python v3.5)"><code class="xref py py-meth docutils literal"><span class="pre">multiprocessing.Process.terminate()</span></code></a>
+<p>All the provisos of <a class="reference external" href="https://docs.python.org/3/library/multiprocessing.html#multiprocessing.Process.terminate" title="(in Python v3.5)"><code class="xref py py-meth docutils literal"><span class="pre">multiprocessing.Process.terminate()</span></code></a>
 apply.</p>
+<p class="last">Attempts are made in the code to ensure that internal variables
+inside the Launcher class are properly cleaned up. However, there is
+little protection for the supplied code in case of termination.</p>
 </div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Whether process was terminated</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.5)">bool</a></td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
+
+<dl class="attribute">
+<dt id="pyautoupdate.Launcher.queue_replace">
+<code class="descname">queue_replace</code><em class="property"> = '.replace'</em><a class="headerlink" href="#pyautoupdate.Launcher.queue_replace" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="pyautoupdate.Launcher.queue_update">
+<code class="descname">queue_update</code><em class="property"> = '.queue'</em><a class="headerlink" href="#pyautoupdate.Launcher.queue_update" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
 
 <dl class="method">
 <dt id="pyautoupdate.Launcher.run">
@@ -247,12 +292,19 @@ apply.</p>
 <dl class="method">
 <dt id="pyautoupdate.Launcher.update_code">
 <code class="descname">update_code</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyautoupdate/launcher.html#Launcher.update_code"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyautoupdate.Launcher.update_code" title="Permalink to this definition">¶</a></dt>
-<dd><p>Updates the code if necessary</p>
+<dd><p>Updates the code if necessary.
+:return: Whether update succeeded
+:rtype: bool</p>
 </dd></dl>
 
 <dl class="attribute">
+<dt id="pyautoupdate.Launcher.version_check_log">
+<code class="descname">version_check_log</code><em class="property"> = 'version_check.log'</em><a class="headerlink" href="#pyautoupdate.Launcher.version_check_log" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
 <dt id="pyautoupdate.Launcher.version_doc">
-<code class="descname">version_doc</code><a class="headerlink" href="#pyautoupdate.Launcher.version_doc" title="Permalink to this definition">¶</a></dt>
+<code class="descname">version_doc</code><em class="property"> = 'version.txt'</em><a class="headerlink" href="#pyautoupdate.Launcher.version_doc" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -270,11 +322,6 @@ apply.</p>
 </tbody>
 </table>
 </dd></dl>
-
-<dl class="attribute">
-<dt id="pyautoupdate.Launcher.version_log">
-<code class="descname">version_log</code><a class="headerlink" href="#pyautoupdate.Launcher.version_log" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
 
 <dl class="method">
 <dt id="pyautoupdate.Launcher.version_log_validator">
@@ -418,7 +465,7 @@ apply.</p>
       
       |
       Powered by <a href="http://sphinx-doc.org/">Sphinx 1.3.1</a>
-      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.8</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.9</a>
       
       |
       <a href="_sources/pyautoupdate.txt"
