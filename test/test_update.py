@@ -49,7 +49,8 @@ def test_update(fixture_update_setup):
     """Checks the ability of program to upload new code"""
     assert os.path.isfile(Launcher.file_list)
     launch = Launcher('extradir/blah.py',
-                      r'http://rlee287.github.io/pyautoupdate/testing/',
+                      r'http://rlee287.github.io/pyautoupdate/'
+                      '_static/testing/',
                       'project.zip','downloads',DEBUG)
     could_update=launch.update_code()
     assert could_update
@@ -68,7 +69,8 @@ def test_run_lock_update(fixture_update_setup):
     """Checks the ability of program to upload new code"""
     assert os.path.isfile(Launcher.file_list)
     launch = Launcher('extradir/blah.py',
-                      r'http://rlee287.github.io/pyautoupdate/testing/',
+                      r'http://rlee287.github.io/pyautoupdate/'
+                      '_static/testing/',
                       'project.zip','downloads',DEBUG)
     launch.run(True)
     while not os.path.isfile(".lck"): # Wait for process to start

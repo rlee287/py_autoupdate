@@ -17,7 +17,8 @@ def test_check_update_needed(fixture_update_dir):
     """Test that ensures that updates occur when needed"""
     package=fixture_update_dir("0.0.1")
     launch = Launcher('blah',
-                      r'http://rlee287.github.io/pyautoupdate/testing/')
+                      r'http://rlee287.github.io/pyautoupdate/'
+                      '_static/testing/')
     #pdb.set_trace()
     isnew=launch.check_new()
     assert isnew
@@ -34,7 +35,8 @@ def test_check_update_notneeded(fixture_update_dir):
     """Test to check update checker when update is not necessary"""
     package=fixture_update_dir('0.2.0')
     launch = Launcher('pypipypipypipypi',
-                      r'http://rlee287.github.io/pyautoupdate/testing/')
+                      r'http://rlee287.github.io/pyautoupdate/'
+                      '_static/testing/')
     isnew=launch.check_new()
     assert not isnew
     assert os.path.isfile(Launcher.version_doc)
@@ -66,7 +68,8 @@ def test_check_update_invalidvers(fixture_update_dir,remove_dump):
     """Test that ensures that updates occur when needed"""
     package=fixture_update_dir("0.0.1")
     launch = Launcher('blah',
-                      r'http://rlee287.github.io/pyautoupdate/testing2/')
+                      r'http://rlee287.github.io/pyautoupdate/'
+                      '_static/testing2/')
     with pytest.raises(CorruptedFileWarning):
         launch.check_new()
     assert os.path.isfile(Launcher.version_doc)
