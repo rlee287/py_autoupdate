@@ -145,6 +145,7 @@ class Launcher(object):
                                                  args=self.args,
                                                  kwargs=self.kwargs)
         self.past_terminated=False
+        self.__process_alive=False
         self.log.info("Launcher initialized successfully")
 
 ####################### Filename getters and validators ######################
@@ -188,8 +189,18 @@ class Launcher(object):
 
     @property
     def process_is_alive(self):
-        """Whether the process is alive"""
+        """Returns whether the process is alive"""
         return self.__process.is_alive()
+
+    @property
+    def process_code_running(self):
+        """Whether the user code is alive
+
+           .. note::
+              This is diferent from `Launcher.process_is_alive` because the
+              process takes time to start up before running the user code.
+        """
+        return self.__process_alive
 
     @property
     def process_pid(self):
@@ -228,6 +239,7 @@ class Launcher(object):
         if self.process_is_alive:
             self.log.warning("Terminating Process")
             self.__process.terminate()
+            self.__process_alive=False
             # Release lock to avoid update deadlock later
             self.log.debug("Releasing code lock after termination")
             self.update.release()
@@ -276,10 +288,12 @@ class Launcher(object):
             # TODO: move up?
             local_log.debug("Acquiring code lock to run code")
             self.update.acquire()
+            self.__process_alive=True
             exec(code, dict(), localvar)
         finally:
             local_log.debug("Releasing code lock after running code")
             self.update.release()
+            self.__process_alive=False
             # Reset past_terminated to False
             # (if terminated and rerun, past_terminated should be false)
             self.past_terminated=False
