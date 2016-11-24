@@ -271,8 +271,10 @@ class Launcher(object):
         localvar = vars(self).copy()
         # Manipulate __dict__ attribute to add handle to check_new
         localvar["check_new"] = self.check_new
-        # Remove handle to process object
+        # Remove handle to process object and lock
+        # Lock should not be tampered with in child process code
         del localvar["_Launcher__process"]
+        del localvar["update"]
         # Pass in args, kwargs, and logger
         localvar["args"]=args
         localvar["kwargs"]=kwargs
@@ -416,7 +418,7 @@ class Launcher(object):
         if has_new:
             version_to_add="Old {0}|New {1}|Time {2}\n"\
                            .format(oldver,newver,request_time)
-        elif invalid==False:
+        elif invalid is False:
             version_to_add="Old {0}|Up to date|Time {1}\n"\
                            .format(oldver,request_time)
         else:
