@@ -24,9 +24,7 @@ class TestRunProgram(object):
         'pprint.pprint(locals())\n'+\
         'with open("'+filetext+'", mode="w") as number_file:\n'+\
         '    l=[i**2 for i in range(20)]\n'+\
-        '    number_file.write(str(l))\n'+\
-        'print(update)\n'+\
-        'print(type(update))\n'
+        '    number_file.write(str(l))\n'
         codepid='import os\n'+\
                 'a=os.getpid()\n'+\
                 'b=os.getppid()\n'+\
@@ -123,26 +121,27 @@ class TestRunProgram(object):
         time.sleep(0.5)
         can_terminate=launch.process_terminate()
         os.remove(".lck")
-        assert isinstance(launch.process_pid,int)
         assert launch.process_exitcode==-15
         assert can_terminate
 
-    @pytest.mark.xfail
+    @pytest.mark.xfail(reason="Produces none but should be 0")
     def test_terminate_rerun(self):
         """Test that attempts to rerun process after termination"""
         fileback = "test_run_base_back.py"
         launch = Launcher(fileback,"NonUniform Resource Locator",
                           'project.zip','downloads',DEBUG)
         launch.run(True)
+        print(id(launch._Launcher__process))
         while not os.path.isfile(".lck"):
             pass
         time.sleep(0.5)
         can_terminate=launch.process_terminate()
         os.remove(".lck")
-        assert isinstance(launch.process_pid,int)
         assert launch.process_exitcode==-15
         assert can_terminate
-        exitcode=launch.run()
+        exitcode=launch.run(True)
+        print(id(launch._Launcher__process))
+        launch.process_join()
         assert exitcode==0
 
     def test_background(self):

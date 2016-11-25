@@ -231,7 +231,7 @@ class Launcher(object):
 
            Attempts are made in the code to ensure that internal variables
            inside the Launcher class are properly cleaned up. However, there is
-           little protection for the supplied code in case of termination.
+           little protection for user supplied code in case of termination.
 
         :return: Whether process was terminated
         :rtype: bool
@@ -243,6 +243,13 @@ class Launcher(object):
             # Release lock to avoid update deadlock later
             self.log.debug("Releasing code lock after termination")
             self.update.release()
+            # Reinitialize process now because is_alive is not properly reset
+            # After a process termination
+            self.log.debug("Reinitializing process object after termination")
+            self.__process = multiprocessing.Process(target=
+                                                     self._call_code,
+                                                     args=self.args,
+                                                     kwargs=self.kwargs)
             self.past_terminated=True
             return True
         else:
@@ -341,7 +348,6 @@ class Launcher(object):
             # Reinitialize the process instance
             self.log.info("Process has already finished")
             self.log.info("Reinitializing process object")
-            self.__process = None
             self.__process = multiprocessing.Process(target=
                                                      self._call_code,
                                                      args=self.args,
