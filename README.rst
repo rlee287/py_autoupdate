@@ -8,8 +8,7 @@ automatically update.
 Advantages
 ----------
 
--  This module is written in pure python. **This means that there is no
-   need to invoke a C compiler to build this module.**
+-  This module is written in pure python. **No C compiler is necessary for installation, simplifying installation for Windows.**
 -  Python 2 and 3 are both supported
 -  Pyautoupdate also works with pypy and pypy3
 
@@ -19,6 +18,7 @@ Core Dependencies
 ~~~~~~~~~~~~~~~~~
 -  Python 2.6+ or Python 3.3+
 -  ``requests`` for retrieving updated versions
+-  ``setuptools`` for archive manipulation and version comparison
 
 Development Dependencies
 ~~~~~~~~~~~~~~~~~~~~~~~~
@@ -45,7 +45,6 @@ LGPL 2.1
 .. |LandscapeIO_Status| image:: https://landscape.io/github/rlee287/pyautoupdate/develop/landscape.svg?style=flat
    :target: https://landscape.io/github/rlee287/pyautoupdate/develop
    :alt: Code Health
-
 .. |Gitter_Badge| image:: https://badges.gitter.im/pyautoupdate_chat/Lobby.svg
    :alt: Join the chat at https://gitter.im/pyautoupdate_chat/Lobby
    :target: https://gitter.im/pyautoupdate_chat/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge
