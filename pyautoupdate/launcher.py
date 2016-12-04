@@ -137,6 +137,7 @@ class Launcher(object):
             raise ValueError("newfiles must be a zip, gzip, or bzip file")
         else:
             self.newfiles = newfiles
+        # Initialize other variables
         self.update = multiprocessing.Lock()
         self.pid = os.getpid()
         self.args = args
@@ -156,16 +157,19 @@ class Launcher(object):
         :return: Whether the version_doc is a proper version
         :rtype: bool
         """
+        # Version is valid only if it exists
         version_valid=os.path.isfile(self.version_doc)
         if version_valid:
             try:
+                # If statement earlier signifies that version file must exist
                 with open(self.version_doc,"r") as version_check:
+                    # Read and parse version
                     vers=version_check.read()
                     if len(vers)>0:
                         vers_obj=parse_version(vers)
                         if not isinstance(vers_obj,SetuptoolsVersion):
                             raise PEP440Warning
-            except PEP440Warning:
+            except PEP440Warning: # Thrown if file has invalid version
                 version_valid=False
         return version_valid
 
@@ -176,6 +180,7 @@ class Launcher(object):
         :rtype: bool
         """
         valid_log=True
+        # Match log file against regex
         with open(self.version_check_log,"r") as log_file:
             log_syntax=re.compile(
                 r"Old .+?\|(New .+?|Up to date|Server invalid)\|Time .+?")
@@ -246,6 +251,7 @@ class Launcher(object):
             # Reinitialize process now because is_alive is not properly reset
             # After a process termination
             self.log.debug("Reinitializing process object after termination")
+            self.__process = None
             self.__process = multiprocessing.Process(target=
                                                      self._call_code,
                                                      args=self.args,
@@ -279,7 +285,7 @@ class Launcher(object):
         # Manipulate __dict__ attribute to add handle to check_new
         localvar["check_new"] = self.check_new
         # Remove handle to process object and lock
-        # Lock should not be tampered with in child process code
+        # Neither should not be tampered with in child process code
         del localvar["_Launcher__process"]
         del localvar["update"]
         # Pass in args, kwargs, and logger
@@ -333,6 +339,9 @@ class Launcher(object):
             # Process has not run yet
             self.log.info("Process has not run yet")
             self.log.info("Starting process")
+            # self.log is not pickleable
+            # The variable will be reinstantiated inside _call_code
+            # Temporarily remove here and reinstantiate after start
             del self.log
             try:
                 self.__process.start()
@@ -354,7 +363,7 @@ class Launcher(object):
                                                      kwargs=self.kwargs)
             # Recursion, since this will reset @property properties
             self.run(background)
-        else:
+        else: # pragma: no cover
             # Should never happen
             self.log.error("Process exitcode exists without PID!")
             self.log.error("The application is probably in an unstable state.")
@@ -376,6 +385,7 @@ class Launcher(object):
         self.log.info("Checking for updates")
         request_time=datetime.utcnow()
         # If self.queue_update is already present, return false
+        # TODO: Check again?
         if os.path.isfile(self.queue_update):
             with open(self.queue_update, 'r') as new_version:
                 newver=new_version.read()
@@ -398,6 +408,7 @@ class Launcher(object):
         oldver=oldver.rstrip("\n")
         # Compare old version with new version
         invalid=False
+        # Check if new version is valid
         if not isinstance(newver_obj,SetuptoolsVersion):
             invalid=True
             self.log.error("Retrieved version number is invalid!\n"
@@ -405,6 +416,7 @@ class Launcher(object):
                            "Please include the generated data dump "
                            "in a bug report.")
             newver_dump=None
+            # If invalid, dump into dump file
             try:
                 newver_dump=tempfile.NamedTemporaryFile(prefix="newverdump",
                                                         delete=False,
@@ -433,6 +445,7 @@ class Launcher(object):
         with open(self.version_check_log, "a") as log_file:
             log_file.write(version_to_add)
         if invalid:
+            # TODO: Use warning module?
             raise CorruptedFileWarning
         elif has_new:
             with open(self.queue_update, 'w') as new_version:
@@ -469,6 +482,7 @@ class Launcher(object):
                     filehandle.write(chunk)
         # Unpack archive and remove it after extraction
         try:
+            self.log.info("Unpacking downloaded archive")
             unpack_archive(self.newfiles, self.updatedir)
         except UnrecognizedFormat:
             self.log.error("Retrieved version archive is invalid!\n"
@@ -478,6 +492,7 @@ class Launcher(object):
             os.rename(self.newfiles,self.newfiles+".dump")
         else:
             # Remove archive only if unpack operation succeeded
+            self.log.info("Removing archive after extraction")
             os.remove(self.newfiles)
             # Signal that update is ready
             self.log.debug("Creating downloaded file marker")
@@ -489,6 +504,7 @@ class Launcher(object):
            :return: Whether update succeeded
            :rtype: bool
         """
+        # Only replace if update and replacement are queued
         if not (os.path.isfile(self.queue_update) and
                 os.path.isfile(self.queue_replace)):
             return False
@@ -500,7 +516,7 @@ class Launcher(object):
             self.log.debug("Acquiring code log to update files")
             has_lock=self.update.acquire(False)
             if not has_lock:
-                self.log.debug("Could not acquire lock to update files")
+                self.log.warn("Could not acquire lock to update files")
                 return False
         try:
             # else (os.path.isfile(self.queue_update) and
