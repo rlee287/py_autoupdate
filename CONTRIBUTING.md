@@ -6,8 +6,8 @@ a copy of which is included in `PSFCodeOfConduct.rst`.
 
 Github's issues are used for bugtracking and feature requests. Please see the details below:
 
-# Filing an Issue
-## Reporting Bugs
+## Filing an Issue
+### Reporting Bugs
 If you have run into issues with Pyautoupdate,
 please ensure that the problem is not with the application that uses Pyautoupdate.
 
@@ -21,7 +21,7 @@ that has not been already reported, please file a bug report including:
  - Instructions to reliably reproduce the problem
 
 *Even if it is a glitch that occurs unreliably, please try to include some instructions*
-## Requesting Features
+### Requesting Features
 If you would like Pyautoupdate to have a new feature, please include the following:
  - A detailed description of the new feature
  - Why you think the feature would be useful to others
@@ -29,16 +29,17 @@ If you would like Pyautoupdate to have a new feature, please include the followi
 Please follow the instructions under [Pull Requests](#pull-requests)
 if you would like to implement features or fix bugs.
 
-# Pull Requests
+## Pull Requests
 The Pyautoupdate project uses [PullApprove](https://pullapprove.com/) to approve pull requests.
 
-Authors of a Pull Request must approve it via PullApprove once it is ready for consideration.
+Authors of a Pull Request *must* approve it via PullApprove once it is ready for consideration.
 By approving a Pull Request, the author(s) signify that their contribution satisfies the
 [Developer Certificate of Origin](http://developercertificate.org/),
 a copy of which has been included in `DeveloperCertificateOrigin.txt`.
 
 When creating a non-release Pull Request, please include the following:
- - An issue number that this Pull Request addresses
+ - An issue number that this Pull Request addresses **OR**
+ - A short description of the problem the Pull Request addresses (please file an issue for large problems)
  - A description of the implementation of the bug fix/feature
 
 All code must be compatible with both Python 2 and 3.
