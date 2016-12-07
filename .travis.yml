@@ -47,6 +47,3 @@ after_script:
   > version.txt
 - cat version.txt | xargs codecov --env
 - rm version.txt
-before_install:
-- openssl aes-256-cbc -K $encrypted_17ecf7cd0287_key -iv $encrypted_17ecf7cd0287_iv
-  -in sphinx_travis_deploy.enc -out sphinx_travis_deploy -d
