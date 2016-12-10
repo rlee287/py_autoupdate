@@ -4,7 +4,7 @@ trap ctrl_c INT
 ctrl_c ()
 {
     if [ -d "$tempclone" ]; then
-        rm -rf $tempclone
+        rm -rf "$tempclone"
     fi
     if [ "$pushdired" -eq 1 ]; then
         popd > /dev/null
@@ -20,7 +20,7 @@ cd docs
 make html
 makestatus=$?
 cd ..
-if [ $? -ne 0 ]; then
+if [ $makestatus -ne 0 ]; then
   echo -e "\e[0;31mDocumentation building failed\e[0m"
   if [ ! -d "docs/build/html" ]; then
     echo -e "\e[0;31mDocumentation is not built\e[0m"
@@ -107,7 +107,21 @@ git reset HEAD commitmessage
 git diff --staged --stat
 git commit -F commitmessage
 rm commitmessage
-# Set up ssh key before running this
-echo "Pushing to gh-pages"
-git push
+if [ $DOCBUILD == true ] && [ $TRAVIS == true]; then
+  # Decrypt server SSH key
+  openssl aes-256-cbc -K $encrypted_17ecf7cd0287_key -iv $encrypted_17ecf7cd0287_iv -in sphinx_travis_deploy.enc -out sphinx_travis_deploy -d
+  if [ -f sphinx_travis_deploy ]; then
+    chmod 600 sphinx_travis_deploy
+    eval `ssh-agent -s`
+    ssh-add sphinx_travis_deploy
+    echo "Pushing to gh-pages"
+    git push
+    eval `ssh-agent -k`
+  else
+    echo -e "\e[0;31mFailed to decrypt deploy key\e[0m"
+  fi
+else
+  # Assume local users have proper authentication in place
+  git push
+fi
 ctrl_c

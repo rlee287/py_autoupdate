@@ -1,15 +1,27 @@
 language: python
-python:
-- '2.6'
-- '2.7'
-- '3.3'
-- '3.4'
-- '3.5'
-- 3.5-dev
-- nightly
-- pypy
-- pypy3
 matrix:
+  include:
+    - python: '2.6'
+      os: linux
+      language: python
+    - python: '3.7'
+      os: linux
+      language: python
+    - python: '3.3'
+      os: linux
+      language: python
+    - python: '3.4'
+      os: linux
+      language: python
+    - python: '3.5'
+      env: DOCBUILD=true
+      os: linux
+    - python: 'pypy'
+      os: linux
+      language: python
+    - python: 'pypy3'
+      os: linux
+      language: python
   allow_failures:
   - python: 3.5-dev
   - python: nightly
@@ -32,13 +44,7 @@ script:
 - bash .travis_scripts/run_travis.sh
 after_success:
 - cd ..; pylint -f colorized pyautoupdate; cd pyautoupdate
-- openssl aes-256-cbc -K $encrypted_17ecf7cd0287_key -iv $encrypted_17ecf7cd0287_iv
-  -in sphinx_travis_deploy.enc -out sphinx_travis_deploy -d
-- chmod 600 sphinx_travis_deploy
-- eval `ssh-agent -s`
-- ssh-add sphinx_travis_deploy
 - bash doc_build.sh
-- eval `ssh-agent -k`
 after_failure:
 - cd ..; pylint -E -f colorized pyautoupdate; cd pyautoupdate
 after_script:
