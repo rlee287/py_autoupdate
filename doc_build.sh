@@ -19,8 +19,7 @@ if [ "$TRAVIS" == true ]; then
 else
   tempclone=$(mktemp -d "doc_build_clone.XXXXXXXX")
 fi
-#if [ ! -d "docs/build/html" ]; then
-#    echo -e "\e[0;31mDocumentation is not built\e[0m"
+echo $tempclone
 if [ $DOCBUILD != true ]; then
   echo "Only verification will be performed."
 fi
