@@ -12,6 +12,14 @@ Advantages
 -  Python 2 and 3 are both supported
 -  Pyautoupdate also works with pypy and pypy3
 
+Installation
+------------
+
+.. code-block:: bash
+
+    $ git clone https://github.com/rlee287/pyautoupdate
+    $ python setup.py install
+
 Dependencies
 ------------
 Core Dependencies
