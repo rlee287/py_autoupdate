@@ -12,7 +12,7 @@ ctrl_c ()
 }
 
 
-tempclone=$(mktemp -d "/tmp/doc_build_clone.XXXXXXXX")
+tempclone=$(mktemp -p .. -d "doc_build_clone.XXXXXXXX")
 #if [ ! -d "docs/build/html" ]; then
 #    echo -e "\e[0;31mDocumentation is not built\e[0m"
 if [ $DOCBUILD != true ]; then
