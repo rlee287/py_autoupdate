@@ -6,7 +6,7 @@ ctrl_c ()
     if [ -d "$tempclone" ]; then
         rm -rf "$tempclone"
     fi
-    if [ "$pushdired"==true ]; then
+    if [ "$pushdired" == true ]; then
         popd > /dev/null
     fi
 }
@@ -15,6 +15,9 @@ ctrl_c ()
 tempclone=$(mktemp -d "/tmp/doc_build_clone.XXXXXXXX")
 #if [ ! -d "docs/build/html" ]; then
 #    echo -e "\e[0;31mDocumentation is not built\e[0m"
+if [ $DOCBUILD != true ]; then
+  echo "Only verification will be performed."
+fi
 echo "Building documentation"
 cd docs
 sphinx-build -b html -d build/doctrees source build/html
@@ -34,7 +37,11 @@ else
 fi
 SHA=$(git rev-parse --short --verify HEAD)
 BRANCH=$(git rev-parse --abbrev-ref HEAD)
-#fi
+if [ $DOCBUILD != true ]; then
+  echo "Exiting after doc verification"
+  ctrl_c
+  exit 0
+fi
 cd docs/build/html
 builtdocs=$PWD
 cd ../../..
@@ -46,7 +53,23 @@ if [ $? -ne 0 ]; then
     exit 1
 fi
 pushdired=true
-git clone --depth 1 -b gh-pages git@github.com:rlee287/pyautoupdate
+if [ "$DOCBUILD" == true ] && [ "$TRAVIS" == true ]; then
+  echo "Decrypting SSH key"
+  openssl aes-256-cbc -K $encrypted_17ecf7cd0287_key -iv $encrypted_17ecf7cd0287_iv -in $builtdocs/../../../sphinx_travis_deploy.enc -out sphinx_travis_deploy -d
+    if [ -f sphinx_travis_deploy ]; then
+      chmod 600 sphinx_travis_deploy
+      eval $(ssh-agent -s)
+      ssh-add sphinx_travis_deploy
+      url=git@github.com:rlee287/pyautoupdate
+    else
+      echo -e "\e[0;31mFailed to decrypt deploy key\e[0m"
+      url=https://github.com/rlee287/pyautoupdate
+    fi
+else
+  # When running locally, use https as it is easier to configure
+  url=https://github.com/rlee287/pyautoupdate
+fi
+git clone --depth 1 -b gh-pages $url
 if [ $? -ne 0 ]; then
     echo -e "\e[0;31mFailed to clone current gh-pages repo\e[0m"
     ctrl_c
@@ -58,9 +81,6 @@ git ls-files | xargs rm
 shopt -u | grep -q dotglob && changed=true && shopt -s dotglob
 cp -r $builtdocs/* .
 [ $changed ] && shopt -u dotglob; unset changed
-#cp -rv $builtdocs .
-#echo "test"
-#mv -v 'html' ..
 # Keep some of the existing indicator files
 git checkout -- .nojekyll
 git checkout -- .gitignore
@@ -107,21 +127,9 @@ git reset HEAD commitmessage
 git diff --staged --stat
 git commit -F commitmessage
 rm commitmessage
-if [ $DOCBUILD == true ] && [ $TRAVIS == true ]; then
-  # Decrypt server SSH key
-  openssl aes-256-cbc -K $encrypted_17ecf7cd0287_key -iv $encrypted_17ecf7cd0287_iv -in sphinx_travis_deploy.enc -out sphinx_travis_deploy -d
-  if [ -f sphinx_travis_deploy ]; then
-    chmod 600 sphinx_travis_deploy
-    eval $(ssh-agent -s)
-    ssh-add sphinx_travis_deploy
-    echo "Pushing to gh-pages"
-    git push
-    eval $(ssh-agent -k)
-  else
-    echo -e "\e[0;31mFailed to decrypt deploy key\e[0m"
-  fi
-else
-  # Assume local users have proper authentication in place
-  git push
+echo "Pushing to gh-pages"
+git push
+if [ "$DOCBUILD" == true ] && [ "$TRAVIS" == true ]; then
+  eval $(ssh-agent -k)
 fi
 ctrl_c
