@@ -11,8 +11,14 @@ ctrl_c ()
     fi
 }
 
-
-tempclone=$(mktemp -p .. -d "doc_build_clone.XXXXXXXX")
+if [ "$TRAVIS" == true ]; then
+  mkdir ../doc_build_clone
+  pushd ../doc_build_clone
+  tempclone=$PWD
+  popd
+else
+  tempclone=$(mktemp -d "doc_build_clone.XXXXXXXX")
+fi
 #if [ ! -d "docs/build/html" ]; then
 #    echo -e "\e[0;31mDocumentation is not built\e[0m"
 if [ $DOCBUILD != true ]; then
