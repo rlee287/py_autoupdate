@@ -17,7 +17,7 @@ tempclone=$(mktemp -d "/tmp/doc_build_clone.XXXXXXXX")
 #    echo -e "\e[0;31mDocumentation is not built\e[0m"
 echo "Building documentation"
 cd docs
-make html
+sphinx-build -b html -d build/doctrees source build/html
 makestatus=$?
 cd ..
 if [ $makestatus -ne 0 ]; then
@@ -32,8 +32,8 @@ if [ $makestatus -ne 0 ]; then
 else
   echo -e "\e[0;32mDocumentation successfully built\e[0m"
 fi
-SHA=`git rev-parse --short --verify HEAD`
-BRANCH=`git rev-parse --abbrev-ref HEAD`
+SHA=$(git rev-parse --short --verify HEAD)
+BRANCH=$(git rev-parse --abbrev-ref HEAD)
 #fi
 cd docs/build/html
 builtdocs=$PWD
@@ -66,8 +66,8 @@ git checkout -- .nojekyll
 git checkout -- .gitignore
 # This step is necessary on Windows Cygwin
 # Or other systems that do not handle executable bits properly
-chmod -x *
-chmod -x **/*
+chmod -x ./*
+chmod -x ./**/*
 git config --local core.fileMode true
 git diff --stat
 #git diff --staged > /tmp/docbuild.patch
@@ -107,16 +107,16 @@ git reset HEAD commitmessage
 git diff --staged --stat
 git commit -F commitmessage
 rm commitmessage
-if [ $DOCBUILD == true ] && [ $TRAVIS == true]; then
+if [ $DOCBUILD == true ] && [ $TRAVIS == true ]; then
   # Decrypt server SSH key
   openssl aes-256-cbc -K $encrypted_17ecf7cd0287_key -iv $encrypted_17ecf7cd0287_iv -in sphinx_travis_deploy.enc -out sphinx_travis_deploy -d
   if [ -f sphinx_travis_deploy ]; then
     chmod 600 sphinx_travis_deploy
-    eval `ssh-agent -s`
+    eval $(ssh-agent -s)
     ssh-add sphinx_travis_deploy
     echo "Pushing to gh-pages"
     git push
-    eval `ssh-agent -k`
+    eval $(ssh-agent -k)
   else
     echo -e "\e[0;31mFailed to decrypt deploy key\e[0m"
   fi
