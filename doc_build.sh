@@ -6,7 +6,7 @@ ctrl_c ()
     if [ -d "$tempclone" ]; then
         rm -rf "$tempclone"
     fi
-    if [ "$pushdired" -eq 1 ]; then
+    if [ "$pushdired"==true ]; then
         popd > /dev/null
     fi
 }
@@ -45,7 +45,7 @@ if [ $? -ne 0 ]; then
     ctrl_c
     exit 1
 fi
-pushdired=1
+pushdired=true
 git clone --depth 1 -b gh-pages git@github.com:rlee287/pyautoupdate
 if [ $? -ne 0 ]; then
     echo -e "\e[0;31mFailed to clone current gh-pages repo\e[0m"
