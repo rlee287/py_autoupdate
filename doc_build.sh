@@ -6,21 +6,23 @@ ctrl_c ()
     if [ -d "$tempclone" ]; then
         rm -rf "$tempclone"
     fi
-    if [ "$pushdired" == true ]; then
+    if [ "$pushdired" = true ]; then
         popd > /dev/null
+    fi
+    if [ "$DOCBUILD" = true ] && [ "$TRAVIS" = true ]; then
+      eval $(ssh-agent -k)
     fi
 }
 
-if [ "$TRAVIS" == true ]; then
-  mkdir ../doc_build_clone
-  pushd ../doc_build_clone
-  tempclone=$PWD
-  popd
+if [ "$TRAVIS" = true ]; then
+  parent_specify='-p .'
 else
-  tempclone=$(mktemp -d "doc_build_clone.XXXXXXXX")
+  parent_specify=""
 fi
+tempclone=$(mktemp $parent_specify -d "doc_build_clone.XXXXXXXX")
+unset -v parent_specify
 echo $tempclone
-if [ $DOCBUILD != true ]; then
+if [ "$DOCBUILD" != true ]; then
   echo "Only verification will be performed."
 fi
 echo "Building documentation"
@@ -42,7 +44,7 @@ else
 fi
 SHA=$(git rev-parse --short --verify HEAD)
 BRANCH=$(git rev-parse --abbrev-ref HEAD)
-if [ $DOCBUILD != true ]; then
+if [ "$DOCBUILD" != true ]; then
   echo "Exiting after doc verification"
   ctrl_c
   exit 0
@@ -51,17 +53,17 @@ cd docs/build/html
 builtdocs=$PWD
 cd ../../..
 echo $builtdocs
-pushd $tempclone > /dev/null
+pushd "$tempclone" > /dev/null
 if [ $? -ne 0 ]; then
     echo -e "\e[0;31mFailed to use temp directory\e[0m"
     ctrl_c
     exit 1
 fi
 pushdired=true
-if [ "$DOCBUILD" == true ] && [ "$TRAVIS" == true ]; then
+if [ "$DOCBUILD" = true ] && [ "$TRAVIS" = true ]; then
   echo "Decrypting SSH key"
   openssl aes-256-cbc -K $encrypted_17ecf7cd0287_key -iv $encrypted_17ecf7cd0287_iv -in $builtdocs/../../../sphinx_travis_deploy.enc -out sphinx_travis_deploy -d
-    if [ -f sphinx_travis_deploy ]; then
+    if [ -f sphinx_travis_deploy ] && [ -s sphinx_travis_deploy ]; then
       chmod 600 sphinx_travis_deploy
       eval $(ssh-agent -s)
       ssh-add sphinx_travis_deploy
@@ -107,6 +109,7 @@ hasdiff=$?
 if [ $hasdiff -eq 0 ]; then
     echo "Documentation has not changed"
     echo "No need to update"
+    ctrl_c
     exit 0
 fi
 if [ "$TRAVIS" = "true" ]; then
@@ -114,6 +117,7 @@ if [ "$TRAVIS" = "true" ]; then
   echo "Running on Travis CI Server"
   if [ "$TRAVIS_PULL_REQUEST" != "false" ]; then
       echo "Skipping deployment of doc on Pull Request build"
+      ctrl_c
       exit 0
   fi
   git config --local user.name TravisCIDocBuild
@@ -134,7 +138,4 @@ git commit -F commitmessage
 rm commitmessage
 echo "Pushing to gh-pages"
 git push
-if [ "$DOCBUILD" == true ] && [ "$TRAVIS" == true ]; then
-  eval $(ssh-agent -k)
-fi
 ctrl_c
