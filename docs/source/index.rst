@@ -15,7 +15,7 @@ Example code using Pyautoupdate:
 
 .. code-block:: python
 
-   import pyautoupdate
+   from pyautoupdate.launcher import Launcher
 
    # Run code
    launch=Launcher("~/example/application_init.py","https://update-url")
