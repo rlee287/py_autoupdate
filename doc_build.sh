@@ -1,4 +1,5 @@
 #!/bin/bash
+set -v
 trap ctrl_c INT
 
 ctrl_c ()
@@ -53,7 +54,8 @@ cd docs/build/html
 builtdocs=$PWD
 cd ../../..
 echo $builtdocs
-pushd "$tempclone" > /dev/null
+pushd "$tempclone"
+echo $PWD
 if [ $? -ne 0 ]; then
     echo -e "\e[0;31mFailed to use temp directory\e[0m"
     ctrl_c
@@ -76,7 +78,6 @@ else
   # When running locally, use https as it is easier to configure
   url=https://github.com/rlee287/pyautoupdate
 fi
-set -v
 git clone --depth 1 -b gh-pages $url
 if [ $? -ne 0 ]; then
     echo -e "\e[0;31mFailed to clone current gh-pages repo\e[0m"
@@ -137,7 +138,7 @@ git reset HEAD commitmessage
 git diff --staged --stat
 git commit -F commitmessage
 rm commitmessage
-set +v
 echo "Pushing to gh-pages"
 git push
+set +v
 ctrl_c
