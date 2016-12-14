@@ -96,8 +96,10 @@ git checkout -- .nojekyll
 git checkout -- .gitignore
 # This step is necessary on Windows Cygwin
 # Or other systems that do not handle executable bits properly
-chmod -x ./*
-chmod -x ./**/*
+if [ "$TRAVIS" != "true" ]; then
+  chmod -x ./*
+  chmod -x ./**/*
+fi
 git config --local core.fileMode true
 git diff --stat
 #git diff --staged > /tmp/docbuild.patch
