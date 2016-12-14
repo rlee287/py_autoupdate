@@ -33,6 +33,7 @@ Development Dependencies
 -  ``pytest`` for running the tests
 -  ``coverage`` to measure coverage
 -  ``pylint`` for local code style checks
+-  ``sphinx`` for building documentation
 
 License
 -------
