@@ -52,6 +52,7 @@ if [ "$DOCBUILD" != true ]; then
 fi
 cd docs/build/html
 builtdocs=$PWD
+ls -l
 cd ../../..
 echo $builtdocs
 pushd "$tempclone"
@@ -85,10 +86,10 @@ if [ $? -ne 0 ]; then
     exit 1
 fi
 cd pyautoupdate
-#ls -a --color
+ls -l
 git ls-files | xargs rm
 shopt -u | grep -q dotglob && changed=true && shopt -s dotglob
-cp -r $builtdocs/* .
+cp --no-preserve=mode --no-preserve=ownership -r $builtdocs/* .
 [ $changed ] && shopt -u dotglob; unset changed
 # Keep some of the existing indicator files
 git checkout -- .nojekyll
