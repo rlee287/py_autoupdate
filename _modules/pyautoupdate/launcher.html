@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>pyautoupdate.launcher &mdash; pyautoupdate 1.0.0a0 documentation</title>
+    <title>pyautoupdate.launcher &#8212; pyautoupdate 1.0.0a0 documentation</title>
     
     <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
@@ -17,15 +17,16 @@
         VERSION:     '1.0.0a0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
       };
     </script>
     <script type="text/javascript" src="../../_static/jquery.js"></script>
     <script type="text/javascript" src="../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../_static/doctools.js"></script>
     <link rel="shortcut icon" href="../../_static/pyautoupdate_logo_icon.ico"/>
-    <link rel="top" title="pyautoupdate 1.0.0a0 documentation" href="../../index.html" />
-    <link rel="up" title="Module code" href="../index.html" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
    
   <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
   
@@ -42,10 +43,10 @@
           <div class="body" role="main">
             
   <h1>Source code for pyautoupdate.launcher</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">absolute_import</span><span class="p">,</span> <span class="n">print_function</span>
+<span></span><span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">absolute_import</span><span class="p">,</span> <span class="n">print_function</span>
 
-<span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span>
-<span class="kn">from</span> <span class="nn">logging</span> <span class="kn">import</span> <span class="n">WARNING</span>
+<span class="kn">from</span> <span class="nn">datetime</span> <span class="k">import</span> <span class="n">datetime</span>
+<span class="kn">from</span> <span class="nn">logging</span> <span class="k">import</span> <span class="n">WARNING</span>
 <span class="kn">import</span> <span class="nn">multiprocessing</span>
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">pprint</span>
@@ -54,13 +55,13 @@
 <span class="kn">import</span> <span class="nn">tempfile</span>
 <span class="kn">import</span> <span class="nn">warnings</span>
 
-<span class="kn">from</span> <span class="nn">pkg_resources</span> <span class="kn">import</span> <span class="n">parse_version</span><span class="p">,</span> <span class="n">SetuptoolsVersion</span><span class="p">,</span> <span class="n">PEP440Warning</span>
-<span class="kn">from</span> <span class="nn">setuptools.archive_util</span> <span class="kn">import</span> <span class="n">unpack_archive</span><span class="p">,</span> <span class="n">UnrecognizedFormat</span>
+<span class="kn">from</span> <span class="nn">pkg_resources</span> <span class="k">import</span> <span class="n">parse_version</span><span class="p">,</span> <span class="n">SetuptoolsVersion</span><span class="p">,</span> <span class="n">PEP440Warning</span>
+<span class="kn">from</span> <span class="nn">setuptools.archive_util</span> <span class="k">import</span> <span class="n">unpack_archive</span><span class="p">,</span> <span class="n">UnrecognizedFormat</span>
 
 <span class="kn">import</span> <span class="nn">requests</span>
 
-<span class="kn">from</span> <span class="nn">._move_glob</span> <span class="kn">import</span> <span class="n">move_glob</span><span class="p">,</span> <span class="n">copy_glob</span>
-<span class="kn">from</span> <span class="nn">.exceptions</span> <span class="kn">import</span> <span class="n">ProcessRunningException</span><span class="p">,</span> <span class="n">CorruptedFileWarning</span>
+<span class="kn">from</span> <span class="nn">._move_glob</span> <span class="k">import</span> <span class="n">move_glob</span><span class="p">,</span> <span class="n">copy_glob</span>
+<span class="kn">from</span> <span class="nn">.exceptions</span> <span class="k">import</span> <span class="n">ProcessRunningException</span><span class="p">,</span> <span class="n">CorruptedFileWarning</span>
 
 
 <div class="viewcode-block" id="Launcher"><a class="viewcode-back" href="../../pyautoupdate.html#pyautoupdate.Launcher">[docs]</a><span class="k">class</span> <span class="nc">Launcher</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
@@ -134,23 +135,23 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Validating files&quot;</span><span class="p">)</span>
         <span class="c1"># Check that self.version_doc is valid</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">version_doc_validator</span><span class="p">():</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;{0} does not have a valid version number!</span><span class="se">\n</span><span class="s2">&quot;</span>
-                           <span class="s2">&quot;{0} is a reserved file name.</span><span class="se">\n</span><span class="s2">&quot;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{0}</span><span class="s2"> does not have a valid version number!</span><span class="se">\n</span><span class="s2">&quot;</span>
+                           <span class="s2">&quot;</span><span class="si">{0}</span><span class="s2"> is a reserved file name.</span><span class="se">\n</span><span class="s2">&quot;</span>
                            <span class="s2">&quot;It will be overwritten by this program!</span><span class="se">\n</span><span class="s2">&quot;</span>
-                           <span class="s2">&quot;If the {0} is corrupted,</span><span class="se">\n</span><span class="s2">&quot;</span>
-                           <span class="s2">&quot;Please use the logfile at {1} to restore it.&quot;</span>
+                           <span class="s2">&quot;If the </span><span class="si">{0}</span><span class="s2"> is corrupted,</span><span class="se">\n</span><span class="s2">&quot;</span>
+                           <span class="s2">&quot;Please use the logfile at </span><span class="si">{1}</span><span class="s2"> to restore it.&quot;</span>
                            <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">version_doc</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">version_check_log</span><span class="p">))</span>
-            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;{0} is corrupted!&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">version_doc</span><span class="p">),</span>
+            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{0}</span><span class="s2"> is corrupted!&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">version_doc</span><span class="p">),</span>
                           <span class="n">CorruptedFileWarning</span><span class="p">,</span>
                           <span class="n">stacklevel</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
         <span class="c1"># Check that self.version_log is valid</span>
         <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">version_check_log</span><span class="p">,</span> <span class="s1">&#39;a&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">close</span><span class="p">()</span> <span class="c1"># &quot;Touch&quot; self.version_log</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">version_log_validator</span><span class="p">():</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;Log file at {0} is corrupted!</span><span class="se">\n</span><span class="s2">&quot;</span>
-                             <span class="s2">&quot;{0} is a reserved file name.</span><span class="se">\n</span><span class="s2">&quot;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;Log file at </span><span class="si">{0}</span><span class="s2"> is corrupted!</span><span class="se">\n</span><span class="s2">&quot;</span>
+                             <span class="s2">&quot;</span><span class="si">{0}</span><span class="s2"> is a reserved file name.</span><span class="se">\n</span><span class="s2">&quot;</span>
                              <span class="s2">&quot;Please ensure that your program is &quot;</span>
                              <span class="s2">&quot;not using it.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">version_check_log</span><span class="p">))</span>
-            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;{0} is corrupted!&quot;</span>
+            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{0}</span><span class="s2"> is corrupted!&quot;</span>
                           <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">version_check_log</span><span class="p">),</span>
                           <span class="n">CorruptedFileWarning</span><span class="p">,</span>
                           <span class="n">stacklevel</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
@@ -181,6 +182,7 @@
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;newfiles must be a zip, gzip, or bzip file&quot;</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">newfiles</span> <span class="o">=</span> <span class="n">newfiles</span>
+        <span class="c1"># Initialize other variables</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">update</span> <span class="o">=</span> <span class="n">multiprocessing</span><span class="o">.</span><span class="n">Lock</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">pid</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getpid</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="n">args</span>
@@ -188,8 +190,8 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">__process</span> <span class="o">=</span> <span class="n">multiprocessing</span><span class="o">.</span><span class="n">Process</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_call_code</span><span class="p">,</span>
                                                  <span class="n">args</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="p">,</span>
                                                  <span class="n">kwargs</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">kwargs</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">past_terminated</span><span class="o">=</span><span class="bp">False</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">__process_alive</span><span class="o">=</span><span class="bp">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">past_terminated</span><span class="o">=</span><span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__process_alive</span><span class="o">=</span><span class="kc">False</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Launcher initialized successfully&quot;</span><span class="p">)</span>
 
 <span class="c1">####################### Filename getters and validators ######################</span>
@@ -200,26 +202,30 @@
 <span class="sd">        :return: Whether the version_doc is a proper version</span>
 <span class="sd">        :rtype: bool</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Version is valid only if it exists</span>
         <span class="n">version_valid</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">version_doc</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">version_valid</span><span class="p">:</span>
             <span class="k">try</span><span class="p">:</span>
+                <span class="c1"># If statement earlier signifies that version file must exist</span>
                 <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">version_doc</span><span class="p">,</span><span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">version_check</span><span class="p">:</span>
+                    <span class="c1"># Read and parse version</span>
                     <span class="n">vers</span><span class="o">=</span><span class="n">version_check</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
                     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">vers</span><span class="p">)</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">:</span>
                         <span class="n">vers_obj</span><span class="o">=</span><span class="n">parse_version</span><span class="p">(</span><span class="n">vers</span><span class="p">)</span>
                         <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">vers_obj</span><span class="p">,</span><span class="n">SetuptoolsVersion</span><span class="p">):</span>
                             <span class="k">raise</span> <span class="n">PEP440Warning</span>
-            <span class="k">except</span> <span class="n">PEP440Warning</span><span class="p">:</span>
-                <span class="n">version_valid</span><span class="o">=</span><span class="bp">False</span>
-        <span class="k">return</span> <span class="n">version_valid</span>
-</div>
+            <span class="k">except</span> <span class="n">PEP440Warning</span><span class="p">:</span> <span class="c1"># Thrown if file has invalid version</span>
+                <span class="n">version_valid</span><span class="o">=</span><span class="kc">False</span>
+        <span class="k">return</span> <span class="n">version_valid</span></div>
+
 <div class="viewcode-block" id="Launcher.version_log_validator"><a class="viewcode-back" href="../../pyautoupdate.html#pyautoupdate.Launcher.version_log_validator">[docs]</a>    <span class="k">def</span> <span class="nf">version_log_validator</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Validates the file containing the version history.</span>
 
 <span class="sd">        :return: Whether the version_log is formatted properly</span>
 <span class="sd">        :rtype: bool</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">valid_log</span><span class="o">=</span><span class="bp">True</span>
+        <span class="n">valid_log</span><span class="o">=</span><span class="kc">True</span>
+        <span class="c1"># Match log file against regex</span>
         <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">version_check_log</span><span class="p">,</span><span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">log_file</span><span class="p">:</span>
             <span class="n">log_syntax</span><span class="o">=</span><span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span>
                 <span class="s2">r&quot;Old .+?\|(New .+?|Up to date|Server invalid)\|Time .+?&quot;</span><span class="p">)</span>
@@ -227,10 +233,10 @@
             <span class="k">if</span> <span class="n">version</span><span class="o">!=</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">version</span><span class="p">)</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">:</span>
                 <span class="n">has_match</span><span class="o">=</span><span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">log_syntax</span><span class="p">,</span><span class="n">version</span><span class="p">)</span>
                 <span class="n">valid_log</span><span class="o">=</span><span class="nb">bool</span><span class="p">(</span><span class="n">has_match</span><span class="p">)</span>
-        <span class="k">return</span> <span class="nb">bool</span><span class="p">(</span><span class="n">valid_log</span><span class="p">)</span>
+        <span class="k">return</span> <span class="nb">bool</span><span class="p">(</span><span class="n">valid_log</span><span class="p">)</span></div>
 
 <span class="c1">########################### Process manipulation #############################</span>
-</div>
+
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">process_is_alive</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Returns whether the process is alive&quot;&quot;&quot;</span>
@@ -261,11 +267,11 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__process</span><span class="o">.</span><span class="n">exitcode</span>
 
-<div class="viewcode-block" id="Launcher.process_join"><a class="viewcode-back" href="../../pyautoupdate.html#pyautoupdate.Launcher.process_join">[docs]</a>    <span class="k">def</span> <span class="nf">process_join</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">timeout</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+<div class="viewcode-block" id="Launcher.process_join"><a class="viewcode-back" href="../../pyautoupdate.html#pyautoupdate.Launcher.process_join">[docs]</a>    <span class="k">def</span> <span class="nf">process_join</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">timeout</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Joins the process&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Joining process&quot;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">__process</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">timeout</span><span class="p">)</span>
-</div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__process</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">timeout</span><span class="p">)</span></div>
+
 <div class="viewcode-block" id="Launcher.process_terminate"><a class="viewcode-back" href="../../pyautoupdate.html#pyautoupdate.Launcher.process_terminate">[docs]</a>    <span class="k">def</span> <span class="nf">process_terminate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Terminates the process.</span>
 
@@ -275,7 +281,7 @@
 
 <span class="sd">           Attempts are made in the code to ensure that internal variables</span>
 <span class="sd">           inside the Launcher class are properly cleaned up. However, there is</span>
-<span class="sd">           little protection for the supplied code in case of termination.</span>
+<span class="sd">           little protection for user supplied code in case of termination.</span>
 
 <span class="sd">        :return: Whether process was terminated</span>
 <span class="sd">        :rtype: bool</span>
@@ -283,18 +289,26 @@
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">process_is_alive</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;Terminating Process&quot;</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">__process</span><span class="o">.</span><span class="n">terminate</span><span class="p">()</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">__process_alive</span><span class="o">=</span><span class="bp">False</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">__process_alive</span><span class="o">=</span><span class="kc">False</span>
             <span class="c1"># Release lock to avoid update deadlock later</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Releasing code lock after termination&quot;</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">update</span><span class="o">.</span><span class="n">release</span><span class="p">()</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">past_terminated</span><span class="o">=</span><span class="bp">True</span>
-            <span class="k">return</span> <span class="bp">True</span>
+            <span class="c1"># Reinitialize process now because is_alive is not properly reset</span>
+            <span class="c1"># After a process termination</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Reinitializing process object after termination&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">__process</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">__process</span> <span class="o">=</span> <span class="n">multiprocessing</span><span class="o">.</span><span class="n">Process</span><span class="p">(</span><span class="n">target</span><span class="o">=</span>
+                                                     <span class="bp">self</span><span class="o">.</span><span class="n">_call_code</span><span class="p">,</span>
+                                                     <span class="n">args</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="p">,</span>
+                                                     <span class="n">kwargs</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">kwargs</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">past_terminated</span><span class="o">=</span><span class="kc">True</span>
+            <span class="k">return</span> <span class="kc">True</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;Attempted to terminate dead process&quot;</span><span class="p">)</span>
-            <span class="k">return</span> <span class="bp">False</span>
+            <span class="k">return</span> <span class="kc">False</span></div>
 
 <span class="c1">########################### Code execution methods ###########################</span>
-</div>
+
 <div class="viewcode-block" id="Launcher._call_code"><a class="viewcode-back" href="../../pyautoupdate.html#pyautoupdate.Launcher._call_code">[docs]</a>    <span class="k">def</span> <span class="nf">_call_code</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Method that executes the wrapped code.</span>
 
@@ -315,8 +329,10 @@
         <span class="n">localvar</span> <span class="o">=</span> <span class="nb">vars</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
         <span class="c1"># Manipulate __dict__ attribute to add handle to check_new</span>
         <span class="n">localvar</span><span class="p">[</span><span class="s2">&quot;check_new&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">check_new</span>
-        <span class="c1"># Remove handle to process object</span>
+        <span class="c1"># Remove handle to process object and lock</span>
+        <span class="c1"># Neither should not be tampered with in child process code</span>
         <span class="k">del</span> <span class="n">localvar</span><span class="p">[</span><span class="s2">&quot;_Launcher__process&quot;</span><span class="p">]</span>
+        <span class="k">del</span> <span class="n">localvar</span><span class="p">[</span><span class="s2">&quot;update&quot;</span><span class="p">]</span>
         <span class="c1"># Pass in args, kwargs, and logger</span>
         <span class="n">localvar</span><span class="p">[</span><span class="s2">&quot;args&quot;</span><span class="p">]</span><span class="o">=</span><span class="n">args</span>
         <span class="n">localvar</span><span class="p">[</span><span class="s2">&quot;kwargs&quot;</span><span class="p">]</span><span class="o">=</span><span class="n">kwargs</span>
@@ -332,17 +348,17 @@
             <span class="c1"># TODO: move up?</span>
             <span class="n">local_log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Acquiring code lock to run code&quot;</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">update</span><span class="o">.</span><span class="n">acquire</span><span class="p">()</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">__process_alive</span><span class="o">=</span><span class="bp">True</span>
-            <span class="k">exec</span><span class="p">(</span><span class="n">code</span><span class="p">,</span> <span class="nb">dict</span><span class="p">(),</span> <span class="n">localvar</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">__process_alive</span><span class="o">=</span><span class="kc">True</span>
+            <span class="n">exec</span><span class="p">(</span><span class="n">code</span><span class="p">,</span> <span class="nb">dict</span><span class="p">(),</span> <span class="n">localvar</span><span class="p">)</span>
         <span class="k">finally</span><span class="p">:</span>
             <span class="n">local_log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Releasing code lock after running code&quot;</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">update</span><span class="o">.</span><span class="n">release</span><span class="p">()</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">__process_alive</span><span class="o">=</span><span class="bp">False</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">__process_alive</span><span class="o">=</span><span class="kc">False</span>
             <span class="c1"># Reset past_terminated to False</span>
             <span class="c1"># (if terminated and rerun, past_terminated should be false)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">past_terminated</span><span class="o">=</span><span class="bp">False</span>
-</div>
-<div class="viewcode-block" id="Launcher.run"><a class="viewcode-back" href="../../pyautoupdate.html#pyautoupdate.Launcher.run">[docs]</a>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">background</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">past_terminated</span><span class="o">=</span><span class="kc">False</span></div>
+
+<div class="viewcode-block" id="Launcher.run"><a class="viewcode-back" href="../../pyautoupdate.html#pyautoupdate.Launcher.run">[docs]</a>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">background</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Method used to run code.</span>
 
 <span class="sd">           If background is ``False``, returns the Process&#39;s exitcode.</span>
@@ -355,19 +371,22 @@
         <span class="c1"># Find the right error to raise depending on python version</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Checking file existence&quot;</span><span class="p">)</span>
         <span class="k">try</span><span class="p">:</span>
-            <span class="n">error_to_raise</span><span class="o">=</span><span class="n">FileNotFoundError</span>
+            <span class="n">error_to_raise</span><span class="o">=</span><span class="ne">FileNotFoundError</span>
         <span class="k">except</span> <span class="ne">NameError</span><span class="p">:</span>
             <span class="n">error_to_raise</span><span class="o">=</span><span class="ne">IOError</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">filepath</span><span class="p">):</span>
-            <span class="k">raise</span> <span class="n">error_to_raise</span><span class="p">(</span><span class="s2">&quot;No file at {0}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">filepath</span><span class="p">))</span>
+            <span class="k">raise</span> <span class="n">error_to_raise</span><span class="p">(</span><span class="s2">&quot;No file at </span><span class="si">{0}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">filepath</span><span class="p">))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Checking process status&quot;</span><span class="p">)</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">process_is_alive</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Process is already running&quot;</span><span class="p">)</span>
             <span class="k">raise</span> <span class="n">ProcessRunningException</span>
-        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">process_pid</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">process_pid</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="c1"># Process has not run yet</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Process has not run yet&quot;</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Starting process&quot;</span><span class="p">)</span>
+            <span class="c1"># self.log is not pickleable</span>
+            <span class="c1"># The variable will be reinstantiated inside _call_code</span>
+            <span class="c1"># Temporarily remove here and reinstantiate after start</span>
             <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">log</span>
             <span class="k">try</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">__process</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
@@ -378,25 +397,24 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">process_join</span><span class="p">()</span>
                 <span class="c1"># Exit code can be used by program that calls the launcher</span>
                 <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">process_exitcode</span>
-        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">process_exitcode</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">process_exitcode</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="c1"># Process has already terminated</span>
             <span class="c1"># Reinitialize the process instance</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Process has already finished&quot;</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Reinitializing process object&quot;</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">__process</span> <span class="o">=</span> <span class="bp">None</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">__process</span> <span class="o">=</span> <span class="n">multiprocessing</span><span class="o">.</span><span class="n">Process</span><span class="p">(</span><span class="n">target</span><span class="o">=</span>
                                                      <span class="bp">self</span><span class="o">.</span><span class="n">_call_code</span><span class="p">,</span>
                                                      <span class="n">args</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="p">,</span>
                                                      <span class="n">kwargs</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">kwargs</span><span class="p">)</span>
             <span class="c1"># Recursion, since this will reset @property properties</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">background</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
+        <span class="k">else</span><span class="p">:</span> <span class="c1"># pragma: no cover</span>
             <span class="c1"># Should never happen</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Process exitcode exists without PID!&quot;</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;The application is probably in an unstable state.&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;The application is probably in an unstable state.&quot;</span><span class="p">)</span></div>
 
 <span class="c1">######################### New code retrieval methods #########################</span>
-</div>
+
 <div class="viewcode-block" id="Launcher.check_new"><a class="viewcode-back" href="../../pyautoupdate.html#pyautoupdate.Launcher.check_new">[docs]</a>    <span class="k">def</span> <span class="nf">check_new</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Retrieves the latest version number from the remote host.</span>
 
@@ -412,6 +430,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Checking for updates&quot;</span><span class="p">)</span>
         <span class="n">request_time</span><span class="o">=</span><span class="n">datetime</span><span class="o">.</span><span class="n">utcnow</span><span class="p">()</span>
         <span class="c1"># If self.queue_update is already present, return false</span>
+        <span class="c1"># TODO: Check again?</span>
         <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">queue_update</span><span class="p">):</span>
             <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">queue_update</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">new_version</span><span class="p">:</span>
                 <span class="n">newver</span><span class="o">=</span><span class="n">new_version</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
@@ -421,9 +440,9 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="n">versionurl</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">url</span><span class="o">+</span><span class="bp">self</span><span class="o">.</span><span class="n">version_doc</span>
             <span class="c1"># Get new files</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Retrieving new version from {0}&quot;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Retrieving new version from </span><span class="si">{0}</span><span class="s2">&quot;</span>
                            <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">versionurl</span><span class="p">))</span>
-            <span class="n">get_new</span><span class="o">=</span><span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">versionurl</span><span class="p">,</span> <span class="n">allow_redirects</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+            <span class="n">get_new</span><span class="o">=</span><span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">versionurl</span><span class="p">,</span> <span class="n">allow_redirects</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
             <span class="n">get_new</span><span class="o">.</span><span class="n">raise_for_status</span><span class="p">()</span>
             <span class="n">newver</span><span class="o">=</span><span class="n">get_new</span><span class="o">.</span><span class="n">text</span>
             <span class="n">newver</span><span class="o">=</span><span class="n">newver</span><span class="o">.</span><span class="n">rstrip</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
@@ -433,48 +452,51 @@
             <span class="n">oldver</span><span class="o">=</span><span class="n">old_version</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
         <span class="n">oldver</span><span class="o">=</span><span class="n">oldver</span><span class="o">.</span><span class="n">rstrip</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
         <span class="c1"># Compare old version with new version</span>
-        <span class="n">invalid</span><span class="o">=</span><span class="bp">False</span>
+        <span class="n">invalid</span><span class="o">=</span><span class="kc">False</span>
+        <span class="c1"># Check if new version is valid</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">newver_obj</span><span class="p">,</span><span class="n">SetuptoolsVersion</span><span class="p">):</span>
-            <span class="n">invalid</span><span class="o">=</span><span class="bp">True</span>
+            <span class="n">invalid</span><span class="o">=</span><span class="kc">True</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Retrieved version number is invalid!</span><span class="se">\n</span><span class="s2">&quot;</span>
                            <span class="s2">&quot;Please contact the software authors.</span><span class="se">\n</span><span class="s2">&quot;</span>
                            <span class="s2">&quot;Please include the generated data dump &quot;</span>
                            <span class="s2">&quot;in a bug report.&quot;</span><span class="p">)</span>
-            <span class="n">newver_dump</span><span class="o">=</span><span class="bp">None</span>
+            <span class="n">newver_dump</span><span class="o">=</span><span class="kc">None</span>
+            <span class="c1"># If invalid, dump into dump file</span>
             <span class="k">try</span><span class="p">:</span>
                 <span class="n">newver_dump</span><span class="o">=</span><span class="n">tempfile</span><span class="o">.</span><span class="n">NamedTemporaryFile</span><span class="p">(</span><span class="n">prefix</span><span class="o">=</span><span class="s2">&quot;newverdump&quot;</span><span class="p">,</span>
-                                                        <span class="n">delete</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span>
+                                                        <span class="n">delete</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
                                                         <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;wt&quot;</span><span class="p">,</span>
                                                         <span class="nb">dir</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">())</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Writing invalid version into {0}&quot;</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Writing invalid version into </span><span class="si">{0}</span><span class="s2">&quot;</span>
                                    <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">newver_dump</span><span class="o">.</span><span class="n">name</span><span class="p">))</span>
                 <span class="n">newver_dump</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">newver</span><span class="p">)</span>
             <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="s2">&quot;Unable to write data dump&quot;</span><span class="p">)</span>
                 <span class="k">raise</span>
             <span class="k">finally</span><span class="p">:</span>
-                <span class="k">if</span> <span class="n">newver_dump</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">newver_dump</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                     <span class="n">newver_dump</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
         <span class="n">has_new</span><span class="o">=</span><span class="p">(</span><span class="n">newver_obj</span><span class="o">&gt;</span><span class="n">parse_version</span><span class="p">(</span><span class="n">oldver</span><span class="p">))</span>
         <span class="c1"># Add entry to the logfile and update version.txt</span>
         <span class="k">if</span> <span class="n">has_new</span><span class="p">:</span>
-            <span class="n">version_to_add</span><span class="o">=</span><span class="s2">&quot;Old {0}|New {1}|Time {2}</span><span class="se">\n</span><span class="s2">&quot;</span>\
+            <span class="n">version_to_add</span><span class="o">=</span><span class="s2">&quot;Old </span><span class="si">{0}</span><span class="s2">|New </span><span class="si">{1}</span><span class="s2">|Time </span><span class="si">{2}</span><span class="se">\n</span><span class="s2">&quot;</span>\
                            <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">oldver</span><span class="p">,</span><span class="n">newver</span><span class="p">,</span><span class="n">request_time</span><span class="p">)</span>
-        <span class="k">elif</span> <span class="n">invalid</span><span class="o">==</span><span class="bp">False</span><span class="p">:</span>
-            <span class="n">version_to_add</span><span class="o">=</span><span class="s2">&quot;Old {0}|Up to date|Time {1}</span><span class="se">\n</span><span class="s2">&quot;</span>\
+        <span class="k">elif</span> <span class="n">invalid</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
+            <span class="n">version_to_add</span><span class="o">=</span><span class="s2">&quot;Old </span><span class="si">{0}</span><span class="s2">|Up to date|Time </span><span class="si">{1}</span><span class="se">\n</span><span class="s2">&quot;</span>\
                            <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">oldver</span><span class="p">,</span><span class="n">request_time</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">version_to_add</span><span class="o">=</span><span class="s2">&quot;Old {0}|Server Invalid|Time {1}</span><span class="se">\n</span><span class="s2">&quot;</span>\
+            <span class="n">version_to_add</span><span class="o">=</span><span class="s2">&quot;Old </span><span class="si">{0}</span><span class="s2">|Server Invalid|Time </span><span class="si">{1}</span><span class="se">\n</span><span class="s2">&quot;</span>\
                            <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">oldver</span><span class="p">,</span><span class="n">request_time</span><span class="p">)</span>
         <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">version_check_log</span><span class="p">,</span> <span class="s2">&quot;a&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">log_file</span><span class="p">:</span>
             <span class="n">log_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">version_to_add</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">invalid</span><span class="p">:</span>
+            <span class="c1"># TODO: Use warning module?</span>
             <span class="k">raise</span> <span class="n">CorruptedFileWarning</span>
         <span class="k">elif</span> <span class="n">has_new</span><span class="p">:</span>
             <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">queue_update</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">new_version</span><span class="p">:</span>
                 <span class="n">new_version</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">newver</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">has_new</span>
-</div>
+        <span class="k">return</span> <span class="n">has_new</span></div>
+
 <div class="viewcode-block" id="Launcher._reset_update_files"><a class="viewcode-back" href="../../pyautoupdate.html#pyautoupdate.Launcher._reset_update_files">[docs]</a>    <span class="k">def</span> <span class="nf">_reset_update_files</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Resets the update directory to its default state.</span>
 
@@ -489,14 +511,14 @@
         <span class="n">os</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">updatedir</span><span class="p">)</span>
         <span class="c1"># Remove old archive</span>
         <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">newfiles</span><span class="p">):</span>
-            <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">newfiles</span><span class="p">)</span>
-</div>
-<div class="viewcode-block" id="Launcher._get_new"><a class="viewcode-back" href="../../pyautoupdate.html#pyautoupdate.Launcher._get_new">[docs]</a>    <span class="k">def</span> <span class="nf">_get_new</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">allow_redirects</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">chunk_size</span><span class="o">=</span><span class="mi">512</span><span class="p">):</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">newfiles</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Launcher._get_new"><a class="viewcode-back" href="../../pyautoupdate.html#pyautoupdate.Launcher._get_new">[docs]</a>    <span class="k">def</span> <span class="nf">_get_new</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">allow_redirects</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">chunk_size</span><span class="o">=</span><span class="mi">512</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Retrieves the new archive and extracts it to self.updatedir.&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Retrieving new version&quot;</span><span class="p">)</span>
         <span class="n">newurl</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">url</span><span class="o">+</span><span class="bp">self</span><span class="o">.</span><span class="n">newfiles</span>
         <span class="c1"># Get new files</span>
-        <span class="n">http_get</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">newurl</span><span class="p">,</span> <span class="n">stream</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
+        <span class="n">http_get</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">newurl</span><span class="p">,</span> <span class="n">stream</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
                                 <span class="n">allow_redirects</span><span class="o">=</span><span class="n">allow_redirects</span><span class="p">)</span>
         <span class="n">http_get</span><span class="o">.</span><span class="n">raise_for_status</span><span class="p">()</span>
         <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">newfiles</span><span class="p">,</span> <span class="s1">&#39;wb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">filehandle</span><span class="p">:</span>
@@ -505,6 +527,7 @@
                     <span class="n">filehandle</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">chunk</span><span class="p">)</span>
         <span class="c1"># Unpack archive and remove it after extraction</span>
         <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Unpacking downloaded archive&quot;</span><span class="p">)</span>
             <span class="n">unpack_archive</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">newfiles</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">updatedir</span><span class="p">)</span>
         <span class="k">except</span> <span class="n">UnrecognizedFormat</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Retrieved version archive is invalid!</span><span class="se">\n</span><span class="s2">&quot;</span>
@@ -514,36 +537,38 @@
             <span class="n">os</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">newfiles</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">newfiles</span><span class="o">+</span><span class="s2">&quot;.dump&quot;</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="c1"># Remove archive only if unpack operation succeeded</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Removing archive after extraction&quot;</span><span class="p">)</span>
             <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">newfiles</span><span class="p">)</span>
             <span class="c1"># Signal that update is ready</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Creating downloaded file marker&quot;</span><span class="p">)</span>
-            <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">queue_replace</span><span class="p">,</span><span class="s2">&quot;w&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
-</div>
+            <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">queue_replace</span><span class="p">,</span><span class="s2">&quot;w&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
+
 <div class="viewcode-block" id="Launcher._replace_files"><a class="viewcode-back" href="../../pyautoupdate.html#pyautoupdate.Launcher._replace_files">[docs]</a>    <span class="k">def</span> <span class="nf">_replace_files</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Replaces the existing files with the downloaded files.</span>
 
 <span class="sd">           :return: Whether update succeeded</span>
 <span class="sd">           :rtype: bool</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Only replace if update and replacement are queued</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">queue_update</span><span class="p">)</span> <span class="ow">and</span>
                 <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">queue_replace</span><span class="p">)):</span>
-            <span class="k">return</span> <span class="bp">False</span>
+            <span class="k">return</span> <span class="kc">False</span>
         <span class="c1"># Attempt to acquire code lock here and exit if unable to</span>
         <span class="c1"># The finally block runs after the &quot;return&quot; statement</span>
         <span class="c1"># This can cause a double-release under some circumstances</span>
         <span class="c1"># Acquiring the lock here prevents this from happening</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Acquiring code log to update files&quot;</span><span class="p">)</span>
-            <span class="n">has_lock</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">update</span><span class="o">.</span><span class="n">acquire</span><span class="p">(</span><span class="bp">False</span><span class="p">)</span>
+            <span class="n">has_lock</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">update</span><span class="o">.</span><span class="n">acquire</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="n">has_lock</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Could not acquire lock to update files&quot;</span><span class="p">)</span>
-                <span class="k">return</span> <span class="bp">False</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;Could not acquire lock to update files&quot;</span><span class="p">)</span>
+                <span class="k">return</span> <span class="kc">False</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="c1"># else (os.path.isfile(self.queue_update) and</span>
             <span class="c1"># os.path.isfile(self.queue_replace))</span>
             <span class="c1"># TODO: Make this code safer and possibly leave diagnostics</span>
             <span class="c1"># if the update operation errors out in the middle</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Writing new version into {0}&quot;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Writing new version into </span><span class="si">{0}</span><span class="s2">&quot;</span>
                            <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">version_doc</span><span class="p">))</span>
             <span class="n">os</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">version_doc</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">version_doc</span><span class="o">+</span><span class="s2">&quot;.bak&quot;</span><span class="p">)</span>
             <span class="n">os</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">queue_update</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">version_doc</span><span class="p">)</span>
@@ -553,18 +578,18 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Replacing files&quot;</span><span class="p">)</span>
             <span class="c1"># Read in files from filelist and move to tempdir</span>
             <span class="n">tempdir</span><span class="o">=</span><span class="n">tempfile</span><span class="o">.</span><span class="n">mkdtemp</span><span class="p">()</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Created tempdir at {0}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tempdir</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Created tempdir at </span><span class="si">{0}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tempdir</span><span class="p">))</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Backing up current filelist&quot;</span><span class="p">)</span>
-            <span class="n">filelist_backup</span><span class="o">=</span><span class="bp">None</span>
+            <span class="n">filelist_backup</span><span class="o">=</span><span class="kc">None</span>
             <span class="k">try</span><span class="p">:</span>
-                <span class="n">filelist_backup</span><span class="o">=</span><span class="n">tempfile</span><span class="o">.</span><span class="n">NamedTemporaryFile</span><span class="p">(</span><span class="n">delete</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+                <span class="n">filelist_backup</span><span class="o">=</span><span class="n">tempfile</span><span class="o">.</span><span class="n">NamedTemporaryFile</span><span class="p">(</span><span class="n">delete</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
                 <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">file_list</span><span class="p">,</span> <span class="s2">&quot;r+b&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file_handle</span><span class="p">:</span>
                     <span class="n">shutil</span><span class="o">.</span><span class="n">copyfileobj</span><span class="p">(</span><span class="n">file_handle</span><span class="p">,</span><span class="n">filelist_backup</span><span class="p">)</span>
             <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="s2">&quot;Backup of current filelist failed!&quot;</span><span class="p">)</span>
                 <span class="k">raise</span>
             <span class="k">finally</span><span class="p">:</span>
-                <span class="k">if</span> <span class="n">filelist_backup</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">filelist_backup</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                     <span class="n">filelist_backup</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Moving old files to tempdir&quot;</span><span class="p">)</span>
             <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">file_list</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file_handle</span><span class="p">:</span>
@@ -573,16 +598,16 @@
                     <span class="n">file_rm</span><span class="o">=</span><span class="n">file_rm</span><span class="o">.</span><span class="n">rstrip</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
                     <span class="c1"># Confirm that each file in filelist exists</span>
                     <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">file_rm</span><span class="p">):</span>
-                        <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;{0} contains the invalid &quot;</span>
-                                       <span class="s2">&quot;filepath {1}.</span><span class="se">\n</span><span class="s2">&quot;</span>
-                                       <span class="s2">&quot;Please check that {0} is not being &quot;</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{0}</span><span class="s2"> contains the invalid &quot;</span>
+                                       <span class="s2">&quot;filepath </span><span class="si">{1}</span><span class="s2">.</span><span class="se">\n</span><span class="s2">&quot;</span>
+                                       <span class="s2">&quot;Please check that </span><span class="si">{0}</span><span class="s2"> is not being &quot;</span>
                                        <span class="s2">&quot;used!</span><span class="se">\n</span><span class="s2">&quot;</span>
-                                       <span class="s2">&quot;Otherwise the {0} is corrupted.</span><span class="se">\n</span><span class="s2">&quot;</span>
+                                       <span class="s2">&quot;Otherwise the </span><span class="si">{0}</span><span class="s2"> is corrupted.</span><span class="se">\n</span><span class="s2">&quot;</span>
                                        <span class="s2">&quot;Updates will fail until this is &quot;</span>
                                        <span class="s2">&quot;restored.&quot;</span>
                                        <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">file_list</span><span class="p">,</span><span class="n">file_rm</span><span class="p">))</span>
-                        <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;{0} is corrupted and contains the &quot;</span>
-                                      <span class="s2">&quot;invalid path {1}!&quot;</span>
+                        <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{0}</span><span class="s2"> is corrupted and contains the &quot;</span>
+                                      <span class="s2">&quot;invalid path </span><span class="si">{1}</span><span class="s2">!&quot;</span>
                                       <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">file_list</span><span class="p">,</span><span class="n">file_rm</span><span class="p">),</span>
                                       <span class="n">CorruptedFileWarning</span><span class="p">,</span>
                                       <span class="n">stacklevel</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
@@ -596,14 +621,14 @@
                                                 <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">updatedir</span><span class="p">,</span>
                                                  <span class="bp">self</span><span class="o">.</span><span class="n">version_doc</span><span class="p">,</span>
                                                  <span class="bp">self</span><span class="o">.</span><span class="n">version_check_log</span><span class="p">]:</span>
-                            <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Moving {0} to {1}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">file_rm</span><span class="p">,</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Moving </span><span class="si">{0}</span><span class="s2"> to </span><span class="si">{1}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">file_rm</span><span class="p">,</span>
                                                                       <span class="n">tempdir</span><span class="p">))</span>
                             <span class="n">shutil</span><span class="o">.</span><span class="n">move</span><span class="p">(</span><span class="n">file_rm</span><span class="p">,</span><span class="n">file_rm_temp</span><span class="p">)</span>
                             <span class="n">file_rm_dir</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">file_rm</span><span class="p">)</span>
                             <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">file_rm_dir</span><span class="p">):</span>
                                 <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">file_rm_dir</span><span class="p">):</span>
                                     <span class="n">os</span><span class="o">.</span><span class="n">rmdir</span><span class="p">(</span><span class="n">file_rm_dir</span><span class="p">)</span>
-                                    <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Removing directory {0}&quot;</span>
+                                    <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Removing directory </span><span class="si">{0}</span><span class="s2">&quot;</span>
                                                    <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">file_rm_dir</span><span class="p">))</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Removing old filelist&quot;</span><span class="p">)</span>
             <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">file_list</span><span class="p">)</span>
@@ -619,7 +644,7 @@
                     <span class="n">filepath</span><span class="o">+=</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
                     <span class="n">filelist_new</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">filepath</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;New filelist is:</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">+</span><span class="n">pprint</span><span class="o">.</span><span class="n">pformat</span><span class="p">(</span><span class="n">filelist_new</span><span class="p">))</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Writing new filelist to {0}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">file_list</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Writing new filelist to </span><span class="si">{0}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">file_list</span><span class="p">))</span>
             <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">file_list</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file_handle</span><span class="p">:</span>
                 <span class="n">file_handle</span><span class="o">.</span><span class="n">writelines</span><span class="p">(</span><span class="n">filelist_new</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Copying downloaded contents to current directory&quot;</span><span class="p">)</span>
@@ -631,8 +656,8 @@
         <span class="k">finally</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Releasing lock after updating files&quot;</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">update</span><span class="o">.</span><span class="n">release</span><span class="p">()</span>
-        <span class="k">return</span> <span class="n">has_lock</span>
-</div>
+        <span class="k">return</span> <span class="n">has_lock</span></div>
+
 <div class="viewcode-block" id="Launcher.update_code"><a class="viewcode-back" href="../../pyautoupdate.html#pyautoupdate.Launcher.update_code">[docs]</a>    <span class="k">def</span> <span class="nf">update_code</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Updates the code if necessary.</span>
 <span class="sd">           :return: Whether update succeeded</span>
@@ -652,7 +677,7 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Update failed&quot;</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Already up to date&quot;</span><span class="p">)</span>
-            <span class="n">update_successful</span><span class="o">=</span><span class="bp">False</span>
+            <span class="n">update_successful</span><span class="o">=</span><span class="kc">False</span>
         <span class="k">return</span> <span class="n">update_successful</span></div></div>
 </pre></div>
 
@@ -712,21 +737,18 @@
 </p>
 <h3>Navigation</h3>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../pyautoupdate.html">Pyautoupdate package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../pyautoupdate.html">Pyautoupdate API</a></li>
 </ul>
 
 
 <div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
     <form class="search" action="../../search.html" method="get">
-      <input type="text" name="q" />
-      <input type="submit" value="Go" />
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
     </form>
-    <p class="searchtip" style="font-size: 90%">
-    Enter search terms or a module, class or function name.
-    </p>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
@@ -737,7 +759,7 @@
       &copy;2016 by Ryan Lee.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.3.1</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.5.1</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.9</a>
       
     </div>

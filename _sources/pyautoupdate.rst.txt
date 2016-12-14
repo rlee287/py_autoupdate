@@ -1,10 +1,10 @@
-Pyautoupdate package
-====================
+Pyautoupdate API
+================
 
 .. module:: pyautoupdate
 
-class Launcher
---------------
+Launcher
+--------
 
 .. autoclass:: pyautoupdate.Launcher
     :inherited-members:
