@@ -1,5 +1,4 @@
 #!/bin/bash
-set -v
 trap ctrl_c INT
 
 ctrl_c ()
@@ -124,5 +123,4 @@ git commit -F commitmessage
 rm commitmessage
 echo "Pushing to gh-pages"
 git push
-set +v
 ctrl_c
