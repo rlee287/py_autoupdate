@@ -10,6 +10,7 @@ import pytest
 
 @pytest.fixture(scope='function')
 def fixture_rm_log(request):
+    """Fixture to remove pyautoupdate log on teardown"""
     def teardown():
         os.remove(Launcher.version_check_log)
     request.addfinalizer(teardown)
