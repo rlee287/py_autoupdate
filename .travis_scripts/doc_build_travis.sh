@@ -1,4 +1,5 @@
 #!/bin/bash
+set -v
 trap ctrl_c INT
 
 ctrl_c ()
@@ -9,9 +10,12 @@ ctrl_c ()
     if [ "$pushdired" = true ]; then
         popd > /dev/null
     fi
+    if [ "$DOCBUILD" = true ] && [ "$TRAVIS" = true ]; then
+      eval $(ssh-agent -k)
+    fi
 }
 
-tempclone=$(mktemp -d "doc_build_clone.XXXXXXXX")
+tempclone=$(mktemp -p . -d "doc_build_clone.XXXXXXXX")
 echo $tempclone
 if [ "$DOCBUILD" != true ]; then
   echo "Only verification will be performed."
@@ -53,8 +57,22 @@ if [ $? -ne 0 ]; then
     exit 1
 fi
 pushdired=true
-# When running locally, use https as it is easier to configure
-url=https://github.com/rlee287/pyautoupdate
+if [ "$DOCBUILD" = true ]; then
+  echo "Decrypting SSH key"
+  openssl aes-256-cbc -K $encrypted_17ecf7cd0287_key -iv $encrypted_17ecf7cd0287_iv -in $builtdocs/../../../sphinx_travis_deploy.enc -out sphinx_travis_deploy -d
+    if [ -f sphinx_travis_deploy ] && [ -s sphinx_travis_deploy ]; then
+      chmod 600 sphinx_travis_deploy
+      eval $(ssh-agent -s)
+      ssh-add sphinx_travis_deploy
+      url=git@github.com:rlee287/pyautoupdate
+    else
+      echo -e "\e[0;31mFailed to decrypt deploy key\e[0m"
+      url=https://github.com/rlee287/pyautoupdate
+    fi
+else
+  # When running locally, use https as it is easier to configure
+  url=https://github.com/rlee287/pyautoupdate
+fi
 git clone --depth 1 -b gh-pages $url
 if [ $? -ne 0 ]; then
     echo -e "\e[0;31mFailed to clone current gh-pages repo\e[0m"
@@ -62,6 +80,7 @@ if [ $? -ne 0 ]; then
     exit 1
 fi
 cd pyautoupdate
+ls -l
 git ls-files | xargs rm
 shopt -u | grep -q dotglob && changed=true && shopt -s dotglob
 cp --no-preserve=mode --no-preserve=ownership -r $builtdocs/* .
@@ -71,10 +90,11 @@ git checkout -- .nojekyll
 git checkout -- .gitignore
 # This step is necessary on Windows Cygwin
 # Or other systems that do not handle executable bits properly
-chmod -x ./*
-chmod -x ./**/*
 git config --local core.fileMode true
 git diff --stat
+# Running on Travis CI Server
+git config --local user.name TravisCIDocBuild
+git config --local user.email travis_build@nonexistent.email
 echo "Checking for changed documentation"
 git diff --quiet
 hasdiff=$?
@@ -84,6 +104,13 @@ if [ $hasdiff -eq 0 ]; then
     ctrl_c
     exit 0
 fi
+if [ "$TRAVIS_PULL_REQUEST" != "false" ]; then
+    echo "Skipping deployment of doc on Pull Request build"
+    ctrl_c
+    exit 0
+fi
+git config --local user.name TravisCIDocBuild
+git config --local user.email travis_build@nonexistent.email
 cat << EOF > commitmessage
 Sphinx rebuild
 
@@ -97,4 +124,5 @@ git commit -F commitmessage
 rm commitmessage
 echo "Pushing to gh-pages"
 git push
+set +v
 ctrl_c
