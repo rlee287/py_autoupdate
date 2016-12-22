@@ -45,11 +45,8 @@ if [ "$DOCBUILD" != true ]; then
 fi
 cd docs/build/html
 builtdocs=$PWD
-ls -l
 cd ../../..
-echo $builtdocs
-pushd "$tempclone"
-echo $PWD
+pushd "$tempclone" > /dev/null
 if [ $? -ne 0 ]; then
     echo -e "\e[0;31mFailed to use temp directory\e[0m"
     ctrl_c
@@ -79,7 +76,6 @@ if [ $? -ne 0 ]; then
     exit 1
 fi
 cd pyautoupdate
-ls -l
 git ls-files | xargs rm
 shopt -u | grep -q dotglob && changed=true && shopt -s dotglob
 cp --no-preserve=mode --no-preserve=ownership -r $builtdocs/* .
@@ -108,8 +104,6 @@ if [ "$TRAVIS_PULL_REQUEST" != "false" ]; then
     ctrl_c
     exit 0
 fi
-git config --local user.name TravisCIDocBuild
-git config --local user.email travis_build@nonexistent.email
 cat << EOF > commitmessage
 Sphinx rebuild
 

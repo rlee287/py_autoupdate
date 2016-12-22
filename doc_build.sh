@@ -70,11 +70,8 @@ if [ $PUSH = false ]; then
 fi
 cd docs/build/html
 builtdocs=$PWD
-ls -l
 cd ../../..
-echo $builtdocs
-pushd "$tempclone"
-echo $PWD
+pushd "$tempclone" > /dev/null
 if [ $? -ne 0 ]; then
     echo -e "\e[0;31mFailed to use temp directory\e[0m"
     ctrl_c
