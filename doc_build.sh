@@ -10,21 +10,17 @@ ctrl_c ()
         popd > /dev/null
     fi
 }
-
 BUILD=true
-WILLPUSH=false
+PUSH=false
 while [[ $# -gt 0 ]]
 do
 key="$1"
-
 case $key in
     --no-build)
     BUILD=false
-    shift # past argument
     ;;
     --push)
-    WILLPUSH=true
-    shift # past argument
+    PUSH=true
     ;;
     *)
             # unknown option
@@ -32,8 +28,7 @@ case $key in
 esac
 shift # past argument or value
 done
-
-if [ $BUILD=false ] && [ $PUSH=false ]; then
+if [ $BUILD = false ] && [ $PUSH = false ]; then
   echo "Error: Not building and not pushing"
   echo "At least one of these actions must be performed"
   ctrl_c
@@ -41,17 +36,17 @@ if [ $BUILD=false ] && [ $PUSH=false ]; then
 fi
 tempclone=$(mktemp -d "doc_build_clone.XXXXXXXX")
 echo $tempclone
-if [ $PUSH=false ]; then
+if [ $PUSH = false ]; then
   echo "Only verification will be performed."
 fi
-if [ $BUILD=true ]; then
+if [ $BUILD = true ]; then
   echo "Building documentation"
   cd docs
   sphinx-build -b html -d build/doctrees source build/html
   makestatus=$?
   cd ..
 else
-  echo -e "\e[0;31mUsing previously built documentation\e[0m"
+  echo "Using previously built documentation"
   makestatus=0
 fi
 if [ $makestatus -ne 0 ]; then
@@ -68,7 +63,7 @@ else
 fi
 SHA=$(git rev-parse --short --verify HEAD)
 BRANCH=$(git rev-parse --abbrev-ref HEAD)
-if [ $PUSH=false ]; then
+if [ $PUSH = false ]; then
   echo "Exiting after doc verification"
   ctrl_c
   exit 0
