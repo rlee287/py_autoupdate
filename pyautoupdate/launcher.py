@@ -33,7 +33,7 @@ class Launcher(object):
 
     .. note::
 
-       The archive can be a ``.zip``, ``.tar.gz``, or a ``.tar.bz2`` file.
+       The supported archive formats are ``.zip``, ``.tar.gz``, and ``.tar.bz2``.
 
     When the code is launched, certain variables are already defined as
     follows:
@@ -45,12 +45,11 @@ class Launcher(object):
     +-------------+-------------------------------------------------+
     |``url``      |Base url to check and download new versions      |
     +-------------+-------------------------------------------------+
+    |``check_new``|Method to check for updated code                 |
+    +-------------+-------------------------------------------------+
     |``newfiles`` |Name of the archive containing the new files     |
     +-------------+-------------------------------------------------+
     |``updatedir``|Directory into which the new archive is extracted|
-    +-------------+-------------------------------------------------+
-    |``update``   |:class:`multiprocessing.Lock` that can be set to |
-    |             |signal an update event                           |
     +-------------+-------------------------------------------------+
     |``pid``      |PID of parent process that spawns the code       |
     +-------------+-------------------------------------------------+
@@ -288,6 +287,7 @@ class Launcher(object):
         # Neither should not be tampered with in child process code
         del localvar["_Launcher__process"]
         del localvar["update"]
+        del localvar["past_terminated"]
         # Pass in args, kwargs, and logger
         localvar["args"]=args
         localvar["kwargs"]=kwargs
