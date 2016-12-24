@@ -288,6 +288,7 @@ class Launcher(object):
         # Neither should not be tampered with in child process code
         del localvar["_Launcher__process"]
         del localvar["update"]
+        del localvar["past_terminated"]
         # Pass in args, kwargs, and logger
         localvar["args"]=args
         localvar["kwargs"]=kwargs
