@@ -193,12 +193,12 @@ class Launcher(object):
 
     @property
     def process_is_alive(self):
-        """Returns whether the process is alive"""
+        """Property indicating whether the process is alive"""
         return self.__process.is_alive()
 
     @property
     def process_code_running(self):
-        """Whether the user code is alive
+        """Property indicating whether the user code is alive
 
            .. note::
               This is diferent from `Launcher.process_is_alive` because the
@@ -208,12 +208,12 @@ class Launcher(object):
 
     @property
     def process_pid(self):
-        """The process PID, if it exists"""
+        """Property indicating the process PID, if it exists"""
         return self.__process.pid
 
     @property
     def process_exitcode(self):
-        """The process exitcode, if it exists"""
+        """Property indicating the process exitcode, if it exists"""
         if self.past_terminated:
             # SIGTERM is signal 15 on Linux
             # Preserve compatibility on Windows
@@ -240,6 +240,7 @@ class Launcher(object):
         :return: Whether process was terminated
         :rtype: bool
         """
+        # TODO: Troubleshoot xfail test
         if self.process_is_alive:
             self.log.warning("Terminating Process")
             self.__process.terminate()
@@ -264,7 +265,7 @@ class Launcher(object):
 ########################### Code execution methods ###########################
 
     def _call_code(self, *args, **kwargs):
-        """Method that executes the wrapped code.
+        """Internal function to execute the user code.
 
            This is internally used as target of a
            :class:`multiprocessing.Process` instance.
@@ -278,6 +279,7 @@ class Launcher(object):
               Please use the :meth:`run` method instead.
         """
         # Open code file
+        # Acquire lock here to avoid TOCTTOU issues with opened code file
         # multiprocessing.get_logger again since this is not pickleable
         local_log=multiprocessing.get_logger()
         local_log.debug("Acquiring code lock to run code")
@@ -314,7 +316,7 @@ class Launcher(object):
             self.past_terminated=False
 
     def run(self, background=False):
-        """Method used to run code.
+        """Runs the user code.
 
            If background is ``False``, returns the Process's exitcode.
 
