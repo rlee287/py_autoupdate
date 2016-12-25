@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Pyautoupdate API &#8212; pyautoupdate 1.0.0a0 documentation</title>
+    <title>Pyautoupdate API &#8212; pyautoupdate 1.0.0rc2 documentation</title>
     
     <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    './',
-        VERSION:     '1.0.0a0',
+        VERSION:     '1.0.0rc2',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -27,6 +27,7 @@
     <link rel="shortcut icon" href="_static/pyautoupdate_logo_icon.ico"/>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Project Structure" href="project.html" />
     <link rel="prev" title="Welcome to Pyautoupdate’s documentation!" href="index.html" />
    
   <link rel="stylesheet" href="_static/custom.css" type="text/css" />
@@ -56,14 +57,14 @@
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>filepath</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.5)"><em>str</em></a>) &#8211; Path to file to execute</li>
-<li><strong>url</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.5)"><em>str</em></a>) &#8211; Base URL from which to download new versions</li>
-<li><strong>newfiles</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.5)"><em>str</em></a>) &#8211; Name of archive with new versions to download from
+<li><strong>filepath</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.6)"><em>str</em></a>) &#8211; Path to file to execute</li>
+<li><strong>url</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.6)"><em>str</em></a>) &#8211; Base URL from which to download new versions</li>
+<li><strong>newfiles</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.6)"><em>str</em></a>) &#8211; Name of archive with new versions to download from
 site</li>
-<li><strong>updatedir</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.5)"><em>str</em></a>) &#8211; Directory in which new versions are downloaded into</li>
-<li><strong>log_level</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.5)"><em>int</em></a>) &#8211; Logging level for the built in logger</li>
-<li><strong>args</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.5)"><em>tuple</em></a>) &#8211; <code class="docutils literal"><span class="pre">args</span></code> passed to the launched code</li>
-<li><strong>kwargs</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.5)"><em>dict</em></a>) &#8211; <code class="docutils literal"><span class="pre">kwargs</span></code> passed to the launched code</li>
+<li><strong>updatedir</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.6)"><em>str</em></a>) &#8211; Directory in which new versions are downloaded into</li>
+<li><strong>log_level</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.6)"><em>int</em></a>) &#8211; Logging level for the built in logger</li>
+<li><strong>args</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.6)"><em>tuple</em></a>) &#8211; <code class="docutils literal"><span class="pre">args</span></code> passed to the launched code</li>
+<li><strong>kwargs</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.6)"><em>dict</em></a>) &#8211; <code class="docutils literal"><span class="pre">kwargs</span></code> passed to the launched code</li>
 </ul>
 </td>
 </tr>
@@ -71,7 +72,7 @@ site</li>
 </table>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
-<p class="last">The archive can be a <code class="docutils literal"><span class="pre">.zip</span></code>, <code class="docutils literal"><span class="pre">.tar.gz</span></code>, or a <code class="docutils literal"><span class="pre">.tar.bz2</span></code> file.</p>
+<p class="last">The supported archive formats are <code class="docutils literal"><span class="pre">.zip</span></code>, <code class="docutils literal"><span class="pre">.tar.gz</span></code>, and <code class="docutils literal"><span class="pre">.tar.bz2</span></code>.</p>
 </div>
 <p>When the code is launched, certain variables are already defined as
 follows:</p>
@@ -92,15 +93,14 @@ follows:</p>
 <tr class="row-odd"><td><code class="docutils literal"><span class="pre">url</span></code></td>
 <td>Base url to check and download new versions</td>
 </tr>
-<tr class="row-even"><td><code class="docutils literal"><span class="pre">newfiles</span></code></td>
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">check_new</span></code></td>
+<td>Method to check for updated code</td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">newfiles</span></code></td>
 <td>Name of the archive containing the new files</td>
 </tr>
-<tr class="row-odd"><td><code class="docutils literal"><span class="pre">updatedir</span></code></td>
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">updatedir</span></code></td>
 <td>Directory into which the new archive is extracted</td>
-</tr>
-<tr class="row-even"><td><code class="docutils literal"><span class="pre">update</span></code></td>
-<td><a class="reference external" href="https://docs.python.org/3/library/multiprocessing.html#multiprocessing.Lock" title="(in Python v3.5)"><code class="xref py py-class docutils literal"><span class="pre">multiprocessing.Lock</span></code></a> that can be set to
-signal an update event</td>
 </tr>
 <tr class="row-odd"><td><code class="docutils literal"><span class="pre">pid</span></code></td>
 <td>PID of parent process that spawns the code</td>
@@ -118,7 +118,7 @@ signal an update event</td>
 </table>
 <div class="admonition warning">
 <p class="first admonition-title">Warning</p>
-<p>The <a class="reference internal" href="#pyautoupdate.Launcher" title="pyautoupdate.Launcher"><code class="xref py py-class docutils literal"><span class="pre">Launcher</span></code></a> uses <a class="reference external" href="https://docs.python.org/3/library/multiprocessing.html#multiprocessing.Process" title="(in Python v3.5)"><code class="xref py py-class docutils literal"><span class="pre">multiprocessing.Process</span></code></a>
+<p>The <a class="reference internal" href="#pyautoupdate.Launcher" title="pyautoupdate.Launcher"><code class="xref py py-class docutils literal"><span class="pre">Launcher</span></code></a> uses <a class="reference external" href="https://docs.python.org/3/library/multiprocessing.html#multiprocessing.Process" title="(in Python v3.6)"><code class="xref py py-class docutils literal"><span class="pre">multiprocessing.Process</span></code></a>
 to run the code.</p>
 <p class="last">Please ensure that all <code class="docutils literal"><span class="pre">args</span></code> and <code class="docutils literal"><span class="pre">kwargs</span></code> can be pickled.</p>
 </div>
@@ -127,14 +127,14 @@ to run the code.</p>
 <code class="descname">_call_code</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyautoupdate/launcher.html#Launcher._call_code"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyautoupdate.Launcher._call_code" title="Permalink to this definition">¶</a></dt>
 <dd><p>Method that executes the wrapped code.</p>
 <p>This is internally used as target of a
-<a class="reference external" href="https://docs.python.org/3/library/multiprocessing.html#multiprocessing.Process" title="(in Python v3.5)"><code class="xref py py-class docutils literal"><span class="pre">multiprocessing.Process</span></code></a> instance.</p>
+<a class="reference external" href="https://docs.python.org/3/library/multiprocessing.html#multiprocessing.Process" title="(in Python v3.6)"><code class="xref py py-class docutils literal"><span class="pre">multiprocessing.Process</span></code></a> instance.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>args</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.5)"><em>tuple</em></a>) &#8211; <code class="docutils literal"><span class="pre">*args</span></code> tuple from self.args</li>
-<li><strong>kwargs</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.5)"><em>dict</em></a>) &#8211; <code class="docutils literal"><span class="pre">**kwargs</span></code> dict from self.kwargs</li>
+<li><strong>args</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.6)"><em>tuple</em></a>) &#8211; <code class="docutils literal"><span class="pre">*args</span></code> tuple from self.args</li>
+<li><strong>kwargs</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.6)"><em>dict</em></a>) &#8211; <code class="docutils literal"><span class="pre">**kwargs</span></code> dict from self.kwargs</li>
 </ul>
 </td>
 </tr>
@@ -163,7 +163,7 @@ Please use the <a class="reference internal" href="#pyautoupdate.Launcher.run" t
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Whether update succeeded</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.5)">bool</a></td>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.6)">bool</a></td>
 </tr>
 </tbody>
 </table>
@@ -186,7 +186,7 @@ Please use the <a class="reference internal" href="#pyautoupdate.Launcher.run" t
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Whether a newer version is available</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.5)">bool</a></td>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.6)">bool</a></td>
 </tr>
 </tbody>
 </table>
@@ -244,7 +244,7 @@ process takes time to start up before running the user code.</p>
 <dd><p>Terminates the process.</p>
 <div class="admonition warning">
 <p class="first admonition-title">Warning</p>
-<p>All the provisos of <a class="reference external" href="https://docs.python.org/3/library/multiprocessing.html#multiprocessing.Process.terminate" title="(in Python v3.5)"><code class="xref py py-meth docutils literal"><span class="pre">multiprocessing.Process.terminate()</span></code></a>
+<p>All the provisos of <a class="reference external" href="https://docs.python.org/3/library/multiprocessing.html#multiprocessing.Process.terminate" title="(in Python v3.6)"><code class="xref py py-meth docutils literal"><span class="pre">multiprocessing.Process.terminate()</span></code></a>
 apply.</p>
 <p class="last">Attempts are made in the code to ensure that internal variables
 inside the Launcher class are properly cleaned up. However, there is
@@ -256,7 +256,7 @@ little protection for user supplied code in case of termination.</p>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Whether process was terminated</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.5)">bool</a></td>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.6)">bool</a></td>
 </tr>
 </tbody>
 </table>
@@ -281,11 +281,11 @@ little protection for user supplied code in case of termination.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>background</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.5)"><em>bool</em></a>) &#8211; Whether to run code in background</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>background</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.6)"><em>bool</em></a>) &#8211; Whether to run code in background</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">the exit code if background is <code class="docutils literal"><span class="pre">False</span></code></td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.5)"><code class="xref py py-class docutils literal"><span class="pre">int</span></code></a> or <code class="xref py py-class docutils literal"><span class="pre">None</span></code></td>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.6)"><code class="xref py py-class docutils literal"><span class="pre">int</span></code></a> or <code class="xref py py-class docutils literal"><span class="pre">None</span></code></td>
 </tr>
 </tbody>
 </table>
@@ -319,7 +319,7 @@ little protection for user supplied code in case of termination.</p>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Whether the version_doc is a proper version</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.5)">bool</a></td>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.6)">bool</a></td>
 </tr>
 </tbody>
 </table>
@@ -335,7 +335,7 @@ little protection for user supplied code in case of termination.</p>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Whether the version_log is formatted properly</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.5)">bool</a></td>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.6)">bool</a></td>
 </tr>
 </tbody>
 </table>
@@ -435,6 +435,8 @@ little protection for user supplied code in case of termination.</p>
 <li class="toctree-l2"><a class="reference internal" href="#exceptions">Exceptions</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="project.html">Project Structure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="contributing.html">Contributing</a></li>
 </ul>
 
 

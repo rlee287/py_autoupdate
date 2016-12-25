@@ -30,6 +30,8 @@ Contents:
    :maxdepth: 2
 
    pyautoupdate
+   project
+   contributing
 
 
 Indices and tables
