@@ -35,9 +35,10 @@ if [ $makestatus -ne 0 ]; then
 else
   echo -e "\e[0;32mDocumentation successfully built\e[0m"
 fi
+
 SHA=$(git rev-parse --short --verify HEAD)
-BRANCH=$(git rev-parse --abbrev-ref HEAD)
-if [ "$DOCBUILD" != true ] || [ "$BRANCH" != "develop" ]; then
+
+if [ "$DOCBUILD" != true ] || [ "$TRAVIS_BRANCH" != "develop" ]; then
   echo "Exiting after doc verification"
   ctrl_c
   exit 0
@@ -107,7 +108,7 @@ fi
 cat << EOF > commitmessage
 Sphinx rebuild
 
-This corresponds to commit $SHA on branch $BRANCH
+This corresponds to commit $SHA on branch $TRAVIS_BRANCH
 EOF
 echo "Committing updated documentation"
 git add --all
