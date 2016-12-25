@@ -32,8 +32,8 @@ including:
 
 -  Instructions to reliably reproduce the problem
 
-*Even if it is a glitch that occurs unreliably, please try to include
-some instructions.*
+**Even if it is a glitch that occurs unreliably, please try to include
+some instructions.**
 
 Requesting Features
 ~~~~~~~~~~~~~~~~~~~
@@ -54,13 +54,12 @@ Pull Requests
 The Pyautoupdate project uses `PullApprove <https://pullapprove.com/>`__
 to approve pull requests.
 
-Authors of a Pull Request *must* approve it via PullApprove once it is
+Authors of a Pull Request **must** approve it via PullApprove once it is
 ready for consideration.
 By approving a Pull Request, the author(s) signify that their
- contribution satisfies the
- `Developer Certificate of
-  Origin <http://developercertificate.org/>`__,
- a copy of which has been included in
+contribution satisfies the
+`Developer Certificate of Origin <http://developercertificate.org/>`__,
+a copy of which has been included in
 ``DeveloperCertificateOrigin.txt``.
 
 When creating a non-release Pull Request, please include the following:
@@ -72,13 +71,12 @@ When creating a non-release Pull Request, please include the following:
 
 All code must be compatible with both Python 2 and 3.
 To ensure this, all tests on `Travis CI <https://travis-ci.org/>`__
- must pass.
+must pass.
 This will help to ensure Python 2 and 3 compatibility.
 
 In addition, please make sure that test coverage, as measured on
-`CodeCov <https://codecov.io/>`__,
- does not decrease significantly.
+`CodeCov <https://codecov.io/>`__, does not decrease significantly.
 
 Although exceptions may be made depending on circumstances,
 a pull request is less likely to be merged if code coverage decreases
- significantly.
+significantly.
