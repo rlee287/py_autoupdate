@@ -10,12 +10,11 @@ ctrl_c ()
         popd > /dev/null
     fi
     if [ "$DOCBUILD" = true ] && [ "$TRAVIS" = true ]; then
-      eval $(ssh-agent -k)
+      eval $(ssh-agent -k) > /dev/null
     fi
 }
 
 tempclone=$(mktemp -p . -d "doc_build_clone.XXXXXXXX")
-echo $tempclone
 if [ "$DOCBUILD" != true ]; then
   echo "Only verification will be performed."
 fi
@@ -38,7 +37,7 @@ else
 fi
 SHA=$(git rev-parse --short --verify HEAD)
 BRANCH=$(git rev-parse --abbrev-ref HEAD)
-if [ "$DOCBUILD" != true ]; then
+if [ "$DOCBUILD" != true ] || [ "$BRANCH" != "develop" ]; then
   echo "Exiting after doc verification"
   ctrl_c
   exit 0
@@ -58,9 +57,10 @@ if [ "$DOCBUILD" = true ]; then
   openssl aes-256-cbc -K $encrypted_17ecf7cd0287_key -iv $encrypted_17ecf7cd0287_iv -in $builtdocs/../../../sphinx_travis_deploy.enc -out sphinx_travis_deploy -d
     if [ -f sphinx_travis_deploy ] && [ -s sphinx_travis_deploy ]; then
       chmod 600 sphinx_travis_deploy
-      eval $(ssh-agent -s)
-      ssh-add sphinx_travis_deploy
+      eval $(ssh-agent -s) > /dev/null
+      ssh-add sphinx_travis_deploy > /dev/null
       url=git@github.com:rlee287/pyautoupdate
+      echo -e "\e[0;32mDeploy key successfully decrypted\e[0m"
     else
       echo -e "\e[0;31mFailed to decrypt deploy key\e[0m"
       url=https://github.com/rlee287/pyautoupdate
