@@ -52,7 +52,8 @@ class TestRunProgram(object):
         def teardown():
             for name in [filecode, filetext, filepid,
                          filefail, fileback, filelog]:
-                os.remove(name)
+                if os.path.isfile(name):
+                    os.remove(name)
             os.remove(Launcher.version_check_log)
         request.addfinalizer(teardown)
         return self.create_test_file
