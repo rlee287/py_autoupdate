@@ -31,6 +31,7 @@ Contents:
 
    pyautoupdate
    project
+   contributing
 
 
 Indices and tables
