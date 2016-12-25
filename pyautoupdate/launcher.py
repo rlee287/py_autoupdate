@@ -279,6 +279,10 @@ class Launcher(object):
               Please use the :meth:`run` method instead.
         """
         # Open code file
+        # multiprocessing.get_logger again since this is not pickleable
+        local_log=multiprocessing.get_logger()
+        local_log.debug("Acquiring code lock to run code")
+        self.update.acquire()
         with open(self.filepath, mode='r') as code_file:
             code = code_file.read()
         localvar = vars(self).copy()
@@ -287,13 +291,12 @@ class Launcher(object):
         # Remove handle to process object and lock
         # Neither should not be tampered with in child process code
         del localvar["_Launcher__process"]
+        del localvar["_Launcher__process_alive"]
         del localvar["update"]
         del localvar["past_terminated"]
         # Pass in args, kwargs, and logger
         localvar["args"]=args
         localvar["kwargs"]=kwargs
-        # multiprocessing.get_logger again since this is not pickleable
-        local_log=multiprocessing.get_logger()
         localvar["log"]=local_log
         local_log.debug("Starting process with"
                         " the following local variables:\n"+
@@ -301,9 +304,6 @@ class Launcher(object):
         # Execute code in file
         local_log.info("Starting code from file")
         try:
-            # TODO: move up?
-            local_log.debug("Acquiring code lock to run code")
-            self.update.acquire()
             self.__process_alive=True
             exec(code, dict(), localvar)
         finally:
