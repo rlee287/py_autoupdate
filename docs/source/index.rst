@@ -6,7 +6,7 @@
 Welcome to Pyautoupdate's documentation!
 ========================================
 
-Pyautoupdate is a module that allows code to automatically update.
+Pyautoupdate is an auto-update API for Python programs.
 Developers can focus on developing their application and use
 Pyautoupdate to easily ensure that the copy of the code on the end
 user's computer remains updated.
