@@ -33,7 +33,8 @@ class Launcher(object):
 
     .. note::
 
-       The supported archive formats are ``.zip``, ``.tar.gz``, and ``.tar.bz2``.
+       The supported archive formats are ``.zip``, ``.tar.gz``,
+       and ``.tar.bz2``.
 
     When the code is launched, certain variables are already defined as
     follows:
