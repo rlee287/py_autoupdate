@@ -1,0 +1,5 @@
+ul, ol {
+    /* Matches the 30px from the narrow-screen "li > ul" selector below */
+    margin: 0 0 0 30px;
+    padding: 0;
+}
