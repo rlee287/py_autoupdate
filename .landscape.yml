@@ -9,6 +9,7 @@ pylint:
 pep8:
   disable:
     - E302
+    - D208
 pyroma:
   run: true
 ignore-paths:
