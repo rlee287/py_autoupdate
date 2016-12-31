@@ -14,7 +14,8 @@ Environment Setup
 
 To run the tests, please run
 
-.. code-block::
+.. code-block:: none
+
    pytest .
 
 in the root directory of the repo. The config file is ``pytest.ini``.
