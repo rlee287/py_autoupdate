@@ -9,7 +9,7 @@ ctrl_c ()
     if [ "$pushdired" = true ]; then
         popd > /dev/null
     fi
-    if [ "$DOCBUILD" = true ] && [ "$TRAVIS" = true ]; then
+    if [ "$DOCBUILD" = true ] && [ "$TRAVIS" = true ] && [ ! -z $SSH_AGENT_PID ]; then
       eval $(ssh-agent -k) > /dev/null
     fi
 }
