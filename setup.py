@@ -15,6 +15,8 @@ if not version_number:
 setup(
     name='pyautoupdate',
     version=version_number,
+    author='Ryan Lee',
+    author_email='rndprogrammer@yahoo.com',
     packages=find_packages(),
     description='Interface to allow python programs to automatically update',
     long_description=text,
@@ -33,11 +35,13 @@ setup(
         'Programming Language :: Python :: Implementation :: CPython',
         'Programming Language :: Python :: Implementation :: PyPy'
     ),
-    install_requires=['requests'],
+    install_requires=['requests','setuptools'],
     extras_require={
         'testing': ['pytest','coverage']
     },
     package_data={
         'testing':['*.rst']},
-    license="LGPL 2.1"
+    license="LGPL 2.1",
+    zip_safe=False
+
 )

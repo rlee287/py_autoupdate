@@ -63,7 +63,9 @@ def test_replace_files(fixture_update_setup):
     assert not os.path.isfile(Launcher.queue_replace)
 
 def test_no_replace_files():
-    """Checks that the replace code function returns false when no files to replace"""
+    """Checks that the replace code function returns false when
+       there are no files to replace
+    """
     launch = Launcher('extradir/blah.py',
                       r'http://rlee287.github.io/pyautoupdate/testing/',
                       'project.zip','downloads',DEBUG)

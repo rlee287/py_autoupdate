@@ -9,6 +9,20 @@ a copy of which is included in ``PSFCodeOfConduct.rst``.
 Github's issues are used for bugtracking and feature requests. Please
 see the details below:
 
+Environment Setup
+-----------------
+
+To run the tests, please run
+
+.. code-block:: none
+
+   pytest .
+
+in the root directory of the repo. The config file is ``pytest.ini``.
+
+Alternately, the wrapper scripts in ``test/scripts`` can be used
+to get a coverage report after running tests.
+
 Filing an Issue
 ---------------
 

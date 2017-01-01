@@ -9,7 +9,8 @@ from ..pyautoupdate.launcher import Launcher
 @pytest.fixture(scope='function')
 def create_update_dir(request):
     """Fixture that populates a downloads folder with a bunch of files,
-       including the project.zip file"""
+       including the project.zip file
+    """
     os.mkdir('downloads')
     files=['tesfeo','fjfesf','fihghg']
     filedir=[os.path.join('downloads',fi) for fi in files]
