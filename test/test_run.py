@@ -117,12 +117,14 @@ class TestRunProgram(object):
         launch = Launcher(fileback,"NonUniform Resource Locator",
                           'project.zip','downloads',DEBUG)
         launch.run(True)
+        print("Entering busyloop")
         while not launch.process_code_running:
             pass
+        print("Exiting busyloop")
         time.sleep(0.5)
         can_terminate=launch.process_terminate()
         os.remove(".lck")
-        assert launch.process_exitcod ==-15
+        assert launch.process_exitcode==-15
         assert can_terminate
 
     @pytest.mark.xfail(reason="Produces none but should be 0")
@@ -133,8 +135,10 @@ class TestRunProgram(object):
                           'project.zip','downloads',DEBUG)
         launch.run(True)
         print(id(launch._Launcher__process))
+        print("Entering busyloop")
         while not launch.process_code_running:
             pass
+        print("Exiting busyloop")
         time.sleep(0.5)
         can_terminate=launch.process_terminate()
         os.remove(".lck")
