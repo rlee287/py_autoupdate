@@ -117,12 +117,12 @@ class TestRunProgram(object):
         launch = Launcher(fileback,"NonUniform Resource Locator",
                           'project.zip','downloads',DEBUG)
         launch.run(True)
-        while not os.path.isfile(".lck"):
+        while not launch.process_code_running:
             pass
         time.sleep(0.5)
         can_terminate=launch.process_terminate()
         os.remove(".lck")
-        assert launch.process_exitcode==-15
+        assert launch.process_exitcod ==-15
         assert can_terminate
 
     @pytest.mark.xfail(reason="Produces none but should be 0")
@@ -133,7 +133,7 @@ class TestRunProgram(object):
                           'project.zip','downloads',DEBUG)
         launch.run(True)
         print(id(launch._Launcher__process))
-        while not os.path.isfile(".lck"):
+        while not launch.process_code_running:
             pass
         time.sleep(0.5)
         can_terminate=launch.process_terminate()
@@ -146,7 +146,8 @@ class TestRunProgram(object):
         assert exitcode==0
 
     def test_background(self):
-        """Test that runs code in the background
+        """Test that runs code in the background.
+        
         ASCII art depicting timeline shown below:
           0        1        2        3        4 seconds|
         --+--------+--------+--------+--------+--------+
@@ -166,7 +167,8 @@ class TestRunProgram(object):
         assert not launch.process_is_alive
 
     def test_run_twice(self):
-        """Test that runs code in the background
+        """Test that runs code in the background twice.
+        
         ASCII art depicting timeline shown below:
           0        1        2        3        4 seconds|
         --+--------+--------+--------+--------+--------+
