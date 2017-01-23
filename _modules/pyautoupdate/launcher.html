@@ -191,7 +191,8 @@
                                                  <span class="n">args</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="p">,</span>
                                                  <span class="n">kwargs</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">past_terminated</span><span class="o">=</span><span class="kc">False</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">__process_alive</span><span class="o">=</span><span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__process_alive</span><span class="o">=</span><span class="n">multiprocessing</span><span class="o">.</span><span class="n">Event</span><span class="p">()</span>
+        <span class="k">assert</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">__process_alive</span><span class="o">.</span><span class="n">is_set</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Launcher initialized successfully&quot;</span><span class="p">)</span>
 
 <span class="c1">####################### Filename getters and validators ######################</span>
@@ -228,7 +229,7 @@
         <span class="c1"># Match log file against regex</span>
         <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">version_check_log</span><span class="p">,</span><span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">log_file</span><span class="p">:</span>
             <span class="n">log_syntax</span><span class="o">=</span><span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span>
-                <span class="s2">r&quot;Old .+?\|(New .+?|Up to date|Server invalid)\|Time .+?&quot;</span><span class="p">)</span>
+                <span class="sa">r</span><span class="s2">&quot;Old .+?\|(New .+?|Up to date|Server invalid)\|Time .+?&quot;</span><span class="p">)</span>
             <span class="n">version</span><span class="o">=</span><span class="n">log_file</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
             <span class="k">if</span> <span class="n">version</span><span class="o">!=</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">version</span><span class="p">)</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">:</span>
                 <span class="n">has_match</span><span class="o">=</span><span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">log_syntax</span><span class="p">,</span><span class="n">version</span><span class="p">)</span>
@@ -250,7 +251,7 @@
 <span class="sd">              This is diferent from `Launcher.process_is_alive` because the</span>
 <span class="sd">              process takes time to start up before running the user code.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__process_alive</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__process_alive</span><span class="o">.</span><span class="n">is_set</span><span class="p">()</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">process_pid</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -289,7 +290,7 @@
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">process_is_alive</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;Terminating Process&quot;</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">__process</span><span class="o">.</span><span class="n">terminate</span><span class="p">()</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">__process_alive</span><span class="o">=</span><span class="kc">False</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">__process_alive</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
             <span class="c1"># Release lock to avoid update deadlock later</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Releasing code lock after termination&quot;</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">update</span><span class="o">.</span><span class="n">release</span><span class="p">()</span>
@@ -349,12 +350,12 @@
         <span class="c1"># Execute code in file</span>
         <span class="n">local_log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Starting code from file&quot;</span><span class="p">)</span>
         <span class="k">try</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">__process_alive</span><span class="o">=</span><span class="kc">True</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">__process_alive</span><span class="o">.</span><span class="n">set</span><span class="p">()</span>
             <span class="n">exec</span><span class="p">(</span><span class="n">code</span><span class="p">,</span> <span class="nb">dict</span><span class="p">(),</span> <span class="n">localvar</span><span class="p">)</span>
         <span class="k">finally</span><span class="p">:</span>
             <span class="n">local_log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Releasing code lock after running code&quot;</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">update</span><span class="o">.</span><span class="n">release</span><span class="p">()</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">__process_alive</span><span class="o">=</span><span class="kc">False</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">__process_alive</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
             <span class="c1"># Reset past_terminated to False</span>
             <span class="c1"># (if terminated and rerun, past_terminated should be false)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">past_terminated</span><span class="o">=</span><span class="kc">False</span></div>
@@ -762,7 +763,7 @@
       &copy;2017 by Ryan Lee.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.5.1</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.5.2</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.9</a>
       
     </div>
