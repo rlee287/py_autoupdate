@@ -9,6 +9,8 @@ pylint:
 pep8:
   disable:
     - E302
+pep257:
+  disable:
     - D208
 pyroma:
   run: true

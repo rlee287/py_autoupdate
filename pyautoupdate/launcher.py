@@ -146,7 +146,8 @@ class Launcher(object):
                                                  args=self.args,
                                                  kwargs=self.kwargs)
         self.past_terminated=False
-        self.__process_alive=False
+        self.__process_alive=multiprocessing.Event()
+        assert not self.__process_alive.is_set()
         self.log.info("Launcher initialized successfully")
 
 ####################### Filename getters and validators ######################
@@ -202,10 +203,10 @@ class Launcher(object):
         """Property indicating whether the user code is alive
 
            .. note::
-              This is diferent from `Launcher.process_is_alive` because the
+              This is diferent from ``Launcher.process_is_alive`` because the
               process takes time to start up before running the user code.
         """
-        return self.__process_alive
+        return self.__process_alive.is_set()
 
     @property
     def process_pid(self):
@@ -245,7 +246,7 @@ class Launcher(object):
         if self.process_is_alive:
             self.log.warning("Terminating Process")
             self.__process.terminate()
-            self.__process_alive=False
+            self.__process_alive.clear()
             # Release lock to avoid update deadlock later
             self.log.debug("Releasing code lock after termination")
             self.update.release()
@@ -306,12 +307,12 @@ class Launcher(object):
         # Execute code in file
         local_log.info("Starting code from file")
         try:
-            self.__process_alive=True
+            self.__process_alive.set()
             exec(code, dict(), localvar)
         finally:
             local_log.debug("Releasing code lock after running code")
             self.update.release()
-            self.__process_alive=False
+            self.__process_alive.clear()
             # Reset past_terminated to False
             # (if terminated and rerun, past_terminated should be false)
             self.past_terminated=False
