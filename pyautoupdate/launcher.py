@@ -203,7 +203,7 @@ class Launcher(object):
         """Whether the user code is alive
 
            .. note::
-              This is diferent from `Launcher.process_is_alive` because the
+              This is diferent from ``Launcher.process_is_alive`` because the
               process takes time to start up before running the user code.
         """
         return self.__process_alive.is_set()
