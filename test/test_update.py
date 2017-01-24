@@ -73,7 +73,7 @@ def test_run_lock_update(fixture_update_setup):
                       '_static/testing/',
                       'project.zip','downloads',DEBUG)
     launch.run(True)
-    while not os.path.isfile(".lck"): # Wait for process to start
+    while not launch.process_code_running:
         pass
     could_update_while_run=launch.update_code()
     assert not could_update_while_run
