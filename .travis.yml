@@ -1,5 +1,6 @@
 language: python
 matrix:
+  fast_finish: true
   include:
     - python: '2.6'
       os: linux
@@ -12,18 +13,16 @@ matrix:
     - python: '3.5'
       env: DOCBUILD=true
       os: linux
-    - python: '3.5-dev'
-      os: linux
-      allow_failures: true
-    - python: '3.6-dev'
-      os: linux
-      allow_failures: true
-    - python: 'nightly'
-      os: linux
-      allow_failures: true
     - python: 'pypy'
       os: linux
     - python: 'pypy3'
+      os: linux
+    - python: '3.5-dev'
+      os: linux
+  allow_failures:
+    - python: '3.6-dev'
+      os: linux
+    - python: 'nightly'
       os: linux
 cache:
   pip: true
