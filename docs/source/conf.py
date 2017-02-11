@@ -70,6 +70,8 @@ with open(os.path.abspath('../../__init__.py'), 'r') as fd:
                         fd.read(), re.MULTILINE).group(1)
 if not version_number:
     raise RuntimeError('Cannot find version information')
+
+# Get git hash without relying on the command line or on tools like gitpython
 if os.path.isdir("../../.git"):
     assert os.path.isfile("../../.git/HEAD")
     with open("../../.git/HEAD",'r') as fd:
@@ -96,11 +98,11 @@ if os.path.isdir("../../.git"):
                     # Raise more appropriate error
                     raise RuntimeError("Unable to get current commit hash")
 else: # Not in git repo
-    commit_hash=None
-if commit_hash is not None:
+    commit_hash=""
+if commit_hash:
     commit_hash_short=commit_hash[:7]
 else:
-    commit_hash_short=None
+    commit_hash_short=""
 
 rst_epilog='.. |commit_hash_short| replace:: {}'.format(commit_hash_short)
 version = version_number+"+"+commit_hash_short
