@@ -33,6 +33,7 @@ Contents:
    project
    contributing
 
+This documentation was built from commit |commit_hash_short|.
 
 Indices and tables
 ==================

@@ -97,8 +97,13 @@ if os.path.isdir("../../.git"):
                     raise RuntimeError("Unable to get current commit hash")
 else: # Not in git repo
     commit_hash=None
+if commit_hash is not None:
+    commit_hash_short=commit_hash[:7]
+else:
+    commit_hash_short=None
 
-version = version_number+"+"+commit_hash[:7]
+rst_epilog='.. |commit_hash_short| replace:: {}'.format(commit_hash_short)
+version = version_number+"+"+commit_hash_short
 # The full version, including alpha/beta/rc tags.
 release = version_number
 
