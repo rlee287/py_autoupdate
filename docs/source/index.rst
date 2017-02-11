@@ -33,7 +33,7 @@ Contents:
    project
    contributing
 
-This documentation was built from commit |commit_hash_short|.
+This documentation was built from commit |release|.
 
 Indices and tables
 ==================
