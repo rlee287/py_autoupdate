@@ -11,24 +11,14 @@ Developers can focus on developing their application and use
 Pyautoupdate to easily ensure that the copy of the code on the end
 user's computer remains updated.
 
-Example code using Pyautoupdate:
-
-.. code-block:: python
-
-   from pyautoupdate.launcher import Launcher
-
-   # Run code
-   launch=Launcher("~/example/application_init.py","https://update-url")
-   excode=launch.run()
-
-   # Update files
-   launch.update()
+Example code using Pyautoupdate can be found in :doc:`quickstart`.
 
 Contents:
 
 .. toctree::
    :maxdepth: 2
 
+   quickstart
    pyautoupdate
    project
    contributing
