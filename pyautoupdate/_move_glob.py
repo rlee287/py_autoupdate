@@ -4,7 +4,7 @@ import os
 
 if os.name == "nt":
     from .ntcommonpath import commonpath
-else:
+else: # pragma: no branch
     from .posixcommonpath import commonpath
 
 def move_glob(src,dst):
