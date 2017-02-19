@@ -23,7 +23,7 @@ Contents:
    project
    contributing
 
-This documentation was built from commit |release|.
+This documentation was built from commit |release| on |today|.
 
 Indices and tables
 ==================
