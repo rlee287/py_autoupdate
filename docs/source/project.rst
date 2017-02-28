@@ -27,9 +27,8 @@ The code starts from ``entry_point.py``,
 which initializes the :class:`Launcher` object.
 
 .. note ::
-   This is still in progress, but it may not be possible to update the
-   ``entry_point.py`` file. It is highly recommended to put the absolute minimum
-   of code needed in that file.
+   The ``entry_point.py`` or equivalent can be updated via renaming
+   while in use. This is in development but is known to be possible.
 
 ``version.txt``
 ***************

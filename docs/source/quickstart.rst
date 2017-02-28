@@ -6,8 +6,8 @@ To set up an initial version, you will need the following files:
 -  ``code_1.py``
 -  ``code_2.py``
 -  ``entry_point.py``
--  ``version.txt``
--  ``filelist.txt``
+-  ``version.txt`` contains the version number.
+-  ``filelist.txt`` contains a list of paths of the code and resource files.
 
 Install these files into the user's location when first starting.
 
@@ -20,9 +20,8 @@ containing the version number in the same direcotry as the archive.
 
 More details about the required files can be found in :doc:`project`.
 
-Upload the archive to your server and make note of the url of its containing folder.
-
-This is a sample ``entry_point.py`` file.py, including an update check before code execution.
+This is a sample ``entry_point.py`` file.py, including an update check
+before code execution.
 
 .. code-block:: python
 
