@@ -15,7 +15,7 @@ from setuptools.archive_util import unpack_archive, UnrecognizedFormat
 
 import requests
 
-from ._file_glob import move_glob, copy_glob
+from ._file_glob import copy_glob
 from .exceptions import ProcessRunningException, CorruptedFileWarning
 
 
