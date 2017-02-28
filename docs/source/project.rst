@@ -13,15 +13,19 @@ The files in the directory tree below are labeled as follows:
 |**R** |Reserved file names          |
 +------+-----------------------------+
 
-| Root directory of project
-|   +-code_1.py
-|   +-code_2.py
-|   +-entry_point.py
-|   +-version.txt **RE**
-|   +-version_history.log **R**
-|   +-filelist.txt **RF**
-|   +-downloads (can be changed) **R**
-|   --project.zip (can be changed) **R**
+.. code-block:: text
+
+  Root directory of project
+  ├── code_1.py
+  ├── code_2.py
+  ├── downloads **R**
+  ├── entry_point.py
+  ├── filelist.txt **RF**
+  ├── project.zip (can be changed) **R**
+  ├── subfolder
+  │   └── code_3.py
+  ├── version.txt **RE**
+  └── version_history.log **R**
 
 The code starts from ``entry_point.py``,
 which initializes the :class:`Launcher` object.

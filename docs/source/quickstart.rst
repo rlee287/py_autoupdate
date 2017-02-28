@@ -25,13 +25,14 @@ before code execution.
 
 .. code-block:: python
 
+   import sys
    from pyautoupdate.launcher import Launcher
 
    # Update files before running
    launch.update()
 
-   # Run code
+   # Run code and return with exit code of launched code
    launch=Launcher("code_1.py","https://update-url")
-   excode=launch.run()
+   sys.exit(launch.run())
 
 Replace the ``https://update-url`` with the actual url of the containing folder.
