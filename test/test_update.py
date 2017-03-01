@@ -21,8 +21,8 @@ def fixture_update_setup(request):
             shutil.rmtree("extradir")
         if os.path.isfile(Launcher.file_list):
             os.remove(Launcher.file_list)
-        if os.path.isdir("downloads"):
-            shutil.rmtree("downloads")
+        if os.path.isdir(Launcher.updatedir):
+            shutil.rmtree(Launcher.updatedir)
         if os.path.isfile(Launcher.queue_update):
             os.remove(Launcher.queue_update)
     request.addfinalizer(teardown)
@@ -51,7 +51,7 @@ def test_update(fixture_update_setup):
     launch = Launcher('extradir/blah.py',
                       r'http://rlee287.github.io/pyautoupdate/'
                       '_static/testing/',
-                      'project.zip','downloads',DEBUG)
+                      'project.zip',DEBUG)
     could_update=launch.update_code()
     assert could_update
     assert not os.path.isfile(Launcher.queue_update)
@@ -71,7 +71,7 @@ def test_run_lock_update(fixture_update_setup):
     launch = Launcher('extradir/blah.py',
                       r'http://rlee287.github.io/pyautoupdate/'
                       '_static/testing/',
-                      'project.zip','downloads',DEBUG)
+                      'project.zip',DEBUG)
     launch.run(True)
     while not launch.process_code_running:
         pass

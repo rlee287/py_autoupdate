@@ -23,7 +23,7 @@ def fixture_update_dir(request):
 def create_update_dir(request):
     """Fixture that tears down downloads directory"""
     def teardown():
-        shutil.rmtree('downloads')
+        shutil.rmtree(Launcher.updatedir)
         os.remove(Launcher.version_check_log)
     request.addfinalizer(teardown)
     return create_update_dir

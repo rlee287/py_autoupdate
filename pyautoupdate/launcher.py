@@ -72,12 +72,12 @@ class Launcher(object):
     version_doc = "version.txt"
     version_check_log = "version_check.log"
     file_list = "filelist.txt"
+    updatedir=".pyautodownloads"
     queue_update = ".queue"
     queue_replace = ".replace"
 
     def __init__(self, filepath, url,
                  newfiles='project.zip',
-                 updatedir='downloads',
                  log_level=WARNING,
                  *args,**kwargs):
         self.log=multiprocessing.get_logger()
@@ -125,11 +125,6 @@ class Launcher(object):
             self.url = url
         else:
             self.url = url + "/"
-        # Check for valid updatedir
-        if len(os.path.normpath(updatedir).split(os.path.sep))>1:
-            raise ValueError("updatedir should be a single directory name")
-        else:
-            self.updatedir = updatedir
         # Check for valid newfiles
         if len(os.path.normpath(newfiles).split(os.path.sep))>1:
             raise ValueError("newfiles should be a single archive name")

@@ -70,11 +70,12 @@ def test_check_corrupted_vers(fixture_corrupt_vers):
             warnings.simplefilter("error",category=CorruptedFileWarning)
             launch=Launcher("123","456")
 
-def test_invalid_updatedir(fixture_rm_log):
-    """Test that checks for invalid updatdir with multiple directories"""
-    with pytest.raises(ValueError):
-        Launcher("123","456",newfiles="project.zip",
-                        updatedir='downloads/extradir')
+# Test unnecessary due to hardcoding of updatedir
+# def test_invalid_updatedir(fixture_rm_log):
+#     """Test that checks for invalid updatdir with multiple directories"""
+#     with pytest.raises(ValueError):
+#         Launcher("123","456",newfiles="project.zip",
+#                         updatedir='downloads/extradir')
 
 def test_invalid_multdir_newfiles(fixture_rm_log):
     """Test that checks for invalid newfiles with multiple directories"""

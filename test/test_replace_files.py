@@ -20,8 +20,8 @@ def fixture_update_setup(request):
             shutil.rmtree("extradir")
         if os.path.isfile(Launcher.file_list):
             os.remove(Launcher.file_list)
-        if os.path.isdir("downloads"):
-            shutil.rmtree("downloads")
+        if os.path.isdir(Launcher.updatedir):
+            shutil.rmtree(Launcher.updatedir)
         if os.path.isfile(Launcher.queue_replace):
             os.remove(Launcher.queue_replace)
     request.addfinalizer(teardown)
@@ -31,10 +31,11 @@ def fixture_update_setup(request):
         new_version.write("0.1.0")
     open(Launcher.queue_replace, mode='w').close()
     os.mkdir("extradir")
-    os.makedirs(os.path.join("downloads","extradir"))
+    os.makedirs(os.path.join(Launcher.updatedir,"extradir"))
     extradir_blah=os.path.join("extradir","blah.py")
     extradir_dummy=os.path.join("extradir","dummy.txt")
-    downloads_extradir_blah=os.path.join("downloads","extradir","blah.py")
+    downloads_extradir_blah=os.path.join(Launcher.updatedir,"extradir",
+                                         "blah.py")
     with open(extradir_blah, mode='w') as code:
         code.write("print('This is the old version')")
     with open(extradir_dummy, mode='w') as extra_file:
@@ -51,7 +52,7 @@ def test_replace_files(fixture_update_setup):
     assert os.path.isfile(Launcher.file_list)
     launch = Launcher('extradir/blah.py',
                       r'http://rlee287.github.io/pyautoupdate/testing/',
-                      'project.zip','downloads',DEBUG)
+                      'project.zip',DEBUG)
     can_replace=launch._replace_files()
     assert can_replace
     assert os.path.isfile("extradir/blah.py")
@@ -68,6 +69,6 @@ def test_no_replace_files():
     """
     launch = Launcher('extradir/blah.py',
                       r'http://rlee287.github.io/pyautoupdate/testing/',
-                      'project.zip','downloads',DEBUG)
+                      'project.zip',DEBUG)
     can_replace=launch._replace_files()
     assert not can_replace

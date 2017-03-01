@@ -63,7 +63,7 @@ class TestRunProgram(object):
         filebase = 'test_run_base'
         filecode = filebase+'.py'
         filetext = filebase+'.txt'
-        launch = Launcher(filecode,'Must','project.zip','downloads',DEBUG,
+        launch = Launcher(filecode,'Must','project.zip',DEBUG,
                           "extra_args",extra="extra_kwargs")
         excode = launch.run()
         assert excode == 0
@@ -115,7 +115,7 @@ class TestRunProgram(object):
         """Test that attempts to terminate process"""
         fileback = "test_run_base_back.py"
         launch = Launcher(fileback,"NonUniform Resource Locator",
-                          'project.zip','downloads',DEBUG)
+                          'project.zip',DEBUG)
         launch.run(True)
         print("Entering busyloop")
         while not launch.process_code_running:
@@ -132,7 +132,7 @@ class TestRunProgram(object):
         """Test that attempts to rerun process after termination"""
         fileback = "test_run_base_back.py"
         launch = Launcher(fileback,"NonUniform Resource Locator",
-                          'project.zip','downloads',DEBUG)
+                          'project.zip',DEBUG)
         launch.run(True)
         print(id(launch._Launcher__process))
         print("Entering busyloop")
