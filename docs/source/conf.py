@@ -16,6 +16,7 @@ import sys
 import os
 import re
 import datetime
+import warnings
 
 # If extensions (or modules to document with autodoc) are in another directory,
 # add these directories to sys.path here. If the directory is relative to the
@@ -95,7 +96,9 @@ if os.path.isdir("../../.git"):
                         raise ValueError
                 except ValueError:
                     # Raise more appropriate error
-                    raise RuntimeError("Unable to get current commit hash")
+                    warnings.warn("Unable to get current commit hash",
+                                  RuntimeWarning)
+                    commit_hash=""
 else: # Not in git repo
     commit_hash=""
 if commit_hash:
