@@ -50,7 +50,7 @@
 <h2>Launcher<a class="headerlink" href="#launcher" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="pyautoupdate.Launcher">
-<em class="property">class </em><code class="descclassname">pyautoupdate.</code><code class="descname">Launcher</code><span class="sig-paren">(</span><em>filepath</em>, <em>url</em>, <em>newfiles='project.zip'</em>, <em>updatedir='downloads'</em>, <em>log_level=30</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyautoupdate/launcher.html#Launcher"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyautoupdate.Launcher" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">pyautoupdate.</code><code class="descname">Launcher</code><span class="sig-paren">(</span><em>filepath</em>, <em>url</em>, <em>newfiles='project.zip'</em>, <em>log_level=30</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyautoupdate/launcher.html#Launcher"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyautoupdate.Launcher" title="Permalink to this definition">¶</a></dt>
 <dd><p>Creates a <a class="reference internal" href="#pyautoupdate.Launcher" title="pyautoupdate.Launcher"><code class="xref py py-class docutils literal"><span class="pre">Launcher</span></code></a> object.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -61,7 +61,6 @@
 <li><strong>url</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.6)"><em>str</em></a>) &#8211; Base URL from which to download new versions</li>
 <li><strong>newfiles</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.6)"><em>str</em></a>) &#8211; Name of archive with new versions to download from
 site</li>
-<li><strong>updatedir</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.6)"><em>str</em></a>) &#8211; Directory in which new versions are downloaded into</li>
 <li><strong>log_level</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.6)"><em>int</em></a>) &#8211; Logging level for the built in logger</li>
 <li><strong>args</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.6)"><em>tuple</em></a>) &#8211; <code class="docutils literal"><span class="pre">args</span></code> passed to the launched code</li>
 <li><strong>kwargs</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.6)"><em>dict</em></a>) &#8211; <code class="docutils literal"><span class="pre">kwargs</span></code> passed to the launched code</li>
@@ -96,12 +95,6 @@ follows:</p>
 </tr>
 <tr class="row-even"><td><code class="docutils literal"><span class="pre">check_new</span></code></td>
 <td>Method to check for updated code</td>
-</tr>
-<tr class="row-odd"><td><code class="docutils literal"><span class="pre">newfiles</span></code></td>
-<td>Name of the archive containing the new files</td>
-</tr>
-<tr class="row-even"><td><code class="docutils literal"><span class="pre">updatedir</span></code></td>
-<td>Directory into which the new archive is extracted</td>
 </tr>
 <tr class="row-odd"><td><code class="docutils literal"><span class="pre">pid</span></code></td>
 <td>PID of parent process that spawns the code</td>
@@ -301,6 +294,11 @@ little protection for user supplied code in case of termination.</p>
 </dd></dl>
 
 <dl class="attribute">
+<dt id="pyautoupdate.Launcher.updatedir">
+<code class="descname">updatedir</code><em class="property"> = '.pyautodownloads'</em><a class="headerlink" href="#pyautoupdate.Launcher.updatedir" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
 <dt id="pyautoupdate.Launcher.version_check_log">
 <code class="descname">version_check_log</code><em class="property"> = 'version_check.log'</em><a class="headerlink" href="#pyautoupdate.Launcher.version_check_log" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
@@ -467,7 +465,7 @@ little protection for user supplied code in case of termination.</p>
       
       |
       Powered by <a href="http://sphinx-doc.org/">Sphinx 1.5.3</a>
-      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.9</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
       
       |
       <a href="_sources/pyautoupdate.rst.txt"
