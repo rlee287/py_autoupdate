@@ -11,11 +11,11 @@ def create_update_dir(request):
     """Fixture that populates a downloads folder with a bunch of files,
        including the project.zip file
     """
-    os.mkdir('downloads')
+    os.mkdir(Launcher.updatedir)
     files=['tesfeo','fjfesf','fihghg']
-    filedir=[os.path.join('downloads',fi) for fi in files]
-    os.mkdir(os.path.join('downloads','subfolder'))
-    filedir.append(os.path.join('downloads','subfolder','oweigjoewig'))
+    filedir=[os.path.join(Launcher.updatedir,fi) for fi in files]
+    os.mkdir(os.path.join(Launcher.updatedir,'subfolder'))
+    filedir.append(os.path.join(Launcher.updatedir,'subfolder','oweigjoewig'))
     if sys.version_info[0]==2:
         empty_zip_data = 'PK\x05\x06\x00\x00\x00\x00\x00\x00\x00\x00\x00'+\
                          '\x00\x00\x00\x00\x00\x00\x00\x00\x00'
@@ -33,7 +33,7 @@ def create_update_dir(request):
                 os.unlink(file_path)
                 # Perhaps move into main test?
                 raise AssertionError# fail test if files exist
-        os.rmdir('downloads')
+        os.rmdir(Launcher.updatedir)
         os.remove(Launcher.version_check_log)
         if os.path.isfile("project.zip"):
             os.remove("project.zip")
@@ -45,7 +45,7 @@ def test_rm_dirs(create_update_dir):
     assert os.path.isfile("project.zip")
     launch = Launcher('all work and no play...','all play and no work...')
     launch._reset_update_files()
-    assert os.path.isdir('downloads')
+    assert os.path.isdir(Launcher.updatedir)
     # Check that directory is empty
-    assert len(os.listdir("downloads"))==0
+    assert len(os.listdir(Launcher.updatedir))==0
     assert not os.path.isfile("project.zip")

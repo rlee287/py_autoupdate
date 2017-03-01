@@ -18,11 +18,11 @@ The files in the directory tree below are labeled as follows:
   Root directory of project
   ├── code_1.py
   ├── code_2.py
-  ├── downloads **R**
+  ├── .pyautodownloads/ **R**
   ├── entry_point.py
   ├── filelist.txt **RF**
   ├── project.zip (can be changed) **R**
-  ├── subfolder
+  ├── subfolder/
   │   └── code_3.py
   ├── version.txt **RE**
   └── version_history.log **R**

@@ -15,7 +15,7 @@ from setuptools.archive_util import unpack_archive, UnrecognizedFormat
 
 import requests
 
-from ._file_glob import move_glob, copy_glob
+from ._file_glob import copy_glob
 from .exceptions import ProcessRunningException, CorruptedFileWarning
 
 
@@ -26,7 +26,6 @@ class Launcher(object):
     :param str url: Base URL from which to download new versions
     :param str newfiles: Name of archive with new versions to download from
      site
-    :param str updatedir: Directory in which new versions are downloaded into
     :param int log_level: Logging level for the built in logger
     :param tuple args: ``args`` passed to the launched code
     :param dict kwargs: ``kwargs`` passed to the launched code
@@ -48,10 +47,6 @@ class Launcher(object):
     +-------------+-------------------------------------------------+
     |``check_new``|Method to check for updated code                 |
     +-------------+-------------------------------------------------+
-    |``newfiles`` |Name of the archive containing the new files     |
-    +-------------+-------------------------------------------------+
-    |``updatedir``|Directory into which the new archive is extracted|
-    +-------------+-------------------------------------------------+
     |``pid``      |PID of parent process that spawns the code       |
     +-------------+-------------------------------------------------+
     |``log``      |Logger for Pyautoupdate and for the executed code|
@@ -72,12 +67,12 @@ class Launcher(object):
     version_doc = "version.txt"
     version_check_log = "version_check.log"
     file_list = "filelist.txt"
+    updatedir=".pyautodownloads"
     queue_update = ".queue"
     queue_replace = ".replace"
 
     def __init__(self, filepath, url,
                  newfiles='project.zip',
-                 updatedir='downloads',
                  log_level=WARNING,
                  *args,**kwargs):
         self.log=multiprocessing.get_logger()
@@ -125,11 +120,6 @@ class Launcher(object):
             self.url = url
         else:
             self.url = url + "/"
-        # Check for valid updatedir
-        if len(os.path.normpath(updatedir).split(os.path.sep))>1:
-            raise ValueError("updatedir should be a single directory name")
-        else:
-            self.updatedir = updatedir
         # Check for valid newfiles
         if len(os.path.normpath(newfiles).split(os.path.sep))>1:
             raise ValueError("newfiles should be a single archive name")
