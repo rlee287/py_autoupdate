@@ -20,7 +20,7 @@ The files in the directory tree below are labeled as follows:
 |   +-version.txt **RE**
 |   +-version_history.log **R**
 |   +-filelist.txt **RF**
-|   +-downloads (can be changed) **R**
+|   +-.pyautodownloads/ **R**
 |   --project.zip (can be changed) **R**
 
 The code starts from ``entry_point.py``,

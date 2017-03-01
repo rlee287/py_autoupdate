@@ -26,7 +26,6 @@ class Launcher(object):
     :param str url: Base URL from which to download new versions
     :param str newfiles: Name of archive with new versions to download from
      site
-    :param str updatedir: Directory in which new versions are downloaded into
     :param int log_level: Logging level for the built in logger
     :param tuple args: ``args`` passed to the launched code
     :param dict kwargs: ``kwargs`` passed to the launched code
@@ -47,10 +46,6 @@ class Launcher(object):
     |``url``      |Base url to check and download new versions      |
     +-------------+-------------------------------------------------+
     |``check_new``|Method to check for updated code                 |
-    +-------------+-------------------------------------------------+
-    |``newfiles`` |Name of the archive containing the new files     |
-    +-------------+-------------------------------------------------+
-    |``updatedir``|Directory into which the new archive is extracted|
     +-------------+-------------------------------------------------+
     |``pid``      |PID of parent process that spawns the code       |
     +-------------+-------------------------------------------------+
