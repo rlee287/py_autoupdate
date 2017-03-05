@@ -1,29 +1,30 @@
 language: python
 matrix:
   include:
-    - python: '2.6'
+      # Orderings to minimize build time
+      # 3.5 Documentation building first
+      # 2.7 to test Python 2
+      # 3.4 Run pylint on Python 3 as well
+      # pypy3 and pypy to support pypy
+      # Interleave remaining versions
+    - python: '3.6'
+      env: DOCBUILD=true
       os: linux
     - python: '2.7'
       env: PYLINT=true
       os: linux
-    - python: '3.3'
-      os: linux
-    - python: '3.4'
-      env: PYLINT=true
-      os: linux
     - python: '3.5'
-      env: DOCBUILD=true
-      os: linux
-    - python: 'pypy'
+      env: PYLINT=true
       os: linux
     - python: 'pypy3'
       os: linux
-    - python: '3.5-dev'
+    - python: 'pypy'
       os: linux
-  allow_failures:
-    - python: '3.6-dev'
+    - python: '3.4'
       os: linux
-    - python: 'nightly'
+    - python: '2.6'
+      os: linux
+    - python: '3.3'
       os: linux
 cache:
   pip: true
