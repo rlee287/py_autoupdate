@@ -8,6 +8,7 @@ import pprint
 import re
 import shutil
 import tempfile
+from urllib.parse import urlparse, urlunparse
 import warnings
 
 from pkg_resources import parse_version, SetuptoolsVersion, PEP440Warning
@@ -24,6 +25,10 @@ class Launcher(object):
 
     :param str filepath: Path to file to execute
     :param str url: Base URL from which to download new versions
+
+    .. note::
+       This must be an HTTPS url. HTTP urls are silently changed into HTTPS.
+
     :param str newfiles: Name of archive with new versions to download from
      site
     :param int log_level: Logging level for the built in logger
@@ -83,6 +88,7 @@ class Launcher(object):
             multiprocessing.log_to_stderr()
         self.log.info("Initializing launcher")
         self.log.debug("Validating files")
+
         # Check that self.version_doc is valid
         if not self.version_doc_validator():
             self.log.error("{0} does not have a valid version number!\n"
@@ -94,6 +100,7 @@ class Launcher(object):
             warnings.warn("{0} is corrupted!".format(self.version_doc),
                           CorruptedFileWarning,
                           stacklevel=2)
+
         # Check that self.version_log is valid
         open(self.version_check_log, 'a').close() # "Touch" self.version_log
         if not self.version_log_validator():
@@ -112,14 +119,29 @@ class Launcher(object):
             self.filepath = filepath
         else:
             raise ValueError("Filepath must not be empty")
+
         # Check that URL is specified
         if len(url) == 0:
             raise ValueError("URL must not be empty")
+        self.url = url
+        # if self.url=="http://rlee287.github.io/pyautoupdate/testing":
+        #     import pdb
+        #     pdb.set_trace()
+        # URL parsing section
+        schemaobj=urlparse(self.url)
+        # Add https schema if necessary and replace http with https
+        if schemaobj.scheme not in ["","https","http"]:
+            raise ValueError("Url must be http or https")
+        if schemaobj.scheme == "":
+            self.url="https://"+self.url
+            schemaobj=urlparse(self.url)
+        # Intended behavior is to remove parameters, query, and fragment
+        self.url=urlunparse(("https",schemaobj.netloc,schemaobj.path,
+                             "","",""))
         # Append slash to end of URL if it is not present
-        if url.endswith("/"):
-            self.url = url
-        else:
-            self.url = url + "/"
+        if not url.endswith("/"):
+            self.url = self.url + "/"
+
         # Check for valid newfiles
         if len(os.path.normpath(newfiles).split(os.path.sep))>1:
             raise ValueError("newfiles should be a single archive name")
@@ -127,6 +149,7 @@ class Launcher(object):
             raise ValueError("newfiles must be a zip, gzip, or bzip file")
         else:
             self.newfiles = newfiles
+
         # Initialize other variables
         self.update = multiprocessing.Lock()
         self.pid = os.getpid()
