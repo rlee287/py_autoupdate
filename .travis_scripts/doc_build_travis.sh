@@ -15,7 +15,10 @@ ctrl_c ()
 }
 
 tempclone=$(mktemp -p . -d "doc_build_clone.XXXXXXXX")
-if [ "$DOCBUILD" != true ]; then
+if [ "$TRAVIS_BRANCH" != "develop" ]; then
+  echo "Not currently on branch develop"
+fi
+if [ "$DOCBUILD" != true ] || [ "$TRAVIS_BRANCH" != "develop" ]; then
   echo "Only verification will be performed."
 fi
 echo "Building documentation"

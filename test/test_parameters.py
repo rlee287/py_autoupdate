@@ -23,6 +23,18 @@ def test_check_urlslash(fixture_rm_log):
                        r'http://rlee287.github.io/pyautoupdate/testing')
     assert launch.url == launch2.url
 
+def test_check_url_schema(fixture_rm_log):
+    """Test that checks that leading slash is properly added to URL"""
+    with pytest.raises(ValueError):
+        Launcher('not here',
+                 r'sftp://rlee287.github.io/pyautoupdate/testing/')
+
+def test_check_url_noschema(fixture_rm_log):
+    """Test that checks that leading slash is properly added to URL"""
+    launch = Launcher('not here',
+                      r'rlee287.github.io/pyautoupdate/testing/')
+    assert launch.url == 'https://rlee287.github.io/pyautoupdate/testing/'
+
 def test_check_emptyfilepath(fixture_rm_log):
     """Check that error is raised with empty file"""
     with pytest.raises(ValueError):
