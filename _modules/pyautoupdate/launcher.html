@@ -52,9 +52,15 @@
 <span class="kn">import</span> <span class="nn">pprint</span>
 <span class="kn">import</span> <span class="nn">re</span>
 <span class="kn">import</span> <span class="nn">shutil</span>
+<span class="kn">from</span> <span class="nn">sys</span> <span class="k">import</span> <span class="n">version_info</span>
 <span class="kn">import</span> <span class="nn">tempfile</span>
-<span class="kn">from</span> <span class="nn">urllib.parse</span> <span class="k">import</span> <span class="n">urlparse</span><span class="p">,</span> <span class="n">urlunparse</span>
 <span class="kn">import</span> <span class="nn">warnings</span>
+
+<span class="c1"># Module in different place depending on python version</span>
+<span class="k">if</span> <span class="n">version_info</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">==</span><span class="mi">2</span><span class="p">:</span> <span class="c1"># pragma: no branch</span>
+    <span class="kn">from</span> <span class="nn">urlparse</span> <span class="k">import</span> <span class="n">urlparse</span><span class="p">,</span><span class="n">urlunparse</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="nn">urllib.parse</span> <span class="k">import</span> <span class="n">urlparse</span><span class="p">,</span> <span class="n">urlunparse</span>
 
 <span class="kn">from</span> <span class="nn">pkg_resources</span> <span class="k">import</span> <span class="n">parse_version</span><span class="p">,</span> <span class="n">SetuptoolsVersion</span><span class="p">,</span> <span class="n">PEP440Warning</span>
 <span class="kn">from</span> <span class="nn">setuptools.archive_util</span> <span class="k">import</span> <span class="n">unpack_archive</span><span class="p">,</span> <span class="n">UnrecognizedFormat</span>
