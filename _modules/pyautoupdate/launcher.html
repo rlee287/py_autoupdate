@@ -53,6 +53,7 @@
 <span class="kn">import</span> <span class="nn">re</span>
 <span class="kn">import</span> <span class="nn">shutil</span>
 <span class="kn">import</span> <span class="nn">tempfile</span>
+<span class="kn">from</span> <span class="nn">urllib.parse</span> <span class="k">import</span> <span class="n">urlparse</span><span class="p">,</span> <span class="n">urlunparse</span>
 <span class="kn">import</span> <span class="nn">warnings</span>
 
 <span class="kn">from</span> <span class="nn">pkg_resources</span> <span class="k">import</span> <span class="n">parse_version</span><span class="p">,</span> <span class="n">SetuptoolsVersion</span><span class="p">,</span> <span class="n">PEP440Warning</span>
@@ -69,6 +70,10 @@
 
 <span class="sd">    :param str filepath: Path to file to execute</span>
 <span class="sd">    :param str url: Base URL from which to download new versions</span>
+
+<span class="sd">    .. note::</span>
+<span class="sd">       This must be an HTTPS url. HTTP urls are silently changed into HTTPS.</span>
+
 <span class="sd">    :param str newfiles: Name of archive with new versions to download from</span>
 <span class="sd">     site</span>
 <span class="sd">    :param int log_level: Logging level for the built in logger</span>
@@ -128,6 +133,7 @@
             <span class="n">multiprocessing</span><span class="o">.</span><span class="n">log_to_stderr</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Initializing launcher&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Validating files&quot;</span><span class="p">)</span>
+
         <span class="c1"># Check that self.version_doc is valid</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">version_doc_validator</span><span class="p">():</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{0}</span><span class="s2"> does not have a valid version number!</span><span class="se">\n</span><span class="s2">&quot;</span>
@@ -139,6 +145,7 @@
             <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{0}</span><span class="s2"> is corrupted!&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">version_doc</span><span class="p">),</span>
                           <span class="n">CorruptedFileWarning</span><span class="p">,</span>
                           <span class="n">stacklevel</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+
         <span class="c1"># Check that self.version_log is valid</span>
         <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">version_check_log</span><span class="p">,</span> <span class="s1">&#39;a&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">close</span><span class="p">()</span> <span class="c1"># &quot;Touch&quot; self.version_log</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">version_log_validator</span><span class="p">():</span>
@@ -157,14 +164,29 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">filepath</span> <span class="o">=</span> <span class="n">filepath</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Filepath must not be empty&quot;</span><span class="p">)</span>
+
         <span class="c1"># Check that URL is specified</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">url</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;URL must not be empty&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">url</span> <span class="o">=</span> <span class="n">url</span>
+        <span class="c1"># if self.url==&quot;http://rlee287.github.io/pyautoupdate/testing&quot;:</span>
+        <span class="c1">#     import pdb</span>
+        <span class="c1">#     pdb.set_trace()</span>
+        <span class="c1"># URL parsing section</span>
+        <span class="n">schemaobj</span><span class="o">=</span><span class="n">urlparse</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">url</span><span class="p">)</span>
+        <span class="c1"># Add https schema if necessary and replace http with https</span>
+        <span class="k">if</span> <span class="n">schemaobj</span><span class="o">.</span><span class="n">scheme</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;&quot;</span><span class="p">,</span><span class="s2">&quot;https&quot;</span><span class="p">,</span><span class="s2">&quot;http&quot;</span><span class="p">]:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Url must be http or https&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">schemaobj</span><span class="o">.</span><span class="n">scheme</span> <span class="o">==</span> <span class="s2">&quot;&quot;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">url</span><span class="o">=</span><span class="s2">&quot;https://&quot;</span><span class="o">+</span><span class="bp">self</span><span class="o">.</span><span class="n">url</span>
+            <span class="n">schemaobj</span><span class="o">=</span><span class="n">urlparse</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">url</span><span class="p">)</span>
+        <span class="c1"># Intended behavior is to remove parameters, query, and fragment</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">url</span><span class="o">=</span><span class="n">urlunparse</span><span class="p">((</span><span class="s2">&quot;https&quot;</span><span class="p">,</span><span class="n">schemaobj</span><span class="o">.</span><span class="n">netloc</span><span class="p">,</span><span class="n">schemaobj</span><span class="o">.</span><span class="n">path</span><span class="p">,</span>
+                             <span class="s2">&quot;&quot;</span><span class="p">,</span><span class="s2">&quot;&quot;</span><span class="p">,</span><span class="s2">&quot;&quot;</span><span class="p">))</span>
         <span class="c1"># Append slash to end of URL if it is not present</span>
-        <span class="k">if</span> <span class="n">url</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">):</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">url</span> <span class="o">=</span> <span class="n">url</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">url</span> <span class="o">=</span> <span class="n">url</span> <span class="o">+</span> <span class="s2">&quot;/&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">url</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">url</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">url</span> <span class="o">+</span> <span class="s2">&quot;/&quot;</span>
+
         <span class="c1"># Check for valid newfiles</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">normpath</span><span class="p">(</span><span class="n">newfiles</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">sep</span><span class="p">))</span><span class="o">&gt;</span><span class="mi">1</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;newfiles should be a single archive name&quot;</span><span class="p">)</span>
@@ -172,6 +194,7 @@
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;newfiles must be a zip, gzip, or bzip file&quot;</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">newfiles</span> <span class="o">=</span> <span class="n">newfiles</span>
+
         <span class="c1"># Initialize other variables</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">update</span> <span class="o">=</span> <span class="n">multiprocessing</span><span class="o">.</span><span class="n">Lock</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">pid</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getpid</span><span class="p">()</span>
@@ -753,7 +776,7 @@
       &copy;2017 by Ryan Lee.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.5.3</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.5.5</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
       
     </div>
