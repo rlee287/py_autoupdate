@@ -7,9 +7,15 @@ import os
 import pprint
 import re
 import shutil
+from sys import version_info
 import tempfile
-from urllib.parse import urlparse, urlunparse
 import warnings
+
+# Module in different place depending on python version
+if version_info[0]==2: # pragma: no branch
+    from urlparse import urlparse,urlunparse
+else:
+    from urllib.parse import urlparse, urlunparse
 
 from pkg_resources import parse_version, SetuptoolsVersion, PEP440Warning
 from setuptools.archive_util import unpack_archive, UnrecognizedFormat
