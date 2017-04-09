@@ -22,9 +22,9 @@ setup(
     long_description=text,
     url='https://github.com/rlee287/pyautoupdate',
     classifiers=(
-        'Intended Audience :: Developers'
+        'Intended Audience :: Developers',
         'Development Status :: 4 - Beta',
-        'License :: OSI Approved :: GNU Lesser General Public License v2 or later (LGPLv2+)'
+        'License :: OSI Approved :: GNU Lesser General Public License v2 or later (LGPLv2+)',
         'Programming Language :: Python',
         'Programming Language :: Python :: 2.6',
         'Programming Language :: Python :: 2.7',
