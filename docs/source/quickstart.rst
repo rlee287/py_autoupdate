@@ -35,4 +35,4 @@ before code execution.
    launch=Launcher("code_1.py","https://update-url")
    sys.exit(launch.run())
 
-Replace the ``https://update-url`` with the actual url of the containing folder.
+Replace the ``https://update-url`` with the actual url of the folder on the server.
