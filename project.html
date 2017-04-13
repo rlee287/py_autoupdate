@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Project Structure &#8212; pyautoupdate 1.0.0rc2 documentation</title>
+    <title>Project Structure &#8212; pyautoupdate 1.0.0rc2+71f5bea documentation</title>
     
     <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    './',
-        VERSION:     '1.0.0rc2',
+        VERSION:     '1.0.0rc2+71f5bea',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -69,26 +69,25 @@
 </tr>
 </tbody>
 </table>
-<div class="line-block">
-<div class="line">Root directory of project</div>
-<div class="line-block">
-<div class="line">+-code_1.py</div>
-<div class="line">+-code_2.py</div>
-<div class="line">+-entry_point.py</div>
-<div class="line">+-version.txt <strong>RE</strong></div>
-<div class="line">+-version_history.log <strong>R</strong></div>
-<div class="line">+-filelist.txt <strong>RF</strong></div>
-<div class="line">+-.pyautodownloads/ <strong>R</strong></div>
-<div class="line">&#8211;project.zip (can be changed) <strong>R</strong></div>
-</div>
+<div class="highlight-text"><div class="highlight"><pre><span></span>Root directory of project
+├── code_1.py
+├── code_2.py
+├── .pyautodownloads/ **R**
+├── entry_point.py
+├── filelist.txt **RF**
+├── project.zip (can be changed) **R**
+├── subfolder/
+│   └── code_3.py
+├── version.txt **RE**
+└── version_history.log **R**
+</pre></div>
 </div>
 <p>The code starts from <code class="docutils literal"><span class="pre">entry_point.py</span></code>,
 which initializes the <code class="xref py py-class docutils literal"><span class="pre">Launcher</span></code> object.</p>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
-<p class="last">This is still in progress, but it may not be possible to update the
-<code class="docutils literal"><span class="pre">entry_point.py</span></code> file. It is highly recommended to put the absolute minimum
-of code needed in that file.</p>
+<p class="last">The <code class="docutils literal"><span class="pre">entry_point.py</span></code> or equivalent can be updated via renaming
+while in use. This is in development but is known to be possible.</p>
 </div>
 <div class="section" id="version-txt">
 <h2><code class="docutils literal"><span class="pre">version.txt</span></code><a class="headerlink" href="#version-txt" title="Permalink to this headline">¶</a></h2>
@@ -164,6 +163,7 @@ The format is one of the following:</p>
 </p>
 <h3>Navigation</h3>
 <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="quickstart.html">Quickstart</a></li>
 <li class="toctree-l1"><a class="reference internal" href="pyautoupdate.html">Pyautoupdate API</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Project Structure</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#version-txt"><code class="docutils literal"><span class="pre">version.txt</span></code></a></li>

@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Pyautoupdate API &#8212; pyautoupdate 1.0.0rc2 documentation</title>
+    <title>Pyautoupdate API &#8212; pyautoupdate 1.0.0rc2+71f5bea documentation</title>
     
     <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    './',
-        VERSION:     '1.0.0rc2',
+        VERSION:     '1.0.0rc2+71f5bea',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -28,7 +28,7 @@
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Project Structure" href="project.html" />
-    <link rel="prev" title="Welcome to Pyautoupdate’s documentation!" href="index.html" />
+    <link rel="prev" title="Quickstart" href="quickstart.html" />
    
   <link rel="stylesheet" href="_static/custom.css" type="text/css" />
   
@@ -66,7 +66,8 @@
 </table>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
-<p class="last">This must be an HTTPS url. HTTP urls are silently changed into HTTPS.</p>
+<p>This must be an HTTPS url. HTTP urls are silently changed into HTTPS.</p>
+<p class="last">Parameters, queries, and fragments will be stripped from the URL.</p>
 </div>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -133,7 +134,7 @@ to run the code.</p>
 <dl class="method">
 <dt id="pyautoupdate.Launcher._call_code">
 <code class="descname">_call_code</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyautoupdate/launcher.html#Launcher._call_code"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyautoupdate.Launcher._call_code" title="Permalink to this definition">¶</a></dt>
-<dd><p>Method that executes the wrapped code.</p>
+<dd><p>Internal function to execute the user code.</p>
 <p>This is internally used as target of a
 <a class="reference external" href="https://docs.python.org/3/library/multiprocessing.html#multiprocessing.Process" title="(in Python v3.6)"><code class="xref py py-class docutils literal"><span class="pre">multiprocessing.Process</span></code></a> instance.</p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -214,7 +215,7 @@ to compare versions.</p>
 <dl class="attribute">
 <dt id="pyautoupdate.Launcher.process_code_running">
 <code class="descname">process_code_running</code><a class="headerlink" href="#pyautoupdate.Launcher.process_code_running" title="Permalink to this definition">¶</a></dt>
-<dd><p>Whether the user code is alive</p>
+<dd><p>Property indicating whether the user code is alive</p>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
 <p class="last">This is diferent from <code class="docutils literal"><span class="pre">Launcher.process_is_alive</span></code> because the
@@ -225,13 +226,13 @@ process takes time to start up before running the user code.</p>
 <dl class="attribute">
 <dt id="pyautoupdate.Launcher.process_exitcode">
 <code class="descname">process_exitcode</code><a class="headerlink" href="#pyautoupdate.Launcher.process_exitcode" title="Permalink to this definition">¶</a></dt>
-<dd><p>The process exitcode, if it exists</p>
+<dd><p>Property indicating the process exitcode, if it exists</p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="pyautoupdate.Launcher.process_is_alive">
 <code class="descname">process_is_alive</code><a class="headerlink" href="#pyautoupdate.Launcher.process_is_alive" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns whether the process is alive</p>
+<dd><p>Property indicating whether the process is alive</p>
 </dd></dl>
 
 <dl class="method">
@@ -243,7 +244,7 @@ process takes time to start up before running the user code.</p>
 <dl class="attribute">
 <dt id="pyautoupdate.Launcher.process_pid">
 <code class="descname">process_pid</code><a class="headerlink" href="#pyautoupdate.Launcher.process_pid" title="Permalink to this definition">¶</a></dt>
-<dd><p>The process PID, if it exists</p>
+<dd><p>Property indicating the process PID, if it exists</p>
 </dd></dl>
 
 <dl class="method">
@@ -283,7 +284,7 @@ little protection for user supplied code in case of termination.</p>
 <dl class="method">
 <dt id="pyautoupdate.Launcher.run">
 <code class="descname">run</code><span class="sig-paren">(</span><em>background=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyautoupdate/launcher.html#Launcher.run"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyautoupdate.Launcher.run" title="Permalink to this definition">¶</a></dt>
-<dd><p>Method used to run code.</p>
+<dd><p>Runs the user code.</p>
 <p>If background is <code class="docutils literal"><span class="pre">False</span></code>, returns the Process&#8217;s exitcode.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -443,6 +444,7 @@ little protection for user supplied code in case of termination.</p>
 </p>
 <h3>Navigation</h3>
 <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="quickstart.html">Quickstart</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Pyautoupdate API</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#launcher">Launcher</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#exceptions">Exceptions</a></li>

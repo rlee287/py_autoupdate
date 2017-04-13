@@ -13,23 +13,26 @@ The files in the directory tree below are labeled as follows:
 |**R** |Reserved file names          |
 +------+-----------------------------+
 
-| Root directory of project
-|   +-code_1.py
-|   +-code_2.py
-|   +-entry_point.py
-|   +-version.txt **RE**
-|   +-version_history.log **R**
-|   +-filelist.txt **RF**
-|   +-.pyautodownloads/ **R**
-|   --project.zip (can be changed) **R**
+.. code-block:: text
+
+  Root directory of project
+  ├── code_1.py
+  ├── code_2.py
+  ├── .pyautodownloads/ **R**
+  ├── entry_point.py
+  ├── filelist.txt **RF**
+  ├── project.zip (can be changed) **R**
+  ├── subfolder/
+  │   └── code_3.py
+  ├── version.txt **RE**
+  └── version_history.log **R**
 
 The code starts from ``entry_point.py``,
 which initializes the :class:`Launcher` object.
 
 .. note ::
-   This is still in progress, but it may not be possible to update the
-   ``entry_point.py`` file. It is highly recommended to put the absolute minimum
-   of code needed in that file.
+   The ``entry_point.py`` or equivalent can be updated via renaming
+   while in use. This is in development but is known to be possible.
 
 ``version.txt``
 ***************

@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>pyautoupdate.launcher &#8212; pyautoupdate 1.0.0rc2 documentation</title>
+    <title>pyautoupdate.launcher &#8212; pyautoupdate 1.0.0rc2+71f5bea documentation</title>
     
     <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../',
-        VERSION:     '1.0.0rc2',
+        VERSION:     '1.0.0rc2+71f5bea',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -79,6 +79,8 @@
 
 <span class="sd">    .. note::</span>
 <span class="sd">       This must be an HTTPS url. HTTP urls are silently changed into HTTPS.</span>
+
+<span class="sd">       Parameters, queries, and fragments will be stripped from the URL.</span>
 
 <span class="sd">    :param str newfiles: Name of archive with new versions to download from</span>
 <span class="sd">     site</span>
@@ -259,12 +261,12 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">process_is_alive</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Returns whether the process is alive&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Property indicating whether the process is alive&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__process</span><span class="o">.</span><span class="n">is_alive</span><span class="p">()</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">process_code_running</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Whether the user code is alive</span>
+        <span class="sd">&quot;&quot;&quot;Property indicating whether the user code is alive</span>
 
 <span class="sd">           .. note::</span>
 <span class="sd">              This is diferent from ``Launcher.process_is_alive`` because the</span>
@@ -274,12 +276,12 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">process_pid</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;The process PID, if it exists&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Property indicating the process PID, if it exists&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__process</span><span class="o">.</span><span class="n">pid</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">process_exitcode</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;The process exitcode, if it exists&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Property indicating the process exitcode, if it exists&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">past_terminated</span><span class="p">:</span>
             <span class="c1"># SIGTERM is signal 15 on Linux</span>
             <span class="c1"># Preserve compatibility on Windows</span>
@@ -306,6 +308,7 @@
 <span class="sd">        :return: Whether process was terminated</span>
 <span class="sd">        :rtype: bool</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># TODO: Troubleshoot xfail test</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">process_is_alive</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;Terminating Process&quot;</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">__process</span><span class="o">.</span><span class="n">terminate</span><span class="p">()</span>
@@ -330,7 +333,7 @@
 <span class="c1">########################### Code execution methods ###########################</span>
 
 <div class="viewcode-block" id="Launcher._call_code"><a class="viewcode-back" href="../../pyautoupdate.html#pyautoupdate.Launcher._call_code">[docs]</a>    <span class="k">def</span> <span class="nf">_call_code</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Method that executes the wrapped code.</span>
+        <span class="sd">&quot;&quot;&quot;Internal function to execute the user code.</span>
 
 <span class="sd">           This is internally used as target of a</span>
 <span class="sd">           :class:`multiprocessing.Process` instance.</span>
@@ -344,6 +347,7 @@
 <span class="sd">              Please use the :meth:`run` method instead.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># Open code file</span>
+        <span class="c1"># Acquire lock here to avoid TOCTTOU issues with opened code file</span>
         <span class="c1"># multiprocessing.get_logger again since this is not pickleable</span>
         <span class="n">local_log</span><span class="o">=</span><span class="n">multiprocessing</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span>
         <span class="n">local_log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Acquiring code lock to run code&quot;</span><span class="p">)</span>
@@ -380,7 +384,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">past_terminated</span><span class="o">=</span><span class="kc">False</span></div>
 
 <div class="viewcode-block" id="Launcher.run"><a class="viewcode-back" href="../../pyautoupdate.html#pyautoupdate.Launcher.run">[docs]</a>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">background</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Method used to run code.</span>
+        <span class="sd">&quot;&quot;&quot;Runs the user code.</span>
 
 <span class="sd">           If background is ``False``, returns the Process&#39;s exitcode.</span>
 
@@ -758,6 +762,7 @@
 </p>
 <h3>Navigation</h3>
 <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../quickstart.html">Quickstart</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../pyautoupdate.html">Pyautoupdate API</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../project.html">Project Structure</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../contributing.html">Contributing</a></li>
