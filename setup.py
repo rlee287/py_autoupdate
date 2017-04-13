@@ -43,5 +43,4 @@ setup(
         'testing':['*.rst']},
     license="LGPL 2.1",
     zip_safe=False
-
 )
