@@ -35,6 +35,8 @@ class Launcher(object):
     .. note::
        This must be an HTTPS url. HTTP urls are silently changed into HTTPS.
 
+       Parameters, queries, and fragments will be stripped from the URL.
+
     :param str newfiles: Name of archive with new versions to download from
      site
     :param int log_level: Logging level for the built in logger
