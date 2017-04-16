@@ -1,7 +1,6 @@
 |pyautoupdate_logo|
 
-Pyautoupdate is a python wrapper that allows the wrapped code to
-automatically update.
+Pyautoupdate is an auto-update API for Python programs.
 
 |Build_Status| |Codecov_Status| |QuantifiedCode_Status| |LandscapeIO_Status| |Gitter_Badge|
 
@@ -17,8 +16,7 @@ Installation
 
 .. code-block:: bash
 
-    $ git clone https://github.com/rlee287/pyautoupdate
-    $ python setup.py install
+    $ pip install pyautoupdate
 
 Dependencies
 ------------
