@@ -1,0 +1,57 @@
+language: python
+matrix:
+  include:
+      # Orderings to minimize build time
+      # 3.5 Documentation building first
+      # 2.7 to test Python 2
+      # 3.4 Run pylint on Python 3 as well
+      # pypy3 and pypy to support pypy
+      # Interleave remaining versions
+    - python: '3.6'
+      env: DOCBUILD=true
+      os: linux
+    - python: '2.7'
+      env: PYLINT=true
+      os: linux
+    - python: '3.5'
+      env: PYLINT=true
+      os: linux
+    - python: 'pypy3'
+      os: linux
+    - python: 'pypy'
+      os: linux
+    - python: '3.4'
+      os: linux
+    - python: '2.6'
+      os: linux
+    - python: '3.3'
+      os: linux
+cache:
+  pip: true
+  directories: "$HOME/.pylint.d"
+notifications:
+  email: false
+  webhooks:
+    urls:
+    - secure: VasVyNvXBmBZb2GC/pYasakiFZ2CEP9U+kmPlPNwuT0eyAxzyXmovkpdYcR/zr3khoo8NBMWFFksi1bR8Vn6z6MRIpJK3Wp5XZsNog8Zt0t9N0J4ev2gTlRx9emQssa/7xiiD2L58dfbO/s5iB74MzMpmEpZcu2HZG+kIOQa67mxaijlZBW1MNjZziLHHe6Cf+awI05HYzdEwhFnDAzSMJxYXH/gomgi0CfB01dp7Thuc2MN4+OENO/37LS966GdvTiQTlRl89fWgj9UB+9/b8Ej1Y4inyrLaWiRQET9L6eAe99x/a6bwGWvZFJ8CdGBPiqALNVM5L2+1Q7OlEis/nC3PgqHnTr/qcYvsRj9boqixfKhd5/zGbB6JDh34pFHGAPhNVq4o0ql0NnpB6V7h0u7LuiCLPI2v4bIfwM5/1i8gctvE7VO//PuDeAZMso7RkOhURF7Q/LhT2pa+ribfNaftVXoMbJM02xWwMQO7NRzXzTT/ZiwcFy/xG4+FLMxVTI2EmbepfqF9Q0YgpSfZEQKTqBUVAbRLN/F3zu+l8cKchOdOjwbagKXP7kXyjFFmOFxTnptZdy8qBysR4sHpsYfJkgtWb2CZX0jTxBRkeJDIkGlFBASzROpClHR3MgUFcvyGGsjTCaOy6rcGp8VTwGjrruYMfTok/nq6zi/5rM=
+    on_success: always
+    on_failure: always
+    on_start: never
+install:
+- pip install requests
+- pip install coverage
+- pip install pylint
+- pip install sphinx
+script:
+- bash .travis_scripts/run_travis.sh
+after_success:
+- if [ ! -z "$PYLINT" ]; then cd ..; pylint -f colorized pyautoupdate; cd pyautoupdate; fi
+- bash .travis_scripts/doc_build_travis.sh
+after_failure:
+- cd ..; pylint -E -f colorized pyautoupdate; cd pyautoupdate
+after_script:
+- pip install codecov
+- python -c 'import sys;print(str(sys.version_info[0])+"."+str(sys.version_info[1]))'
+  > version.txt
+- cat version.txt | xargs codecov --env
+- rm version.txt

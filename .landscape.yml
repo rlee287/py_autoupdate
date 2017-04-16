@@ -1,0 +1,24 @@
+doc-warnings: true
+test-warnings: true
+strictness: high
+max-line-length: 79
+pylint:
+  disable:
+    - exec-used
+    - protected-access
+pep8:
+  disable:
+    - E302
+pep257:
+  disable:
+    - D208
+pyroma:
+  run: true
+ignore-paths:
+ - docs
+ignore-patterns:
+ - (^|/)__init__\.py
+ - pyautoupdate/.+commonpath.py
+python-targets:
+ - 2
+ - 3

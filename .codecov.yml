@@ -1,0 +1,8 @@
+coverage:
+  precision: 3
+  round: nearest
+  range: "75...95"
+notify:
+  gitter:
+    default:
+      url: "secret:DaK89nD6glEC/PrnY3IMQVEfw8w8+a7AqnQJtnYrz3PYVKOTV0vwhGpXMbWKmy/QNxCumcACn+HTn120ZBE1Cg+roBemJQnPC5JaoN0osv+9t8UtfEYZNVgRx19L0bVD"

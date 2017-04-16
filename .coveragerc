@@ -1,0 +1,8 @@
+[run]
+branch = True
+concurrency = multiprocessing
+
+[report]
+omit = **/__init__.py
+       **/*commonpath.py
+show_missing = True
