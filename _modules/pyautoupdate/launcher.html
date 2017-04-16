@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>pyautoupdate.launcher &#8212; pyautoupdate 1.0.0rc2+71f5bea documentation</title>
+    <title>pyautoupdate.launcher &#8212; pyautoupdate 1.0.0.post1+6db4974 documentation</title>
     
     <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../',
-        VERSION:     '1.0.0rc2+71f5bea',
+        VERSION:     '1.0.0.post1+6db4974',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -177,9 +177,7 @@
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">url</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;URL must not be empty&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">url</span> <span class="o">=</span> <span class="n">url</span>
-        <span class="c1"># if self.url==&quot;http://rlee287.github.io/pyautoupdate/testing&quot;:</span>
-        <span class="c1">#     import pdb</span>
-        <span class="c1">#     pdb.set_trace()</span>
+
         <span class="c1"># URL parsing section</span>
         <span class="n">schemaobj</span><span class="o">=</span><span class="n">urlparse</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">url</span><span class="p">)</span>
         <span class="c1"># Add https schema if necessary and replace http with https</span>
@@ -477,10 +475,9 @@
             <span class="n">oldver</span><span class="o">=</span><span class="n">old_version</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
         <span class="n">oldver</span><span class="o">=</span><span class="n">oldver</span><span class="o">.</span><span class="n">rstrip</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
         <span class="c1"># Compare old version with new version</span>
-        <span class="n">invalid</span><span class="o">=</span><span class="kc">False</span>
+        <span class="n">invalid</span><span class="o">=</span><span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">newver_obj</span><span class="p">,</span><span class="n">SetuptoolsVersion</span><span class="p">)</span>
         <span class="c1"># Check if new version is valid</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">newver_obj</span><span class="p">,</span><span class="n">SetuptoolsVersion</span><span class="p">):</span>
-            <span class="n">invalid</span><span class="o">=</span><span class="kc">True</span>
+        <span class="k">if</span> <span class="n">invalid</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Retrieved version number is invalid!</span><span class="se">\n</span><span class="s2">&quot;</span>
                            <span class="s2">&quot;Please contact the software authors.</span><span class="se">\n</span><span class="s2">&quot;</span>
                            <span class="s2">&quot;Please include the generated data dump &quot;</span>
@@ -501,25 +498,29 @@
             <span class="k">finally</span><span class="p">:</span>
                 <span class="k">if</span> <span class="n">newver_dump</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                     <span class="n">newver_dump</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="n">invalid</span><span class="p">:</span>
+            <span class="c1"># Throw warning as error object after logging</span>
+            <span class="c1"># If version is invalid, upgrade cannot succeed</span>
+            <span class="n">version_to_add</span><span class="o">=</span><span class="s2">&quot;Old </span><span class="si">{0}</span><span class="s2">|Server Invalid|Time </span><span class="si">{1}</span><span class="se">\n</span><span class="s2">&quot;</span>\
+                           <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">oldver</span><span class="p">,</span><span class="n">request_time</span><span class="p">)</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">version_check_log</span><span class="p">,</span> <span class="s2">&quot;a&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">log_file</span><span class="p">:</span>
+                <span class="n">log_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">version_to_add</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="n">CorruptedFileWarning</span>
+
+        <span class="c1"># Will always return not new if new version is invalid</span>
         <span class="n">has_new</span><span class="o">=</span><span class="p">(</span><span class="n">newver_obj</span><span class="o">&gt;</span><span class="n">parse_version</span><span class="p">(</span><span class="n">oldver</span><span class="p">))</span>
         <span class="c1"># Add entry to the logfile and update version.txt</span>
         <span class="k">if</span> <span class="n">has_new</span><span class="p">:</span>
             <span class="n">version_to_add</span><span class="o">=</span><span class="s2">&quot;Old </span><span class="si">{0}</span><span class="s2">|New </span><span class="si">{1}</span><span class="s2">|Time </span><span class="si">{2}</span><span class="se">\n</span><span class="s2">&quot;</span>\
                            <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">oldver</span><span class="p">,</span><span class="n">newver</span><span class="p">,</span><span class="n">request_time</span><span class="p">)</span>
-        <span class="k">elif</span> <span class="n">invalid</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
-            <span class="n">version_to_add</span><span class="o">=</span><span class="s2">&quot;Old </span><span class="si">{0}</span><span class="s2">|Up to date|Time </span><span class="si">{1}</span><span class="se">\n</span><span class="s2">&quot;</span>\
-                           <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">oldver</span><span class="p">,</span><span class="n">request_time</span><span class="p">)</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">queue_update</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">new_version</span><span class="p">:</span>
+                <span class="n">new_version</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">newver</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">version_to_add</span><span class="o">=</span><span class="s2">&quot;Old </span><span class="si">{0}</span><span class="s2">|Server Invalid|Time </span><span class="si">{1}</span><span class="se">\n</span><span class="s2">&quot;</span>\
+            <span class="n">version_to_add</span><span class="o">=</span><span class="s2">&quot;Old </span><span class="si">{0}</span><span class="s2">|Up to date|Time </span><span class="si">{1}</span><span class="se">\n</span><span class="s2">&quot;</span>\
                            <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">oldver</span><span class="p">,</span><span class="n">request_time</span><span class="p">)</span>
         <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">version_check_log</span><span class="p">,</span> <span class="s2">&quot;a&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">log_file</span><span class="p">:</span>
             <span class="n">log_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">version_to_add</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">invalid</span><span class="p">:</span>
-            <span class="c1"># TODO: Use warning module?</span>
-            <span class="k">raise</span> <span class="n">CorruptedFileWarning</span>
-        <span class="k">elif</span> <span class="n">has_new</span><span class="p">:</span>
-            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">queue_update</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">new_version</span><span class="p">:</span>
-                <span class="n">new_version</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">newver</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">has_new</span></div>
 
 <div class="viewcode-block" id="Launcher._reset_update_files"><a class="viewcode-back" href="../../pyautoupdate.html#pyautoupdate.Launcher._reset_update_files">[docs]</a>    <span class="k">def</span> <span class="nf">_reset_update_files</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
