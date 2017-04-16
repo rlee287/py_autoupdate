@@ -132,9 +132,7 @@ class Launcher(object):
         if len(url) == 0:
             raise ValueError("URL must not be empty")
         self.url = url
-        # if self.url=="http://rlee287.github.io/pyautoupdate/testing":
-        #     import pdb
-        #     pdb.set_trace()
+
         # URL parsing section
         schemaobj=urlparse(self.url)
         # Add https schema if necessary and replace http with https
