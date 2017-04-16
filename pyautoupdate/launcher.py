@@ -430,10 +430,9 @@ class Launcher(object):
             oldver=old_version.read()
         oldver=oldver.rstrip("\n")
         # Compare old version with new version
-        invalid=False
+        invalid=not isinstance(newver_obj,SetuptoolsVersion)
         # Check if new version is valid
-        if not isinstance(newver_obj,SetuptoolsVersion):
-            invalid=True
+        if invalid:
             self.log.error("Retrieved version number is invalid!\n"
                            "Please contact the software authors.\n"
                            "Please include the generated data dump "
@@ -454,25 +453,29 @@ class Launcher(object):
             finally:
                 if newver_dump is not None:
                     newver_dump.close()
+
+        if invalid:
+            # Throw warning as error object after logging
+            # If version is invalid, upgrade cannot succeed
+            version_to_add="Old {0}|Server Invalid|Time {1}\n"\
+                           .format(oldver,request_time)
+            with open(self.version_check_log, "a") as log_file:
+                log_file.write(version_to_add)
+            raise CorruptedFileWarning
+
+        # Will always return not new if new version is invalid
         has_new=(newver_obj>parse_version(oldver))
         # Add entry to the logfile and update version.txt
         if has_new:
             version_to_add="Old {0}|New {1}|Time {2}\n"\
                            .format(oldver,newver,request_time)
-        elif invalid is False:
-            version_to_add="Old {0}|Up to date|Time {1}\n"\
-                           .format(oldver,request_time)
+            with open(self.queue_update, 'w') as new_version:
+                new_version.write(newver)
         else:
-            version_to_add="Old {0}|Server Invalid|Time {1}\n"\
+            version_to_add="Old {0}|Up to date|Time {1}\n"\
                            .format(oldver,request_time)
         with open(self.version_check_log, "a") as log_file:
             log_file.write(version_to_add)
-        if invalid:
-            # TODO: Use warning module?
-            raise CorruptedFileWarning
-        elif has_new:
-            with open(self.queue_update, 'w') as new_version:
-                new_version.write(newver)
         return has_new
 
     def _reset_update_files(self):
