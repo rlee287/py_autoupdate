@@ -18,7 +18,7 @@ setup(
     author='Ryan Lee',
     author_email='rndprogrammer@yahoo.com',
     packages=find_packages(),
-    description='Interface to allow python programs to automatically update',
+    description='Auto-update API for Python programs',
     long_description=text,
     url='https://github.com/rlee287/pyautoupdate',
     classifiers=(
