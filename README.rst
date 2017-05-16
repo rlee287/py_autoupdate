@@ -18,6 +18,10 @@ Installation
 
     $ pip install pyautoupdate
 
+Documentation
+-------------
+Documentation is available at http://rlee287.github.io/pyautoupdate.
+
 Dependencies
 ------------
 Core Dependencies
