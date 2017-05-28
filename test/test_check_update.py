@@ -11,7 +11,7 @@ import os
 import pytest
 from requests import HTTPError
 
-@needinternet
+#@needinternet
 def test_check_update_needed(fixture_update_dir):
     """Test that ensures that updates occur when needed"""
     package=fixture_update_dir("0.0.1")
@@ -77,4 +77,3 @@ def test_check_update_invalidvers(fixture_update_dir,remove_dump):
     with open(Launcher.version_check_log,"r") as log_handle:
         log=log_handle.read()
     assert "Server Invalid" in log
-
