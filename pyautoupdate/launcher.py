@@ -88,6 +88,7 @@ class Launcher(object):
                  newfiles='project.zip',
                  log_level=WARNING,
                  *args,**kwargs):
+        # Initialize logger
         self.log=multiprocessing.get_logger()
         self.log.setLevel(log_level)
         # Create handle to self.log only if necessary
@@ -123,10 +124,9 @@ class Launcher(object):
 
         self.log.debug("Validating arguments")
         # Check that filepath is specified
-        if len(filepath) != 0:
-            self.filepath = filepath
-        else:
+        if len(filepath) == 0:
             raise ValueError("Filepath must not be empty")
+        self.filepath = filepath
 
         # Check that URL is specified
         if len(url) == 0:
@@ -166,7 +166,6 @@ class Launcher(object):
                                                  kwargs=self.kwargs)
         self.past_terminated=False
         self.__process_alive=multiprocessing.Event()
-        assert not self.__process_alive.is_set()
         self.log.info("Launcher initialized successfully")
 
 ####################### Filename getters and validators ######################
@@ -208,7 +207,7 @@ class Launcher(object):
             if version!="\n" and len(version)>0:
                 has_match=re.match(log_syntax,version)
                 valid_log=bool(has_match)
-        return bool(valid_log)
+        return valid_log
 
 ########################### Process manipulation #############################
 
@@ -307,6 +306,7 @@ class Launcher(object):
         self.update.acquire()
         with open(self.filepath, mode='r') as code_file:
             code = code_file.read()
+        # Set up variables visible to child process
         localvar = vars(self).copy()
         # Manipulate __dict__ attribute to add handle to check_new
         localvar["check_new"] = self.check_new
