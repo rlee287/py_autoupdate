@@ -126,6 +126,10 @@ class Launcher(object):
         # Check that filepath is specified
         if len(filepath) == 0:
             raise ValueError("Filepath must not be empty")
+        if ".." in os.path.relpath(filepath,start=os.getcwd()):
+            # Filepath must be inside
+            # Enforcing this prevents ../../../etc/passwd style attacks
+            raise ValueError("Filepath must be inside ")
         self.filepath = filepath
 
         # Check that URL is specified
