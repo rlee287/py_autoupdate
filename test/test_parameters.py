@@ -2,6 +2,7 @@ from __future__ import absolute_import, print_function
 
 from ..pyautoupdate.launcher import Launcher
 from ..pyautoupdate.exceptions import CorruptedFileWarning
+from .pytest_makevers import fixture_update_dir
 
 import os
 import warnings
@@ -45,6 +46,13 @@ def test_check_emptyURL(fixture_rm_log):
     with pytest.raises(ValueError):
         Launcher('a filepath','')
 
+def test_check_emptyVersion(fixture_update_dir):
+    """Check that error is raised with empty version doc"""
+    package = fixture_update_dir("")
+    assert os.path.isfile(Launcher.version_doc)
+    launch = Launcher('a filepath } 404','a URL that points nowhere')
+    assert not launch.version_doc_validator()
+
 @pytest.fixture(scope="function")
 def fixture_corrupt_log(request):
     """Fixture that creates corrupted log"""
@@ -81,13 +89,6 @@ def test_check_corrupted_vers(fixture_corrupt_vers):
         with warnings.catch_warnings():
             warnings.simplefilter("error",category=CorruptedFileWarning)
             launch=Launcher("123","456")
-
-# Test unnecessary due to hardcoding of updatedir
-# def test_invalid_updatedir(fixture_rm_log):
-#     """Test that checks for invalid updatdir with multiple directories"""
-#     with pytest.raises(ValueError):
-#         Launcher("123","456",newfiles="project.zip",
-#                         updatedir='downloads/extradir')
 
 def test_invalid_multdir_newfiles(fixture_rm_log):
     """Test that checks for invalid newfiles with multiple directories"""
