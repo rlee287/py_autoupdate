@@ -89,10 +89,10 @@ class Launcher(object):
                  log_level=WARNING,
                  *args,**kwargs):
         # Initialize logger
-        self.log=multiprocessing.get_logger()
+        self.log = multiprocessing.get_logger()
         self.log.setLevel(log_level)
         # Create handle to self.log only if necessary
-        if len(self.log.handlers)==0:
+        if len(self.log.handlers) == 0:
             # Create handler to sys.stderr
             multiprocessing.log_to_stderr()
         self.log.info("Initializing launcher")
@@ -138,7 +138,7 @@ class Launcher(object):
         self.url = url
 
         # URL parsing section
-        schemaobj=urlparse(self.url)
+        schemaobj = urlparse(self.url)
         # Add https schema if necessary and replace http with https
         if schemaobj.scheme not in ["","https","http"]:
             raise ValueError("Url must be http or https")

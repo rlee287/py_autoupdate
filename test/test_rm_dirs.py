@@ -43,7 +43,7 @@ def create_update_dir(request):
 def test_rm_dirs(create_update_dir):
     """Test that ensures that downloads folder is properly emptied"""
     assert os.path.isfile("project.zip")
-    launch = Launcher('all work and no play...','all play and no work...')
+    launch = Launcher('all work and no play','all play and no work')
     launch._reset_update_files()
     assert os.path.isdir(Launcher.updatedir)
     # Check that directory is empty
