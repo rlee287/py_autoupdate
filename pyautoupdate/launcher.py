@@ -12,8 +12,8 @@ import tempfile
 import warnings
 
 # Module in different place depending on python version
-if version_info[0]==2: # pragma: no branch
-    from urlparse import urlparse,urlunparse
+if version_info[0] == 2: # pragma: no branch
+    from urlparse import urlparse, urlunparse
 else:
     from urllib.parse import urlparse, urlunparse
 
@@ -548,7 +548,7 @@ class Launcher(object):
             self.log.debug("Acquiring code log to update files")
             has_lock = self.update.acquire(False)
             if not has_lock:
-                self.log.warn("Could not acquire lock to update files")
+                self.log.warning("Could not acquire lock to update files")
                 return False
         try:
             # else (os.path.isfile(self.queue_update) and

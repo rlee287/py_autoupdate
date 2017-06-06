@@ -3,7 +3,7 @@ from setuptools import setup, find_packages
 import re
 
 with open("README.rst", mode='r') as readme_file:
-    text=readme_file.read()
+    text = readme_file.read()
 
 #below version code pulled from requests module
 with open('__init__.py', 'r') as fd:
@@ -35,9 +35,9 @@ setup(
         'Programming Language :: Python :: Implementation :: CPython',
         'Programming Language :: Python :: Implementation :: PyPy'
     ),
-    install_requires=['requests','setuptools'],
-    extras_require={
-        'testing': ['pytest','coverage']
+    install_requires = ['requests','setuptools'],
+    extras_require = {
+        'testing': ['pytest', 'coverage']
     },
     package_data={
         'testing':['*.rst']},

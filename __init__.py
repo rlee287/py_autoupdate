@@ -1,2 +1,2 @@
-__title__='pyautoupdate'
-__version__='1.0.0.post1'
+__title__ = 'pyautoupdate'
+__version__ = '1.0.0.post1'
