@@ -35,8 +35,8 @@ setup(
         'Programming Language :: Python :: Implementation :: CPython',
         'Programming Language :: Python :: Implementation :: PyPy'
     ),
-    install_requires = ['requests','setuptools'],
-    extras_require = {
+    install_requires=['requests', 'setuptools'],
+    extras_require={
         'testing': ['pytest', 'coverage']
     },
     package_data={
