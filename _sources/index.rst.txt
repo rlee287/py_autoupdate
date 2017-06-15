@@ -13,6 +13,8 @@ user's computer remains updated.
 
 Example code using Pyautoupdate can be found in :doc:`quickstart`.
 
+Pyautoupdate is released under the `LGPL 2.1 <https://www.gnu.org/licenses/old-licenses/lgpl-2.1.en.html>`__.
+
 Contents:
 
 .. toctree::
