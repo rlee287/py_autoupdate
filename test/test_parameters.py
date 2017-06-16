@@ -47,15 +47,17 @@ def test_check_emptyURL(fixture_rm_log):
         Launcher('a filepath','')
 
 def test_check_escape_path(fixture_rm_log):
-    """Check that error is raised when the path attempts to escape out of the folder"""
+    """Check that error is raised when the path
+       attempts to escape out of the folder"""
     with pytest.raises(ValueError):
-        Launcher('../../../sandboxing/undocked/from/proper/security/policies','wanna.cry.over.random.downloads')
+        Launcher('../../../sandboxing/undocked/from/security/policies',
+                 'wanna.cry.over.random.downloads')
 
-def test_check_emptyVersion(fixture_update_dir):
+def test_check_empty_version(fixture_update_dir):
     """Check that error is raised with empty version doc"""
     package = fixture_update_dir("")
     assert os.path.isfile(Launcher.version_doc)
-    launch = Launcher('a filepath } 404','a URL that points nowhere')
+    launch = Launcher('a filepath } 404', 'a URL that points nowhere')
     assert not launch.version_doc_validator()
 
 @pytest.fixture(scope="function")
