@@ -37,11 +37,9 @@ class TestRunProgram(object):
         codefail='nonexistent_eiofjeoifjdoijfkldsjf'
         codeback='import time\n'+\
                  'import os\n'+\
-                 'open(".lck","w").close()\n'+\
                  'print("start")\n'+\
                  'time.sleep(2)\n'+\
-                 'print("end")\n'+\
-                 'os.remove(".lck")\n'
+                 'print("end")\n'
         codelog='log.error("This should be an error")\n'
         for name,code in zip([filecode, filepid, filefail,
                               fileback, filelog],
@@ -123,7 +121,6 @@ class TestRunProgram(object):
         print("Exiting busyloop")
         time.sleep(0.5)
         can_terminate=launch.process_terminate()
-        os.remove(".lck")
         assert launch.process_exitcode==-15
         assert can_terminate
 
@@ -141,7 +138,6 @@ class TestRunProgram(object):
         print("Exiting busyloop")
         time.sleep(0.5)
         can_terminate=launch.process_terminate()
-        os.remove(".lck")
         assert launch.process_exitcode==-15
         assert can_terminate
         exitcode=launch.run(True)
@@ -151,7 +147,7 @@ class TestRunProgram(object):
 
     def test_background(self):
         """Test that runs code in the background.
-        
+
         ASCII art depicting timeline shown below:
           0        1        2        3        4 seconds|
         --+--------+--------+--------+--------+--------+
@@ -172,7 +168,7 @@ class TestRunProgram(object):
 
     def test_run_twice(self):
         """Test that runs code in the background twice.
-        
+
         ASCII art depicting timeline shown below:
           0        1        2        3        4 seconds|
         --+--------+--------+--------+--------+--------+
