@@ -33,10 +33,8 @@ def fixture_update_setup(request):
         code.write("import time\n"
                    "import os\n"
                    "print('This is the old version')\n"
-                   "q=open('.lck','w')\n"
                    "time.sleep(1)\n"
-                   "q.close()\n"
-                   "os.remove('.lck')\n")
+                   "print('Quitting')\n")
     with open(os.path.join("extradir","dummy.txt"), mode='w') as extra_file:
         extra_file.write("1984: 2+2=5")
     with open(Launcher.file_list, mode='w') as filelist:
