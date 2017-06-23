@@ -7,6 +7,7 @@ import os
 import pprint
 import re
 import shutil
+import signal
 from sys import version_info
 import tempfile
 import warnings
@@ -23,7 +24,7 @@ from setuptools.archive_util import unpack_archive, UnrecognizedFormat
 import requests
 
 from ._file_glob import copy_glob
-from .exceptions import ProcessRunningException, CorruptedFileWarning
+from .exceptions import *
 
 
 class Launcher(object):
@@ -220,6 +221,9 @@ class Launcher(object):
     @property
     def process_is_alive(self):
         """Property indicating whether the process is alive"""
+        #if self.past_terminated:
+        #    return False
+        #else:
         return self.__process.is_alive()
 
     @property
@@ -240,12 +244,11 @@ class Launcher(object):
     @property
     def process_exitcode(self):
         """Property indicating the process exitcode, if it exists"""
-        if self.past_terminated:
+        #if self.past_terminated:
             # SIGTERM is signal 15 on Linux
             # Preserve compatibility on Windows
-            return -15
-        else:
-            return self.__process.exitcode
+        #else:
+        return self.__process.exitcode
 
     def process_join(self, timeout=None):
         """Joins the process"""
@@ -274,14 +277,7 @@ class Launcher(object):
             # Release lock to avoid update deadlock later
             self.log.debug("Releasing code lock after termination")
             self.update.release()
-            # Reinitialize process now because is_alive is not properly reset
-            # After a process termination
-            self.log.debug("Reinitializing process object after termination")
-            self.__process = None
-            self.__process = multiprocessing.Process(target=
-                                                     self._call_code,
-                                                     args=self.args,
-                                                     kwargs=self.kwargs)
+            # is_alive is not properly reset after termination
             self.past_terminated = True
             return True
         else:
@@ -304,6 +300,9 @@ class Launcher(object):
               End users should never call this directly.
               Please use the :meth:`run` method instead.
         """
+        # Reset past_terminated to False
+        # (if terminated and rerun, past_terminated should be false)
+        self.past_terminated = False
         # Open code file
         # Acquire lock here to avoid TOCTTOU issues with opened code file
         # multiprocessing.get_logger again since this is not pickleable
@@ -331,6 +330,10 @@ class Launcher(object):
                         pprint.pformat(localvar))
         # Execute code in file
         local_log.info("Starting code from file")
+        def empty_function(arg1, arg2):
+            print("Process terminated: print from signal handler")
+            print("Greppable")
+        signal.signal(signal.SIGTERM,empty_function)
         try:
             self.__process_alive.set()
             exec(code, dict(), localvar)
@@ -338,9 +341,6 @@ class Launcher(object):
             local_log.debug("Releasing code lock after running code")
             self.update.release()
             self.__process_alive.clear()
-            # Reset past_terminated to False
-            # (if terminated and rerun, past_terminated should be false)
-            self.past_terminated = False
 
     def run(self, background=False):
         """Runs the user code.
@@ -396,6 +396,7 @@ class Launcher(object):
             # Should never happen
             self.log.error("Process exitcode exists without PID!")
             self.log.error("The application is probably in an unstable state.")
+            raise PyautoupdateBaseException
 
 ######################### New code retrieval methods #########################
 
