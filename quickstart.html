@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Quickstart &#8212; pyautoupdate 1.0.0.post1+3542b9e documentation</title>
+    <title>Quickstart &#8212; pyautoupdate 1.0.0.post1+7bb3466 documentation</title>
     
     <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    './',
-        VERSION:     '1.0.0.post1+3542b9e',
+        VERSION:     '1.0.0.post1+7bb3466',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -48,18 +48,20 @@
 <h1>Quickstart<a class="headerlink" href="#quickstart" title="Permalink to this headline">¶</a></h1>
 <p>To set up an initial version, you will need the following files:</p>
 <ul class="simple">
-<li><code class="docutils literal"><span class="pre">code_1.py</span></code></li>
-<li><code class="docutils literal"><span class="pre">code_2.py</span></code></li>
-<li><code class="docutils literal"><span class="pre">entry_point.py</span></code></li>
+<li>Code file that creates launcher (referred to below as <code class="docutils literal"><span class="pre">entry_point.py</span></code>)</li>
+<li>Auxilliary code files passed into launcher</li>
 <li><code class="docutils literal"><span class="pre">version.txt</span></code> contains the version number.</li>
 <li><code class="docutils literal"><span class="pre">filelist.txt</span></code> contains a list of paths of the code and resource files.</li>
 </ul>
-<p>Install these files into the user’s location when first starting.</p>
-<p>To create the server versions, replicate code files and the layout
-in a directory and compress the directory into a
+<p>Package these files into your application installer.
+This is the initial version on the end user’s computer.</p>
+<p>To create new versions, copy the code files into a directory
+and compress the directory into a
 <code class="docutils literal"><span class="pre">.zip</span></code>, <code class="docutils literal"><span class="pre">.tar.gz</span></code>, or a <code class="docutils literal"><span class="pre">.tar.bz2</span></code> archive.</p>
 <p>Upload the archive to the server and place a <code class="docutils literal"><span class="pre">version.txt</span></code>
-containing the version number in the same direcotry as the archive.</p>
+containing the version number in the same directory as the archive.
+Pyautoupdate will then download the new version when performing updates
+and replace the old code files with the new ones.</p>
 <p>More details about the required files can be found in <a class="reference internal" href="project.html"><span class="doc">Project Structure</span></a>.</p>
 <p>This is a sample <code class="docutils literal"><span class="pre">entry_point.py</span></code> file.py, including an update check
 before code execution.</p>

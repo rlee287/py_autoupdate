@@ -3,20 +3,22 @@ Quickstart
 
 To set up an initial version, you will need the following files:
 
--  ``code_1.py``
--  ``code_2.py``
--  ``entry_point.py``
+-  Code file that creates launcher (referred to below as ``entry_point.py``)
+-  Auxilliary code files passed into launcher
 -  ``version.txt`` contains the version number.
 -  ``filelist.txt`` contains a list of paths of the code and resource files.
 
-Install these files into the user's location when first starting.
+Package these files into your application installer.
+This is the initial version on the end user's computer.
 
-To create the server versions, replicate code files and the layout
-in a directory and compress the directory into a
+To create new versions, copy the code files into a directory
+and compress the directory into a
 ``.zip``, ``.tar.gz``, or a ``.tar.bz2`` archive.
 
 Upload the archive to the server and place a ``version.txt``
-containing the version number in the same direcotry as the archive.
+containing the version number in the same directory as the archive.
+Pyautoupdate will then download the new version when performing updates
+and replace the old code files with the new ones.
 
 More details about the required files can be found in :doc:`project`.
 
