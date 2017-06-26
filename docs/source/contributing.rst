@@ -12,6 +12,8 @@ as explained below.
 Environment Setup
 -----------------
 
+Please see the project README for a full list of dependencies.
+
 Pyautoupdate uses `pytest <https://docs.pytest.org/en/latest/>`__. To run the unit tests, please run
 
 .. code-block:: none
