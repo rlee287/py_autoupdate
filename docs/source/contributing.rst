@@ -6,13 +6,13 @@ When contributing, please follow the
 `PSF Code of Conduct <https://www.python.org/psf/codeofconduct/>`__,
 a copy of which is included in ``PSFCodeOfConduct.rst``.
 
-Github's issues are used for bugtracking and feature requests. Please
-see the details below:
+Github's issues are used for tracking bugs and requesting features,
+as explained below.
 
 Environment Setup
 -----------------
 
-To run the tests, please run
+Pyautoupdate uses `pytest <https://docs.pytest.org/en/latest/>`__. To run the unit tests, please run
 
 .. code-block:: none
 
@@ -20,8 +20,9 @@ To run the tests, please run
 
 in the root directory of the repo. The config file is ``pytest.ini``.
 
-Alternately, the wrapper scripts in ``test/scripts`` can be used
-to get a coverage report after running tests.
+The wrapper scripts in ``test/scripts`` use
+`coverage.py <https://coverage.readthedocs.io/>`__ to create
+a coverage report after running tests.
 
 Filing an Issue
 ---------------
@@ -73,24 +74,20 @@ ready for consideration.
 By approving a Pull Request, the author(s) signify that their
 contribution satisfies the
 `Developer Certificate of Origin <http://developercertificate.org/>`__,
-a copy of which has been included in
-``DeveloperCertificateOrigin.txt``.
+a copy of which has been included in ``DeveloperCertificateOrigin.txt``.
 
-When creating a non-release Pull Request, please include the following:
+All tests on `Travis CI <https://travis-ci.org/>`__ must pass.
+Please explain any new xfailed tests in the Pull Request description.
+In addition, all code must be simultaneously compatible with both
+Python 2 and 3. The Travis CI build will help to ensure this.
+
+Moreover, please make sure that new code is covered by new tests. Coverage for the project is tracked on `CodeCov <https://codecov.io/>`__.
+When creating a Pull Request, please include the following:
 
 -  An issue number that this Pull Request addresses **OR**
--  A short description of the problem the Pull Request addresses (please
-   file an issue for large problems)
+-  A short description of the problem the Pull Request addresses
 -  A description of the implementation of the bug fix/feature
 
-All code must be compatible with both Python 2 and 3.
-To ensure this, all tests on `Travis CI <https://travis-ci.org/>`__
-must pass.
-This will help to ensure Python 2 and 3 compatibility.
-
-In addition, please make sure that test coverage, as measured on
-`CodeCov <https://codecov.io/>`__, does not decrease significantly.
-
-Although exceptions may be made depending on circumstances,
-a pull request is less likely to be merged if code coverage decreases
-significantly.
+If you are fixing a new large issue in your Pull Request, please file an issue
+concurrently with the Pull Request and link to the issue number in the Pull
+Request.
