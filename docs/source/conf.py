@@ -67,29 +67,33 @@ copyright = '{0} by {1}'.format(datetime.datetime.now().year, author)
 #Below version code pulled from requests module
 with open(os.path.abspath('../../__init__.py'), 'r') as fd:
     version_number = re.search(r'^__version__\s*=\s*[\'"]([^\'"]*)[\'"]',
-                        fd.read(), re.MULTILINE).group(1)
+                               fd.read(), re.MULTILINE).group(1)
 if not version_number:
     raise RuntimeError('Cannot find version information')
 
 # Get git hash without relying on the command line or on tools like gitpython
 if os.path.isdir("../../.git"):
     assert os.path.isfile("../../.git/HEAD")
-    with open("../../.git/HEAD",'r') as fd:
-        commit_hash=fd.read()
-        try: # is alreay hexadecimal
-            int(commit_hash,16)
+    # Examine HEAD
+    with open("../../.git/HEAD", 'r') as fd:
+        commit_hash = fd.read()
+        try: # Detached head means HEAD is already hexadecimal
+            # This will throw an error if HEAD is not detached
+            int(commit_hash, 16)
             # 40 41 42 depending on \n or \r\n
             if len(commit_hash) not in [40,41,42]:
                 raise ValueError
-        except ValueError: # is ref: refs/heads/*
-            commit_hash=commit_hash.split()
-            assert len(commit_hash)==2
-            commit_hash=commit_hash[1]
+        except ValueError: # is "ref: refs/heads/*""
+            commit_hash = commit_hash.split()
+            assert len(commit_hash) == 2
+            commit_hash = commit_hash[1]
             # Dereference branch pointer
-            assert os.path.isfile(os.path.join("../../.git",commit_hash))
-            with open(os.path.join("../../.git",commit_hash),'r') as fd2:
-                commit_hash=fd2.read()
+            head_ref = os.path.join("../../.git", commit_hash)
+            assert os.path.isfile(head_ref)
+            with open(head_ref,'r') as fd2:
+                commit_hash = fd2.read()
                 try:
+                    # This will throw an error if HEAD is not detached
                     int(commit_hash,16)
                     # 40 41 42 depending on \n or \r\n
                     if len(commit_hash) not in [40,41,42]:
