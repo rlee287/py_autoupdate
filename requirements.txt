@@ -1,2 +1,3 @@
 pyautoupdate
-requests==2.10.0
+requests
+setuptools
