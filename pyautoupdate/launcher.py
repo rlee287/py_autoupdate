@@ -28,7 +28,8 @@ from .exceptions import *
 
 
 class Launcher(object):
-    """Creates a :class:`Launcher` object.
+    """Creates a :class:`Launcher` object. This class provides the main
+    functionality of the Pyautoupdate module.
 
     :param str filepath: Path to file to execute
     :param str url: Base URL from which to download new versions
@@ -40,14 +41,15 @@ class Launcher(object):
 
     :param str newfiles: Name of archive with new versions to download from
      site
-    :param int log_level: Logging level for the built in logger
-    :param tuple args: ``args`` passed to the launched code
-    :param dict kwargs: ``kwargs`` passed to the launched code
 
     .. note::
 
        The supported archive formats are ``.zip``, ``.tar.gz``,
        and ``.tar.bz2``.
+
+    :param int log_level: Logging level for the built in logger
+    :param tuple args: ``args`` passed to the launched code
+    :param dict kwargs: ``kwargs`` passed to the launched code
 
     When the code is launched, certain variables are already defined as
     follows:
@@ -76,6 +78,8 @@ class Launcher(object):
        to run the code.
 
        Please ensure that all ``args`` and ``kwargs`` can be pickled.
+       If they are not pickleable, they cannot be passed to the child process
+       on Windows, and an error will be raised when attempting to run user code.
     """
 
     version_doc = "version.txt"

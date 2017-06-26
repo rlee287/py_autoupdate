@@ -57,7 +57,9 @@ def test_check_update_nourl(fixture_update_dir):
 def remove_dump(request):
     """Fixture to remove error dump"""
     def teardown():
-        for glob_file in glob.iglob("newverdump*"):
+        glob_list = glob.glob("newverdump*")
+        assert len(glob_list) == 1
+        for glob_file in glob_list:
             os.remove(glob_file)
     request.addfinalizer(teardown)
     return remove_dump
