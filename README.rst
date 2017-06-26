@@ -40,7 +40,7 @@ Development Dependencies
 License
 -------
 
-LGPL 2.1
+Pyautoupdate is licensed under the `LGPL 2.1 <https://www.gnu.org/licenses/old-licenses/lgpl-2.1.en.html>`__
 
 .. |pyautoupdate_logo| image:: https://rlee287.github.io/pyautoupdate/_static/images/pyautoupdate_logo.svg
    :alt: Pyautoupdate Logo
