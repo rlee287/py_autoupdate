@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>pyautoupdate.launcher &#8212; pyautoupdate 1.0.0.post1+8d199c9 documentation</title>
+    <title>pyautoupdate.launcher &#8212; pyautoupdate 1.0.0.post1+b3c5d6d documentation</title>
     
     <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../',
-        VERSION:     '1.0.0.post1+8d199c9',
+        VERSION:     '1.0.0.post1+b3c5d6d',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -72,7 +72,8 @@
 
 
 <div class="viewcode-block" id="Launcher"><a class="viewcode-back" href="../../pyautoupdate.html#pyautoupdate.Launcher">[docs]</a><span class="k">class</span> <span class="nc">Launcher</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Creates a :class:`Launcher` object.</span>
+    <span class="sd">&quot;&quot;&quot;Creates a :class:`Launcher` object. This class provides the main</span>
+<span class="sd">    functionality of the Pyautoupdate module.</span>
 
 <span class="sd">    :param str filepath: Path to file to execute</span>
 <span class="sd">    :param str url: Base URL from which to download new versions</span>
@@ -84,14 +85,15 @@
 
 <span class="sd">    :param str newfiles: Name of archive with new versions to download from</span>
 <span class="sd">     site</span>
-<span class="sd">    :param int log_level: Logging level for the built in logger</span>
-<span class="sd">    :param tuple args: ``args`` passed to the launched code</span>
-<span class="sd">    :param dict kwargs: ``kwargs`` passed to the launched code</span>
 
 <span class="sd">    .. note::</span>
 
 <span class="sd">       The supported archive formats are ``.zip``, ``.tar.gz``,</span>
 <span class="sd">       and ``.tar.bz2``.</span>
+
+<span class="sd">    :param int log_level: Logging level for the built in logger</span>
+<span class="sd">    :param tuple args: ``args`` passed to the launched code</span>
+<span class="sd">    :param dict kwargs: ``kwargs`` passed to the launched code</span>
 
 <span class="sd">    When the code is launched, certain variables are already defined as</span>
 <span class="sd">    follows:</span>
@@ -120,6 +122,8 @@
 <span class="sd">       to run the code.</span>
 
 <span class="sd">       Please ensure that all ``args`` and ``kwargs`` can be pickled.</span>
+<span class="sd">       If they are not pickleable, they cannot be passed to the child process</span>
+<span class="sd">       on Windows, and an error will be raised when attempting to run user code.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">version_doc</span> <span class="o">=</span> <span class="s2">&quot;version.txt&quot;</span>

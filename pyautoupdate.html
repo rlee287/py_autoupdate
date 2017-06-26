@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Pyautoupdate API &#8212; pyautoupdate 1.0.0.post1+8d199c9 documentation</title>
+    <title>Pyautoupdate API &#8212; pyautoupdate 1.0.0.post1+b3c5d6d documentation</title>
     
     <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    './',
-        VERSION:     '1.0.0.post1+8d199c9',
+        VERSION:     '1.0.0.post1+b3c5d6d',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -51,7 +51,8 @@
 <dl class="class">
 <dt id="pyautoupdate.Launcher">
 <em class="property">class </em><code class="descclassname">pyautoupdate.</code><code class="descname">Launcher</code><span class="sig-paren">(</span><em>filepath</em>, <em>url</em>, <em>newfiles=’project.zip’</em>, <em>log_level=30</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyautoupdate/launcher.html#Launcher"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyautoupdate.Launcher" title="Permalink to this definition">¶</a></dt>
-<dd><p>Creates a <a class="reference internal" href="#pyautoupdate.Launcher" title="pyautoupdate.Launcher"><code class="xref py py-class docutils literal"><span class="pre">Launcher</span></code></a> object.</p>
+<dd><p>Creates a <a class="reference internal" href="#pyautoupdate.Launcher" title="pyautoupdate.Launcher"><code class="xref py py-class docutils literal"><span class="pre">Launcher</span></code></a> object. This class provides the main
+functionality of the Pyautoupdate module.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -73,14 +74,8 @@
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>newfiles</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.6)"><em>str</em></a>) – Name of archive with new versions to download from
-site</li>
-<li><strong>log_level</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.6)"><em>int</em></a>) – Logging level for the built in logger</li>
-<li><strong>args</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.6)"><em>tuple</em></a>) – <code class="docutils literal"><span class="pre">args</span></code> passed to the launched code</li>
-<li><strong>kwargs</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.6)"><em>dict</em></a>) – <code class="docutils literal"><span class="pre">kwargs</span></code> passed to the launched code</li>
-</ul>
-</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>newfiles</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.6)"><em>str</em></a>) – Name of archive with new versions to download from
+site</td>
 </tr>
 </tbody>
 </table>
@@ -89,6 +84,19 @@ site</li>
 <p class="last">The supported archive formats are <code class="docutils literal"><span class="pre">.zip</span></code>, <code class="docutils literal"><span class="pre">.tar.gz</span></code>,
 and <code class="docutils literal"><span class="pre">.tar.bz2</span></code>.</p>
 </div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>log_level</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.6)"><em>int</em></a>) – Logging level for the built in logger</li>
+<li><strong>args</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.6)"><em>tuple</em></a>) – <code class="docutils literal"><span class="pre">args</span></code> passed to the launched code</li>
+<li><strong>kwargs</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.6)"><em>dict</em></a>) – <code class="docutils literal"><span class="pre">kwargs</span></code> passed to the launched code</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
 <p>When the code is launched, certain variables are already defined as
 follows:</p>
 <table border="1" class="docutils">
@@ -129,7 +137,9 @@ follows:</p>
 <p class="first admonition-title">Warning</p>
 <p>The <a class="reference internal" href="#pyautoupdate.Launcher" title="pyautoupdate.Launcher"><code class="xref py py-class docutils literal"><span class="pre">Launcher</span></code></a> uses <a class="reference external" href="https://docs.python.org/3/library/multiprocessing.html#multiprocessing.Process" title="(in Python v3.6)"><code class="xref py py-class docutils literal"><span class="pre">multiprocessing.Process</span></code></a>
 to run the code.</p>
-<p class="last">Please ensure that all <code class="docutils literal"><span class="pre">args</span></code> and <code class="docutils literal"><span class="pre">kwargs</span></code> can be pickled.</p>
+<p class="last">Please ensure that all <code class="docutils literal"><span class="pre">args</span></code> and <code class="docutils literal"><span class="pre">kwargs</span></code> can be pickled.
+If they are not pickleable, they cannot be passed to the child process
+on Windows, and an error will be raised when attempting to run user code.</p>
 </div>
 <dl class="method">
 <dt id="pyautoupdate.Launcher._call_code">
