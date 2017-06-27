@@ -39,12 +39,12 @@ def test_check_url_noschema(fixture_rm_log):
 def test_check_emptyfilepath(fixture_rm_log):
     """Check that error is raised with empty file"""
     with pytest.raises(ValueError):
-        Launcher('','a url')
+        Launcher('', 'a url')
 
 def test_check_emptyURL(fixture_rm_log):
     """Check that error is raised with empty URL"""
     with pytest.raises(ValueError):
-        Launcher('a filepath','')
+        Launcher('a filepath', '')
 
 def test_check_escape_path(fixture_rm_log):
     """Check that error is raised when the path
@@ -63,9 +63,9 @@ def test_check_empty_version(fixture_update_dir):
 @pytest.fixture(scope="function")
 def fixture_corrupt_log(request):
     """Fixture that creates corrupted log"""
-    with open(Launcher.version_check_log,"w") as log:
+    with open(Launcher.version_check_log, "w") as log:
         log.write("invalid!gibberish")
-    open(Launcher.version_doc,"w").close()
+    open(Launcher.version_doc, "w").close()
     def teardown():
         os.remove(Launcher.version_check_log)
         os.remove(Launcher.version_doc)
@@ -75,7 +75,7 @@ def fixture_corrupt_log(request):
 @pytest.fixture(scope="function")
 def fixture_corrupt_vers(request):
     """Fixture that creates invalid version file"""
-    with open(Launcher.version_doc,"w") as vers_file:
+    with open(Launcher.version_doc, "w") as vers_file:
         vers_file.write("invalid?version")
     def teardown():
         if os.path.isfile(Launcher.version_doc):
@@ -87,22 +87,22 @@ def test_check_corrupted_log(fixture_corrupt_log):
     """Test that checks for corrupted log error"""
     with pytest.raises(CorruptedFileWarning):
         with warnings.catch_warnings():
-            warnings.simplefilter("error",category=CorruptedFileWarning)
-            launch=Launcher("123","456")
+            warnings.simplefilter("error", category=CorruptedFileWarning)
+            Launcher("123", "456")
 
 def test_check_corrupted_vers(fixture_corrupt_vers):
     """Test that checks for corrupted version error"""
     with pytest.raises(CorruptedFileWarning):
         with warnings.catch_warnings():
-            warnings.simplefilter("error",category=CorruptedFileWarning)
-            launch=Launcher("123","456")
+            warnings.simplefilter("error", category=CorruptedFileWarning)
+            Launcher("123", "456")
 
 def test_invalid_multdir_newfiles(fixture_rm_log):
     """Test that checks for invalid newfiles with multiple directories"""
     with pytest.raises(ValueError):
-        Launcher("123","456",newfiles="project.zip/hahaha")
+        Launcher("123", "456", newfiles="project.zip/hahaha")
 
 def test_invalid_ext_newfiles(fixture_rm_log):
     """Test that checks for invalid newfiles with wrong file extension"""
     with pytest.raises(ValueError):
-        Launcher("qwe","rty",newfiles='project.txt')
+        Launcher("qwe", "rty", newfiles='project.txt')

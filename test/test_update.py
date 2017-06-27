@@ -35,7 +35,7 @@ def fixture_update_setup(request):
                    "print('This is the old version')\n"
                    "time.sleep(1)\n"
                    "print('Quitting')\n")
-    with open(os.path.join("extradir","dummy.txt"), mode='w') as extra_file:
+    with open(os.path.join("extradir", "dummy.txt"), mode='w') as extra_file:
         extra_file.write("1984: 2+2=5")
     with open(Launcher.file_list, mode='w') as filelist:
         filelist.write("extradir/blah.py")
@@ -49,17 +49,17 @@ def test_update(fixture_update_setup):
     launch = Launcher('extradir/blah.py',
                       r'http://rlee287.github.io/pyautoupdate/'
                       '_static/testing/',
-                      'project.zip',DEBUG)
-    could_update=launch.update_code()
+                      'project.zip', DEBUG)
+    could_update = launch.update_code()
     assert could_update
     assert not os.path.isfile(Launcher.queue_update)
     assert os.path.isfile("extradir/blah.py")
     with open(os.path.abspath("extradir/blah.py"), "r") as file_code:
-        file_text=file_code.read()
+        file_text = file_code.read()
     assert "new version" in file_text
     assert os.path.isfile(Launcher.file_list)
-    excode=launch.run()
-    assert excode==0
+    excode = launch.run()
+    assert excode == 0
 
 @pytest.mark.trylast
 @needinternet
@@ -69,15 +69,15 @@ def test_run_lock_update(fixture_update_setup):
     launch = Launcher('extradir/blah.py',
                       r'http://rlee287.github.io/pyautoupdate/'
                       '_static/testing/',
-                      'project.zip',DEBUG)
+                      'project.zip', DEBUG)
     launch.run(True)
     while not launch.process_code_running:
         pass
-    could_update_while_run=launch.update_code()
+    could_update_while_run = launch.update_code()
     assert not could_update_while_run
     launch.process_join()
-    assert launch.process_exitcode==0
-    could_update=launch.update_code()
+    assert launch.process_exitcode == 0
+    could_update = launch.update_code()
     assert could_update
     assert not os.path.isfile(Launcher.queue_update)
     assert not os.path.isfile(Launcher.queue_replace)
