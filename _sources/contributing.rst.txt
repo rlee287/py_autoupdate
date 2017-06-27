@@ -12,7 +12,15 @@ as explained below.
 Environment Setup
 -----------------
 
-Please see the project README for a full list of dependencies.
+In addition to the core dependencies in :doc:`quickstart`, development also requires the following packages:
+
+-  ``pytest`` for running the tests
+-  ``coverage`` to measure coverage
+
+The following packages are optional but recommended:
+
+-  ``pylint`` for local code style checks
+-  ``sphinx`` for building documentation
 
 Pyautoupdate uses `pytest <https://docs.pytest.org/en/latest/>`__. To run the unit tests, please run
 

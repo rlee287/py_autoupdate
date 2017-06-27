@@ -1,6 +1,11 @@
 Quickstart
 ==========
 
+The core dependencies are
+
+-  ``requests`` for retrieving updated versions
+-  ``setuptools`` for archive manipulation and version comparison
+
 To set up an initial version, you will need the following files:
 
 -  Code file that creates launcher (referred to below as ``entry_point.py``)
