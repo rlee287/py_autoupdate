@@ -15,11 +15,30 @@ ctrl_c ()
 }
 
 tempclone=$(mktemp -p . -d "doc_build_clone.XXXXXXXX")
-if [ "$TRAVIS_BRANCH" != "develop" ]; then
-  echo "Not currently on branch develop"
+if [ "$DOCBUILD" != true ]; then
+  echo "Will not build documentation."
+  ctrl_c
+  exit 0
+else
+  if [ "$TRAVIS_BRANCH" != "develop" ]; then
+    echo "Not currently on branch develop"
+    echo "Only verification will be performed."
+  fi
 fi
-if [ "$DOCBUILD" != true ] || [ "$TRAVIS_BRANCH" != "develop" ]; then
-  echo "Only verification will be performed."
+echo "Checking for changed documentation"
+# If merge commit, assume changes
+merge_indicator=0
+git show HEAD^2 &> /dev/null
+if [ $? -eq 0 ]; then
+  merge_indicator=1
+fi
+git diff HEAD^ HEAD docs --quiet
+hasdiff=$?
+if [ $hasdiff -eq 0 ] && [ $merge_indicator -eq 0 ]; then
+    echo "Documentation has not changed"
+    echo "No need to update"
+    ctrl_c
+    exit 0
 fi
 echo "Building documentation"
 cd docs
@@ -45,6 +64,11 @@ if [ "$DOCBUILD" != true ] || [ "$TRAVIS_BRANCH" != "develop" ]; then
   echo "Exiting after doc verification"
   ctrl_c
   exit 0
+fi
+if [ "$TRAVIS_PULL_REQUEST" != "false" ]; then
+    echo "Skipping deployment of doc on Pull Request build"
+    ctrl_c
+    exit 0
 fi
 cd docs/build/html
 builtdocs=$PWD
@@ -94,20 +118,6 @@ git diff --stat
 # Running on Travis CI Server
 git config --local user.name TravisCIDocBuild
 git config --local user.email travis_build@nonexistent.email
-echo "Checking for changed documentation"
-git diff --quiet
-hasdiff=$?
-if [ $hasdiff -eq 0 ]; then
-    echo "Documentation has not changed"
-    echo "No need to update"
-    ctrl_c
-    exit 0
-fi
-if [ "$TRAVIS_PULL_REQUEST" != "false" ]; then
-    echo "Skipping deployment of doc on Pull Request build"
-    ctrl_c
-    exit 0
-fi
 cat << EOF > commitmessage
 Sphinx rebuild
 
