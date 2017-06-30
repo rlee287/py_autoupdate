@@ -32,7 +32,7 @@ git show HEAD^2 &> /dev/null
 if [ $? -eq 0 ]; then
   merge_indicator=1
 fi
-git diff HEAD^ HEAD docs --quiet
+git diff HEAD^ HEAD --quiet docs
 hasdiff=$?
 if [ $hasdiff -eq 0 ] && [ $merge_indicator -eq 0 ]; then
     echo "Documentation has not changed"
