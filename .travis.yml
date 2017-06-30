@@ -28,7 +28,6 @@ matrix:
       os: linux
 cache:
   pip: true
-  directories: "$HOME/.pylint.d"
 notifications:
   email: false
   webhooks:
