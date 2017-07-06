@@ -32,7 +32,8 @@ git show HEAD^2 &> /dev/null
 if [ $? -eq 0 ]; then
   merge_indicator=1
 fi
-git diff HEAD^ HEAD --quiet docs
+# .rst sources are in docs and in pyautoupdate (via autodoc extension)
+git diff HEAD^ HEAD --quiet docs pyautoupdate
 hasdiff=$?
 if [ $hasdiff -eq 0 ] && [ $merge_indicator -eq 0 ]; then
     echo "Documentation has not changed"
@@ -40,6 +41,7 @@ if [ $hasdiff -eq 0 ] && [ $merge_indicator -eq 0 ]; then
     ctrl_c
     exit 0
 fi
+
 echo "Building documentation"
 cd docs
 sphinx-build -b html -d build/doctrees source build/html
