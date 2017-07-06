@@ -5,13 +5,13 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>Pyautoupdate API &#8212; pyautoupdate 1.0.0.post1+fa4e228 documentation</title>
+    <title>Pyautoupdate API &#8212; pyautoupdate 1.0.0.post1+c0ac43b documentation</title>
     <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    './',
-        VERSION:     '1.0.0.post1+fa4e228',
+        VERSION:     '1.0.0.post1+c0ac43b',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -135,14 +135,14 @@ follows:</p>
 <p>The <a class="reference internal" href="#pyautoupdate.Launcher" title="pyautoupdate.Launcher"><code class="xref py py-class docutils literal"><span class="pre">Launcher</span></code></a> uses <a class="reference external" href="https://docs.python.org/3/library/multiprocessing.html#multiprocessing.Process" title="(in Python v3.6)"><code class="xref py py-class docutils literal"><span class="pre">multiprocessing.Process</span></code></a>
 to run the code.</p>
 <p class="last">Please ensure that all <code class="docutils literal"><span class="pre">args</span></code> and <code class="docutils literal"><span class="pre">kwargs</span></code> can be pickled.
-If they are not pickleable, they cannot be passed to the child process
-on Windows, and an error will be raised when attempting to run user code.</p>
+Non-pickleable arguments cannot be passed to the child process on
+Windows, and an error will be raised when attempting to run user code.</p>
 </div>
 <dl class="method">
 <dt id="pyautoupdate.Launcher._call_code">
 <code class="descname">_call_code</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyautoupdate/launcher.html#Launcher._call_code"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyautoupdate.Launcher._call_code" title="Permalink to this definition">¶</a></dt>
 <dd><p>Internal function to execute the user code.</p>
-<p>This is internally used as target of a
+<p>This is used as target of a
 <a class="reference external" href="https://docs.python.org/3/library/multiprocessing.html#multiprocessing.Process" title="(in Python v3.6)"><code class="xref py py-class docutils literal"><span class="pre">multiprocessing.Process</span></code></a> instance.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -189,7 +189,8 @@ Please use the <a class="reference internal" href="#pyautoupdate.Launcher.run" t
 <dt id="pyautoupdate.Launcher._reset_update_files">
 <code class="descname">_reset_update_files</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyautoupdate/launcher.html#Launcher._reset_update_files"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyautoupdate.Launcher._reset_update_files" title="Permalink to this definition">¶</a></dt>
 <dd><p>Resets the update directory to its default state.</p>
-<p>It also creates a new update directory if one doesn’t exist.</p>
+<p>It empties the existing update directory or creates a new one
+if it doesn’t exist.</p>
 </dd></dl>
 
 <dl class="method">
@@ -240,6 +241,8 @@ process takes time to start up before running the user code.</p>
 <dt id="pyautoupdate.Launcher.process_is_alive">
 <code class="descname">process_is_alive</code><a class="headerlink" href="#pyautoupdate.Launcher.process_is_alive" title="Permalink to this definition">¶</a></dt>
 <dd><p>Property indicating whether the process is alive</p>
+<p>To see if user code is running, please use
+<code class="docutils literal"><span class="pre">Launcher.process_code_running</span></code>.</p>
 </dd></dl>
 
 <dl class="method">
@@ -310,9 +313,17 @@ little protection for user supplied code in case of termination.</p>
 <dl class="method">
 <dt id="pyautoupdate.Launcher.update_code">
 <code class="descname">update_code</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyautoupdate/launcher.html#Launcher.update_code"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyautoupdate.Launcher.update_code" title="Permalink to this definition">¶</a></dt>
-<dd><p>Updates the code if necessary.
-:return: Whether update succeeded
-:rtype: bool</p>
+<dd><p>Updates the code if necessary.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Whether update succeeded</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.6)">bool</a></td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="attribute">

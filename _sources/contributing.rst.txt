@@ -15,7 +15,7 @@ Environment Setup
 In addition to the core dependencies in :doc:`quickstart`, development also requires the following packages:
 
 -  ``pytest`` for running the tests
--  ``coverage`` to measure coverage
+-  ``coverage.py`` to measure coverage
 
 The following packages are optional for development but recommended:
 
@@ -30,9 +30,8 @@ Pyautoupdate uses `pytest <https://docs.pytest.org/en/latest/>`__. To run the un
 
 in the root directory of the repo. The config file is ``pytest.ini``.
 
-The wrapper scripts in ``test/scripts`` use
-`coverage.py <https://coverage.readthedocs.io/>`__ to create
-a coverage report after running tests.
+To get coverage measurements, use the wrapper scripts in ``test/scripts``
+to get a coverage report after running tests.
 
 Filing an Issue
 ---------------
