@@ -41,7 +41,7 @@ def test_check_emptyfilepath(fixture_rm_log):
     with pytest.raises(ValueError):
         Launcher('', 'a url')
 
-def test_check_emptyURL(fixture_rm_log):
+def test_check_empty_url(fixture_rm_log):
     """Check that error is raised with empty URL"""
     with pytest.raises(ValueError):
         Launcher('a filepath', '')

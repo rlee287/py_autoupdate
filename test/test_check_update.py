@@ -65,7 +65,7 @@ def remove_dump(request):
     return remove_dump
 
 @needinternet
-def test_check_update_invalidvers(fixture_update_dir,remove_dump):
+def test_check_update_invalidvers(fixture_update_dir, remove_dump):
     """Test that ensures that updates occur when needed"""
     package = fixture_update_dir("0.0.1")
     launch = Launcher('blah',

@@ -12,11 +12,11 @@ def create_update_dir(request):
        including the project.zip file
     """
     os.mkdir(Launcher.updatedir)
-    files=['tesfeo','fjfesf','fihghg']
-    filedir=[os.path.join(Launcher.updatedir,fi) for fi in files]
-    os.mkdir(os.path.join(Launcher.updatedir,'subfolder'))
-    filedir.append(os.path.join(Launcher.updatedir,'subfolder','oweigjoewig'))
-    if sys.version_info[0]==2:
+    files = ['tesfeo','fjfesf','fihghg']
+    filedir = [os.path.join(Launcher.updatedir,fi) for fi in files]
+    os.mkdir(os.path.join(Launcher.updatedir, 'subfolder'))
+    filedir.append(os.path.join(Launcher.updatedir, 'subfolder', 'oweigjoewig'))
+    if sys.version_info[0] == 2:
         empty_zip_data = 'PK\x05\x06\x00\x00\x00\x00\x00\x00\x00\x00\x00'+\
                          '\x00\x00\x00\x00\x00\x00\x00\x00\x00'
     else:
@@ -32,7 +32,7 @@ def create_update_dir(request):
             if os.path.isfile(file_path):
                 os.unlink(file_path)
                 # Perhaps move into main test?
-                raise AssertionError# fail test if files exist
+                raise AssertionError # fail test if files exist
         os.rmdir(Launcher.updatedir)
         os.remove(Launcher.version_check_log)
         if os.path.isfile("project.zip"):
@@ -43,9 +43,9 @@ def create_update_dir(request):
 def test_rm_dirs(create_update_dir):
     """Test that ensures that downloads folder is properly emptied"""
     assert os.path.isfile("project.zip")
-    launch = Launcher('all work and no play','all play and no work')
+    launch = Launcher('all work and no play', 'all play and no work')
     launch._reset_update_files()
     assert os.path.isdir(Launcher.updatedir)
     # Check that directory is empty
-    assert len(os.listdir(Launcher.updatedir))==0
+    assert len(os.listdir(Launcher.updatedir)) == 0
     assert not os.path.isfile("project.zip")
