@@ -17,11 +17,11 @@ def create_update_dir(request):
     os.mkdir(os.path.join(Launcher.updatedir, 'subfolder'))
     filedir.append(os.path.join(Launcher.updatedir, 'subfolder', 'oweigjoewig'))
     if sys.version_info[0] == 2:
-        empty_zip_data = 'PK\x05\x06\x00\x00\x00\x00\x00\x00\x00\x00\x00'+\
-                         '\x00\x00\x00\x00\x00\x00\x00\x00\x00'
+        empty_zip_data = ('PK\x05\x06\x00\x00\x00\x00\x00\x00\x00\x00\x00'
+                          '\x00\x00\x00\x00\x00\x00\x00\x00\x00')
     else:
-        empty_zip_data = b'PK\x05\x06\x00\x00\x00\x00\x00\x00\x00\x00\x00'+\
-                         b'\x00\x00\x00\x00\x00\x00\x00\x00\x00'
+        empty_zip_data = (b'PK\x05\x06\x00\x00\x00\x00\x00\x00\x00\x00\x00'
+                          b'\x00\x00\x00\x00\x00\x00\x00\x00\x00')
     with open('project.zip', 'wb') as zip_file:
         zip_file.write(empty_zip_data)
     for each_file in filedir:

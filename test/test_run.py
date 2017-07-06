@@ -20,26 +20,29 @@ class TestRunProgram(object):
         filefail = filebase + '_fail' + '.py'
         fileback = filebase + '_back' + '.py'
         filelog = filebase + '_log' + '.py'
-        codebasic = 'import pprint\n'+\
-        'pprint.pprint(locals())\n'+\
-        'with open("'+filetext+'", mode="w") as number_file:\n'+\
-        '    l=[i**2 for i in range(20)]\n'+\
-        '    number_file.write(str(l))\n'
-        codepid = 'import os\n'+\
-                'a=os.getpid()\n'+\
-                'b=os.getppid()\n'+\
-                'c=pid\n'+\
-                'print("pid", a)\n'+\
-                'print("ppid",b)\n'+\
-                'print("LauncherPid",c)\n'+\
-                'assert b==c\n'+\
-                'assert a!=c\n'
+        codebasic = (\
+                      'import pprint\n'
+                      'pprint.pprint(locals())\n'
+                      'with open("'+filetext+'", mode="w") as number_file:\n'
+                      '    l=[i**2 for i in range(20)]\n'
+                      '    number_file.write(str(l))\n')
+        codepid = (\
+                    'import os\n'
+                    'a=os.getpid()\n'
+                    'b=os.getppid()\n'
+                    'c=pid\n'
+                    'print("pid", a)\n'
+                    'print("ppid",b)\n'
+                    'print("LauncherPid",c)\n'
+                    'assert b==c\n'
+                    'assert a!=c\n')
         codefail = 'nonexistent_eiofjeoifjdoijfkldsjf'
-        codeback = 'import time\n'+\
-                 'import os\n'+\
-                 'print("start")\n'+\
-                 'time.sleep(2)\n'+\
-                 'print("end")\n'
+        codeback = (\
+                     'import time\n'
+                     'import os\n'
+                     'print("start")\n'
+                     'time.sleep(2)\n'
+                     'print("end")\n')
         codelog = 'log.error("This should be an error")\n'
         for name, code in zip([filecode, filepid, filefail,
                                fileback, filelog],
@@ -56,7 +59,7 @@ class TestRunProgram(object):
         request.addfinalizer(teardown)
         return self.create_test_file
 
-    def test_run(self,create_test_file):
+    def test_run(self, create_test_file):
         """Basic test that confirms that code will run"""
         filebase = 'test_run_base'
         filecode = filebase+'.py'
