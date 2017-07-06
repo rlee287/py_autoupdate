@@ -16,10 +16,9 @@ The files in the directory tree below are labeled as follows:
 .. code-block:: text
 
   Root directory of project
-  ├── code_1.py
-  ├── code_2.py
+  ├── <general code files>
   ├── .pyautodownloads/ **R**
-  ├── entry_point.py
+  ├── <an entry point file that creates the launcher>
   ├── filelist.txt **RF**
   ├── project.zip (can be changed) **R**
   ├── subfolder/
@@ -27,11 +26,11 @@ The files in the directory tree below are labeled as follows:
   ├── version.txt **RE**
   └── version_history.log **R**
 
-The code starts from ``entry_point.py``,
-which initializes the :class:`Launcher` object.
+The code starts from an entry point file that initializes the
+:class:`Launcher` object.
 
 .. note ::
-   The ``entry_point.py`` or equivalent can be updated via renaming
+   The entry point file can be updated via renaming
    while in use. This is in development but is known to be possible.
 
 ``version.txt``
