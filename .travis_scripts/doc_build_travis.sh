@@ -60,7 +60,7 @@ fi
 
 SHA=$(git rev-parse --short --verify HEAD)
 
-if [ "$DOCBUILD" != true ] || [ "$TRAVIS_BRANCH" != "develop" ]; then
+if [ "$TRAVIS_BRANCH" != "develop" ]; then
   echo "Exiting after doc verification"
   ctrl_c
   exit 0
@@ -80,23 +80,18 @@ if [ $? -ne 0 ]; then
     exit 1
 fi
 pushdired=true
-if [ "$DOCBUILD" = true ]; then
-  echo "Decrypting SSH key"
-  openssl aes-256-cbc -K $encrypted_17ecf7cd0287_key -iv $encrypted_17ecf7cd0287_iv -in $builtdocs/../../../sphinx_travis_deploy.enc -out sphinx_travis_deploy -d
-    if [ -f sphinx_travis_deploy ] && [ -s sphinx_travis_deploy ]; then
-      chmod 600 sphinx_travis_deploy
-      eval $(ssh-agent -s) > /dev/null
-      ssh-add sphinx_travis_deploy > /dev/null
-      url=git@github.com:rlee287/pyautoupdate
-      echo -e "\e[0;32mDeploy key successfully decrypted\e[0m"
-    else
-      echo -e "\e[0;31mFailed to decrypt deploy key\e[0m"
-      url=https://github.com/rlee287/pyautoupdate
-    fi
-else
-  # When running locally, use https as it is easier to configure
-  url=https://github.com/rlee287/pyautoupdate
-fi
+echo "Decrypting SSH key"
+openssl aes-256-cbc -K $encrypted_17ecf7cd0287_key -iv $encrypted_17ecf7cd0287_iv -in $builtdocs/../../../sphinx_travis_deploy.enc -out sphinx_travis_deploy -d
+  if [ -f sphinx_travis_deploy ] && [ -s sphinx_travis_deploy ]; then
+    chmod 600 sphinx_travis_deploy
+    eval $(ssh-agent -s) > /dev/null
+    ssh-add sphinx_travis_deploy > /dev/null
+    url=git@github.com:rlee287/pyautoupdate
+    echo -e "\e[0;32mDeploy key successfully decrypted\e[0m"
+  else
+    echo -e "\e[0;31mFailed to decrypt deploy key\e[0m"
+    url=https://github.com/rlee287/pyautoupdate
+  fi
 git clone --depth 1 -b gh-pages $url
 if [ $? -ne 0 ]; then
     echo -e "\e[0;31mFailed to clone current gh-pages repo\e[0m"
