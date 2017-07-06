@@ -2,9 +2,9 @@ language: python
 matrix:
   include:
       # Orderings to minimize build time
-      # 3.5 Documentation building first
-      # 2.7 to test Python 2
-      # 3.4 Run pylint on Python 3 as well
+      # 3.6 Documentation building first
+      # 2.7 to test Python 2 and lint on Python2
+      # 3.5 Run pylint on Python 3 as well
       # pypy3 and pypy to support pypy
       # Interleave remaining versions
     - python: '3.6'
