@@ -21,8 +21,6 @@ The files in the directory tree below are labeled as follows:
   ├── <an entry point file that creates the launcher>
   ├── filelist.txt **RF**
   ├── project.zip (can be changed) **R**
-  ├── subfolder/
-  │   └── code_3.py
   ├── version.txt **RE**
   └── version_history.log **R**
 
@@ -32,6 +30,19 @@ The code starts from an entry point file that initializes the
 .. note ::
    The entry point file can be updated via renaming
    while in use. This is in development but is known to be possible.
+
+``filelist.txt``
+*********************
+This file has the list of files for the project.
+It is used during the update process to remove the old version.
+
+``project.zip`` (or equivalent)
+*******************************
+This is the downloaded archive containing the new version.
+
+``.pyautodownloads/``
+*********************
+This directory temporarily contains the downloaded new version.
 
 ``version.txt``
 ***************
