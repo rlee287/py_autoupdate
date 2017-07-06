@@ -223,7 +223,10 @@ class Launcher(object):
 
     @property
     def process_is_alive(self):
-        """Property indicating whether the process is alive"""
+        """Property indicating whether the process is alive
+
+           To see if user code is running, please use
+           ``Launcher.process_code_running``."""
         return self.__process.is_alive()
 
     @property
@@ -297,7 +300,7 @@ class Launcher(object):
     def _call_code(self, *args, **kwargs):
         """Internal function to execute the user code.
 
-           This is internally used as target of a
+           This is used as target of a
            :class:`multiprocessing.Process` instance.
 
            :param tuple args: ``*args`` tuple from self.args
@@ -491,7 +494,8 @@ class Launcher(object):
     def _reset_update_files(self):
         """Resets the update directory to its default state.
 
-           It also creates a new update directory if one doesn't exist.
+           It empties the existing update directory or creates a new one
+           if it doesn't exist.
         """
         self.log.debug("Resetting update directory")
         if os.path.isdir(self.updatedir):
@@ -651,6 +655,7 @@ class Launcher(object):
 
     def update_code(self):
         """Updates the code if necessary.
+
            :return: Whether update succeeded
            :rtype: bool
         """
