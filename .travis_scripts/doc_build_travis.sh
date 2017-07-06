@@ -43,8 +43,12 @@ if [ $hasdiff -eq 0 ] && [ $merge_indicator -eq 0 ]; then
 fi
 
 echo "Installing sphinx"
-pip install sphinx || { echo "\e[0;31mUnable to install sphinx\e[0m" &&
-    ctrl_c && exit 1 }
+pip install sphinx
+if [ $? -ne 0 ]; then
+  echo "\e[0;31mUnable to install sphinx\e[0m"
+  ctrl_c
+  exit 1
+fi
 echo "Done installing Sphinx"
 echo "Building documentation"
 cd docs
