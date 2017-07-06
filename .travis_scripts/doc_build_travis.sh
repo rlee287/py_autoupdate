@@ -15,12 +15,33 @@ ctrl_c ()
 }
 
 tempclone=$(mktemp -p . -d "doc_build_clone.XXXXXXXX")
-if [ "$TRAVIS_BRANCH" != "develop" ]; then
-  echo "Not currently on branch develop"
+if [ "$DOCBUILD" != true ]; then
+  echo "Will not build documentation."
+  ctrl_c
+  exit 0
+else
+  if [ "$TRAVIS_BRANCH" != "develop" ]; then
+    echo "Not currently on branch develop"
+    echo "Only verification will be performed."
+  fi
 fi
-if [ "$DOCBUILD" != true ] || [ "$TRAVIS_BRANCH" != "develop" ]; then
-  echo "Only verification will be performed."
+echo "Checking for changed documentation"
+# If merge commit, assume changes
+merge_indicator=0
+git show HEAD^2 &> /dev/null
+if [ $? -eq 0 ]; then
+  merge_indicator=1
 fi
+# .rst sources are in docs and in pyautoupdate (via autodoc extension)
+git diff HEAD^ HEAD --quiet docs pyautoupdate
+hasdiff=$?
+if [ $hasdiff -eq 0 ] && [ $merge_indicator -eq 0 ]; then
+    echo "Documentation has not changed"
+    echo "No need to update"
+    ctrl_c
+    exit 0
+fi
+
 echo "Building documentation"
 cd docs
 sphinx-build -b html -d build/doctrees source build/html
@@ -41,10 +62,15 @@ fi
 
 SHA=$(git rev-parse --short --verify HEAD)
 
-if [ "$DOCBUILD" != true ] || [ "$TRAVIS_BRANCH" != "develop" ]; then
+if [ "$TRAVIS_BRANCH" != "develop" ]; then
   echo "Exiting after doc verification"
   ctrl_c
   exit 0
+fi
+if [ "$TRAVIS_PULL_REQUEST" != "false" ]; then
+    echo "Skipping deployment of doc on Pull Request build"
+    ctrl_c
+    exit 0
 fi
 cd docs/build/html
 builtdocs=$PWD
@@ -56,23 +82,18 @@ if [ $? -ne 0 ]; then
     exit 1
 fi
 pushdired=true
-if [ "$DOCBUILD" = true ]; then
-  echo "Decrypting SSH key"
-  openssl aes-256-cbc -K $encrypted_17ecf7cd0287_key -iv $encrypted_17ecf7cd0287_iv -in $builtdocs/../../../sphinx_travis_deploy.enc -out sphinx_travis_deploy -d
-    if [ -f sphinx_travis_deploy ] && [ -s sphinx_travis_deploy ]; then
-      chmod 600 sphinx_travis_deploy
-      eval $(ssh-agent -s) > /dev/null
-      ssh-add sphinx_travis_deploy > /dev/null
-      url=git@github.com:rlee287/pyautoupdate
-      echo -e "\e[0;32mDeploy key successfully decrypted\e[0m"
-    else
-      echo -e "\e[0;31mFailed to decrypt deploy key\e[0m"
-      url=https://github.com/rlee287/pyautoupdate
-    fi
-else
-  # When running locally, use https as it is easier to configure
-  url=https://github.com/rlee287/pyautoupdate
-fi
+echo "Decrypting SSH key"
+openssl aes-256-cbc -K $encrypted_17ecf7cd0287_key -iv $encrypted_17ecf7cd0287_iv -in $builtdocs/../../../sphinx_travis_deploy.enc -out sphinx_travis_deploy -d
+  if [ -f sphinx_travis_deploy ] && [ -s sphinx_travis_deploy ]; then
+    chmod 600 sphinx_travis_deploy
+    eval $(ssh-agent -s) > /dev/null
+    ssh-add sphinx_travis_deploy > /dev/null
+    url=git@github.com:rlee287/pyautoupdate
+    echo -e "\e[0;32mDeploy key successfully decrypted\e[0m"
+  else
+    echo -e "\e[0;31mFailed to decrypt deploy key\e[0m"
+    url=https://github.com/rlee287/pyautoupdate
+  fi
 git clone --depth 1 -b gh-pages $url
 if [ $? -ne 0 ]; then
     echo -e "\e[0;31mFailed to clone current gh-pages repo\e[0m"
@@ -94,20 +115,6 @@ git diff --stat
 # Running on Travis CI Server
 git config --local user.name TravisCIDocBuild
 git config --local user.email travis_build@nonexistent.email
-echo "Checking for changed documentation"
-git diff --quiet
-hasdiff=$?
-if [ $hasdiff -eq 0 ]; then
-    echo "Documentation has not changed"
-    echo "No need to update"
-    ctrl_c
-    exit 0
-fi
-if [ "$TRAVIS_PULL_REQUEST" != "false" ]; then
-    echo "Skipping deployment of doc on Pull Request build"
-    ctrl_c
-    exit 0
-fi
 cat << EOF > commitmessage
 Sphinx rebuild
 
