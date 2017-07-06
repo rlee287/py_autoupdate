@@ -77,8 +77,8 @@ class Launcher(object):
        to run the code.
 
        Please ensure that all ``args`` and ``kwargs`` can be pickled.
-       If they are not pickleable, they cannot be passed to the child process
-       on Windows, and an error will be raised when attempting to run user code.
+       Non-pickleable arguments cannot be passed to the child process on
+       Windows, and an error will be raised when attempting to run user code.
     """
 
     version_doc = "version.txt"
