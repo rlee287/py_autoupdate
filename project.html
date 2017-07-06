@@ -5,13 +5,13 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>Project Structure &#8212; pyautoupdate 1.0.0.post1+6dbaf5e documentation</title>
+    <title>Project Structure &#8212; pyautoupdate 1.0.0.post1+fa4e228 documentation</title>
     <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    './',
-        VERSION:     '1.0.0.post1+6dbaf5e',
+        VERSION:     '1.0.0.post1+fa4e228',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -67,24 +67,34 @@
 </tbody>
 </table>
 <div class="highlight-text"><div class="highlight"><pre><span></span>Root directory of project
-├── code_1.py
-├── code_2.py
+├── &lt;general code files&gt;
 ├── .pyautodownloads/ **R**
-├── entry_point.py
+├── &lt;an entry point file that creates the launcher&gt;
 ├── filelist.txt **RF**
 ├── project.zip (can be changed) **R**
-├── subfolder/
-│   └── code_3.py
 ├── version.txt **RE**
 └── version_history.log **R**
 </pre></div>
 </div>
-<p>The code starts from <code class="docutils literal"><span class="pre">entry_point.py</span></code>,
-which initializes the <code class="xref py py-class docutils literal"><span class="pre">Launcher</span></code> object.</p>
+<p>The code starts from an entry point file that initializes the
+<code class="xref py py-class docutils literal"><span class="pre">Launcher</span></code> object.</p>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
-<p class="last">The <code class="docutils literal"><span class="pre">entry_point.py</span></code> or equivalent can be updated via renaming
+<p class="last">The entry point file can be updated via renaming
 while in use. This is in development but is known to be possible.</p>
+</div>
+<div class="section" id="filelist-txt">
+<h2><code class="docutils literal"><span class="pre">filelist.txt</span></code><a class="headerlink" href="#filelist-txt" title="Permalink to this headline">¶</a></h2>
+<p>This file has the list of files for the project.
+It is used during the update process to remove the old version.</p>
+</div>
+<div class="section" id="project-zip-or-equivalent">
+<h2><code class="docutils literal"><span class="pre">project.zip</span></code> (or equivalent)<a class="headerlink" href="#project-zip-or-equivalent" title="Permalink to this headline">¶</a></h2>
+<p>This is the downloaded archive containing the new version.</p>
+</div>
+<div class="section" id="pyautodownloads">
+<h2><code class="docutils literal"><span class="pre">.pyautodownloads/</span></code><a class="headerlink" href="#pyautodownloads" title="Permalink to this headline">¶</a></h2>
+<p>This directory temporarily contains the downloaded new version.</p>
 </div>
 <div class="section" id="version-txt">
 <h2><code class="docutils literal"><span class="pre">version.txt</span></code><a class="headerlink" href="#version-txt" title="Permalink to this headline">¶</a></h2>
@@ -163,6 +173,9 @@ The format is one of the following:</p>
 <li class="toctree-l1"><a class="reference internal" href="quickstart.html">Quickstart</a></li>
 <li class="toctree-l1"><a class="reference internal" href="pyautoupdate.html">Pyautoupdate API</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Project Structure</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#filelist-txt"><code class="docutils literal"><span class="pre">filelist.txt</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#project-zip-or-equivalent"><code class="docutils literal"><span class="pre">project.zip</span></code> (or equivalent)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#pyautodownloads"><code class="docutils literal"><span class="pre">.pyautodownloads/</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#version-txt"><code class="docutils literal"><span class="pre">version.txt</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#version-history-log"><code class="docutils literal"><span class="pre">version_history.log</span></code></a></li>
 </ul>

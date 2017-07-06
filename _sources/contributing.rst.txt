@@ -17,7 +17,7 @@ In addition to the core dependencies in :doc:`quickstart`, development also requ
 -  ``pytest`` for running the tests
 -  ``coverage`` to measure coverage
 
-The following packages are optional but recommended:
+The following packages are optional for development but recommended:
 
 -  ``pylint`` for local code style checks
 -  ``sphinx`` for building documentation
