@@ -33,7 +33,7 @@ Core Dependencies
 Development Dependencies
 ~~~~~~~~~~~~~~~~~~~~~~~~
 -  ``pytest`` for running the tests
--  ``coverage`` to measure coverage
+-  ``coverage.py`` to measure coverage
 
 Optional Development Dependencies
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
