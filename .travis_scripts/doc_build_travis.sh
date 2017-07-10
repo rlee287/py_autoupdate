@@ -25,6 +25,7 @@ else
     echo "Only verification will be performed."
   fi
 fi
+echo "TRAVIS_COMMIT_RANGE is $TRAVIS_COMMIT_RANGE"
 echo "Checking for changed documentation"
 # If merge commit, assume changes
 merge_indicator=0
@@ -33,7 +34,8 @@ if [ $? -eq 0 ]; then
   merge_indicator=1
 fi
 # .rst sources are in docs and in pyautoupdate (via autodoc extension)
-git diff HEAD^ HEAD --quiet docs pyautoupdate
+# Also include .travis_scripts in case the scripts themsevles change
+git diff HEAD^ HEAD --quiet docs pyautoupdate .travis_scripts
 hasdiff=$?
 if [ $hasdiff -eq 0 ] && [ $merge_indicator -eq 0 ]; then
     echo "Documentation has not changed"
@@ -50,6 +52,7 @@ if [ $? -ne 0 ]; then
   exit 1
 fi
 echo "Done installing Sphinx"
+
 echo "Building documentation"
 cd docs
 sphinx-build -b html -d build/doctrees source build/html
