@@ -86,7 +86,6 @@ class Launcher(object):
     file_list = "filelist.txt"
     updatedir = ".pyautodownloads"
     queue_update = ".queue"
-    queue_replace = ".replace"
 
     def __init__(self, filepath, url,
                  newfiles='project.zip',
@@ -534,9 +533,6 @@ class Launcher(object):
             # Remove archive only if unpack operation succeeded
             self.log.info("Removing archive after extraction")
             os.remove(self.newfiles)
-            # Signal that update is ready
-            self.log.debug("Creating downloaded file marker")
-            open(self.queue_replace, "w").close()
 
     def _replace_files(self):
         """Replaces the existing files with the downloaded files.
@@ -545,8 +541,11 @@ class Launcher(object):
            :rtype: bool
         """
         # Only replace if update and replacement are queued
-        if not (os.path.isfile(self.queue_update) and
-                os.path.isfile(self.queue_replace)):
+        has_new = os.path.isfile(self.queue_update)
+        is_downloaded = os.path.isdir(self.updatedir) and \
+                        os.listdir(self.updatedir)
+
+        if not (has_new and is_downloaded):
             return False
         # Attempt to acquire code lock here and exit if unable to
         # The finally block runs after the "return" statement
@@ -568,8 +567,6 @@ class Launcher(object):
             os.rename(self.version_doc, self.version_doc+".bak")
             os.rename(self.queue_update, self.version_doc)
             os.remove(self.version_doc+".bak")
-            self.log.debug("Removing downloaded file marker")
-            os.remove(self.queue_replace)
             self.log.info("Replacing files")
             # Read in files from filelist and move to tempdir
             tempdir = tempfile.mkdtemp()
@@ -662,7 +659,9 @@ class Launcher(object):
         if self.check_new():
             # self.check_new will create a self.queue_update file
             self.log.info("Beginning update process")
-            if not os.path.isfile(self.queue_replace):
+            if (not os.path.isdir(self.updatedir) or
+                    (os.path.isdir(self.updatedir) and
+                     os.listdir(self.updatedir))):
                 self._reset_update_files()
                 self._get_new()
             update_successful = self._replace_files()

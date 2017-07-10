@@ -22,14 +22,11 @@ def fixture_update_setup(request):
             os.remove(Launcher.file_list)
         if os.path.isdir(Launcher.updatedir):
             shutil.rmtree(Launcher.updatedir)
-        if os.path.isfile(Launcher.queue_replace):
-            os.remove(Launcher.queue_replace)
     request.addfinalizer(teardown)
     with open(Launcher.version_doc, mode='w') as version_file:
         version_file.write("0.0.1")
     with open(Launcher.queue_update, mode='w') as new_version:
         new_version.write("0.1.0")
-    open(Launcher.queue_replace, mode='w').close()
     os.mkdir("extradir")
     os.makedirs(os.path.join(Launcher.updatedir,"extradir"))
     extradir_blah=os.path.join("extradir","blah.py")
@@ -61,7 +58,6 @@ def test_replace_files(fixture_update_setup):
     assert "new version" in file_text
     assert os.path.isfile(Launcher.file_list)
     assert not os.path.isfile(Launcher.queue_update)
-    assert not os.path.isfile(Launcher.queue_replace)
 
 def test_no_replace_files():
     """Checks that the replace code function returns false when

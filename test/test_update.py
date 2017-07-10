@@ -80,5 +80,4 @@ def test_run_lock_update(fixture_update_setup):
     could_update = launch.update_code()
     assert could_update
     assert not os.path.isfile(Launcher.queue_update)
-    assert not os.path.isfile(Launcher.queue_replace)
     assert os.path.isfile("extradir/blah.py")
