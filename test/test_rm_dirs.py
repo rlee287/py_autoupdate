@@ -12,8 +12,8 @@ def create_update_dir(request):
        including the project.zip file
     """
     os.mkdir(Launcher.updatedir)
-    files = ['tesfeo','fjfesf','fihghg']
-    filedir = [os.path.join(Launcher.updatedir,fi) for fi in files]
+    files = ['tesfeo', 'fjfesf', 'fihghg']
+    filedir = [os.path.join(Launcher.updatedir, fi) for fi in files]
     os.mkdir(os.path.join(Launcher.updatedir, 'subfolder'))
     filedir.append(os.path.join(Launcher.updatedir, 'subfolder', 'oweigjoewig'))
     if sys.version_info[0] == 2:

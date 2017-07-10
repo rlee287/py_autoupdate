@@ -127,7 +127,7 @@ class TestRunProgram(object):
         assert launch.process_exitcode == -15
         assert can_terminate
 
-    @pytest.mark.xfail(reason="Produces none but should be 0")
+    @pytest.mark.xfail(reason="Fails due to process reinitialization")
     def test_terminate_rerun(self):
         """Test that attempts to rerun process after termination"""
         fileback = "test_run_base_back.py"
