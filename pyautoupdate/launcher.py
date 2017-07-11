@@ -417,6 +417,12 @@ class Launcher(object):
               to compare versions.
 
               Any versioning scheme described in :pep:`440` can be used.
+
+           When the server contains an invalid version specification, this
+           returns ``false``.
+
+           .. versionchanged 1.0.0::
+              Previously, an invalid server version would cause an exception.
         """
         self.log.info("Checking for updates")
         request_time = datetime.utcnow()
