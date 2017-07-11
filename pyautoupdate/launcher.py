@@ -157,7 +157,8 @@ class Launcher(object):
             self.url = self.url + "/"
 
         # Check for valid newfiles
-        if len(os.path.normpath(newfiles).split(os.path.sep)) > 1:
+        # Split along both types of path seperators
+        if len(re.split(r"\\|\/",os.path.normpath(newfiles))) > 1:
             raise ValueError("newfiles should be a single archive name")
         elif not newfiles.endswith((".zip", ".tar.gz", ".tar.bz2")):
             raise ValueError("newfiles must be a zip, gzip, or bzip file")
@@ -449,6 +450,11 @@ class Launcher(object):
                            "Please contact the software authors.\n"
                            "Please include the generated data dump "
                            "in a bug report.")
+            # Write notification into log file
+            version_to_add = "Old {0}|Server Invalid|Time {1}\n"\
+                            .format(oldver, request_time)
+            with open(self.version_check_log, "a") as log_file:
+                log_file.write(version_to_add)
             newver_dump = None
             # If invalid, dump into dump file
             try:
@@ -459,21 +465,17 @@ class Launcher(object):
                 self.log.error("Writing invalid version into {0}"
                                .format(newver_dump.name))
                 newver_dump.write(newver)
+                # finally runs after return statement
+                return False
             except Exception:
                 self.log.exception("Unable to write data dump")
-                raise
+                return False
             finally:
                 if newver_dump is not None:
                     newver_dump.close()
-
-        if invalid:
-            # Throw warning as error object after logging
-            # If version is invalid, upgrade cannot succeed
-            version_to_add = "Old {0}|Server Invalid|Time {1}\n"\
-                             .format(oldver, request_time)
-            with open(self.version_check_log, "a") as log_file:
-                log_file.write(version_to_add)
-            raise CorruptedFileWarning
+                # Throw warning after logging
+                # If version is invalid, upgrade cannot succeed
+                warnings.warn("Invalid Server version!",CorruptedFileWarning)
 
         # Will always return not new if new version is invalid
         has_new = (newver_obj > parse_version(oldver))
@@ -491,7 +493,7 @@ class Launcher(object):
         return has_new
 
     def _reset_update_files(self):
-        """Resets the update directory to its default state.
+        """Resets the update files to its default state.
 
            It empties the existing update directory or creates a new one
            if it doesn't exist.
@@ -503,7 +505,7 @@ class Launcher(object):
         # Make new empty directory
         # shutil.rmtree would have deleted the directory
         os.mkdir(self.updatedir)
-        # Remove old archive
+        # Remove old archive if it is left behind
         if os.path.isfile(self.newfiles):
             os.remove(self.newfiles)
 
@@ -558,8 +560,6 @@ class Launcher(object):
                 self.log.warning("Could not acquire lock to update files")
                 return False
         try:
-            # else (os.path.isfile(self.queue_update) and
-            # os.path.isfile(self.queue_replace))
             # TODO: Make this code safer and possibly leave diagnostics
             # if the update operation errors out in the middle
             self.log.debug("Writing new version into {0}"
@@ -645,6 +645,7 @@ class Launcher(object):
             os.remove(filelist_backup.name)
             self.log.info("Removing tempdir")
             shutil.rmtree(tempdir)
+            self._reset_update_files()
         finally:
             self.log.debug("Releasing lock after updating files")
             self.update.release()
