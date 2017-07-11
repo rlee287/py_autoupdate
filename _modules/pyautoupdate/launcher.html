@@ -5,13 +5,13 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>pyautoupdate.launcher &#8212; pyautoupdate 1.0.0.post1+fa44b98 documentation</title>
+    <title>pyautoupdate.launcher &#8212; pyautoupdate 1.0.0.post1+ba3563c documentation</title>
     <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../',
-        VERSION:     '1.0.0.post1+fa44b98',
+        VERSION:     '1.0.0.post1+ba3563c',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -199,7 +199,8 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">url</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">url</span> <span class="o">+</span> <span class="s2">&quot;/&quot;</span>
 
         <span class="c1"># Check for valid newfiles</span>
-        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">normpath</span><span class="p">(</span><span class="n">newfiles</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">sep</span><span class="p">))</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="c1"># Split along both types of path seperators</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">re</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;</span><span class="se">\\</span><span class="s2">|\/&quot;</span><span class="p">,</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">normpath</span><span class="p">(</span><span class="n">newfiles</span><span class="p">)))</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;newfiles should be a single archive name&quot;</span><span class="p">)</span>
         <span class="k">elif</span> <span class="ow">not</span> <span class="n">newfiles</span><span class="o">.</span><span class="n">endswith</span><span class="p">((</span><span class="s2">&quot;.zip&quot;</span><span class="p">,</span> <span class="s2">&quot;.tar.gz&quot;</span><span class="p">,</span> <span class="s2">&quot;.tar.bz2&quot;</span><span class="p">)):</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;newfiles must be a zip, gzip, or bzip file&quot;</span><span class="p">)</span>
@@ -458,6 +459,12 @@
 <span class="sd">              to compare versions.</span>
 
 <span class="sd">              Any versioning scheme described in :pep:`440` can be used.</span>
+
+<span class="sd">           When the server contains an invalid version specification, this</span>
+<span class="sd">           returns ``false``.</span>
+
+<span class="sd">           .. versionchanged 1.0.0::</span>
+<span class="sd">              Previously, an invalid server version would cause an exception.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Checking for updates&quot;</span><span class="p">)</span>
         <span class="n">request_time</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">utcnow</span><span class="p">()</span>
@@ -491,6 +498,11 @@
                            <span class="s2">&quot;Please contact the software authors.</span><span class="se">\n</span><span class="s2">&quot;</span>
                            <span class="s2">&quot;Please include the generated data dump &quot;</span>
                            <span class="s2">&quot;in a bug report.&quot;</span><span class="p">)</span>
+            <span class="c1"># Write notification into log file</span>
+            <span class="n">version_to_add</span> <span class="o">=</span> <span class="s2">&quot;Old </span><span class="si">{0}</span><span class="s2">|Server Invalid|Time </span><span class="si">{1}</span><span class="se">\n</span><span class="s2">&quot;</span>\
+                            <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">oldver</span><span class="p">,</span> <span class="n">request_time</span><span class="p">)</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">version_check_log</span><span class="p">,</span> <span class="s2">&quot;a&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">log_file</span><span class="p">:</span>
+                <span class="n">log_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">version_to_add</span><span class="p">)</span>
             <span class="n">newver_dump</span> <span class="o">=</span> <span class="kc">None</span>
             <span class="c1"># If invalid, dump into dump file</span>
             <span class="k">try</span><span class="p">:</span>
@@ -501,21 +513,17 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Writing invalid version into </span><span class="si">{0}</span><span class="s2">&quot;</span>
                                <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">newver_dump</span><span class="o">.</span><span class="n">name</span><span class="p">))</span>
                 <span class="n">newver_dump</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">newver</span><span class="p">)</span>
+                <span class="c1"># finally runs after return statement</span>
+                <span class="k">return</span> <span class="kc">False</span>
             <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="s2">&quot;Unable to write data dump&quot;</span><span class="p">)</span>
-                <span class="k">raise</span>
+                <span class="k">return</span> <span class="kc">False</span>
             <span class="k">finally</span><span class="p">:</span>
                 <span class="k">if</span> <span class="n">newver_dump</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                     <span class="n">newver_dump</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
-
-        <span class="k">if</span> <span class="n">invalid</span><span class="p">:</span>
-            <span class="c1"># Throw warning as error object after logging</span>
-            <span class="c1"># If version is invalid, upgrade cannot succeed</span>
-            <span class="n">version_to_add</span> <span class="o">=</span> <span class="s2">&quot;Old </span><span class="si">{0}</span><span class="s2">|Server Invalid|Time </span><span class="si">{1}</span><span class="se">\n</span><span class="s2">&quot;</span>\
-                             <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">oldver</span><span class="p">,</span> <span class="n">request_time</span><span class="p">)</span>
-            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">version_check_log</span><span class="p">,</span> <span class="s2">&quot;a&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">log_file</span><span class="p">:</span>
-                <span class="n">log_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">version_to_add</span><span class="p">)</span>
-            <span class="k">raise</span> <span class="n">CorruptedFileWarning</span>
+                <span class="c1"># Throw warning after logging</span>
+                <span class="c1"># If version is invalid, upgrade cannot succeed</span>
+                <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;Invalid Server version!&quot;</span><span class="p">,</span><span class="n">CorruptedFileWarning</span><span class="p">)</span>
 
         <span class="c1"># Will always return not new if new version is invalid</span>
         <span class="n">has_new</span> <span class="o">=</span> <span class="p">(</span><span class="n">newver_obj</span> <span class="o">&gt;</span> <span class="n">parse_version</span><span class="p">(</span><span class="n">oldver</span><span class="p">))</span>
@@ -533,7 +541,7 @@
         <span class="k">return</span> <span class="n">has_new</span></div>
 
 <div class="viewcode-block" id="Launcher._reset_update_files"><a class="viewcode-back" href="../../pyautoupdate.html#pyautoupdate.Launcher._reset_update_files">[docs]</a>    <span class="k">def</span> <span class="nf">_reset_update_files</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Resets the update directory to its default state.</span>
+        <span class="sd">&quot;&quot;&quot;Resets the update files to its default state.</span>
 
 <span class="sd">           It empties the existing update directory or creates a new one</span>
 <span class="sd">           if it doesn&#39;t exist.</span>
@@ -545,7 +553,7 @@
         <span class="c1"># Make new empty directory</span>
         <span class="c1"># shutil.rmtree would have deleted the directory</span>
         <span class="n">os</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">updatedir</span><span class="p">)</span>
-        <span class="c1"># Remove old archive</span>
+        <span class="c1"># Remove old archive if it is left behind</span>
         <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">newfiles</span><span class="p">):</span>
             <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">newfiles</span><span class="p">)</span></div>
 
@@ -600,8 +608,6 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;Could not acquire lock to update files&quot;</span><span class="p">)</span>
                 <span class="k">return</span> <span class="kc">False</span>
         <span class="k">try</span><span class="p">:</span>
-            <span class="c1"># else (os.path.isfile(self.queue_update) and</span>
-            <span class="c1"># os.path.isfile(self.queue_replace))</span>
             <span class="c1"># TODO: Make this code safer and possibly leave diagnostics</span>
             <span class="c1"># if the update operation errors out in the middle</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Writing new version into </span><span class="si">{0}</span><span class="s2">&quot;</span>
@@ -687,6 +693,7 @@
             <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">filelist_backup</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Removing tempdir&quot;</span><span class="p">)</span>
             <span class="n">shutil</span><span class="o">.</span><span class="n">rmtree</span><span class="p">(</span><span class="n">tempdir</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_reset_update_files</span><span class="p">()</span>
         <span class="k">finally</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Releasing lock after updating files&quot;</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">update</span><span class="o">.</span><span class="n">release</span><span class="p">()</span>
