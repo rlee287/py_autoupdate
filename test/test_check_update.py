@@ -71,8 +71,7 @@ def test_check_update_invalidvers(fixture_update_dir, remove_dump):
     launch = Launcher('blah',
                       r'http://rlee287.github.io/pyautoupdate/'
                       '_static/testing2/')
-    with pytest.raises(CorruptedFileWarning):
-        launch.check_new()
+    assert not launch.check_new()
     assert os.path.isfile(Launcher.version_doc)
     assert os.path.isfile(Launcher.version_check_log)
     with open(Launcher.version_check_log, "r") as log_handle:
