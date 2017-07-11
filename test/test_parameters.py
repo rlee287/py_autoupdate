@@ -97,10 +97,20 @@ def test_check_corrupted_vers(fixture_corrupt_vers):
             warnings.simplefilter("error", category=CorruptedFileWarning)
             Launcher("123", "456")
 
-def test_invalid_multdir_newfiles(fixture_rm_log):
+def test_invalid_multdir_forwardslash_newfiles(fixture_rm_log):
     """Test that checks for invalid newfiles with multiple directories"""
     with pytest.raises(ValueError):
         Launcher("123", "456", newfiles="project.zip/hahaha")
+
+def test_invalid_multdir_backslash_newfiles(fixture_rm_log):
+    """Test that checks for invalid newfiles with multiple directories"""
+    with pytest.raises(ValueError):
+        Launcher("123", "456", newfiles="project.zip\\slash_without_damage?")
+
+def test_invalid_multdir_bothslash_newfiles(fixture_rm_log):
+    """Test that checks for invalid newfiles with multiple directories"""
+    with pytest.raises(ValueError):
+        Launcher("123", "456", newfiles="\\X//K\\C//D\\1//6\\3//8")
 
 def test_invalid_ext_newfiles(fixture_rm_log):
     """Test that checks for invalid newfiles with wrong file extension"""
