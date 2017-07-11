@@ -7,7 +7,9 @@ Pyautoupdate is an auto-update API for Python programs.
 Advantages
 ----------
 
--  This module is written in pure python. **No C compiler is necessary for installation, simplifying installation for Windows.**
+-  Pyautoupdate secures its downloads through HTTPS.
+-  Pyautoupdate is written in pure python.
+**No C compiler is necessary for installation, simplifying installation for Windows.**
 -  Python 2 and 3 are both supported
 -  Pyautoupdate also works with pypy and pypy3
 
@@ -20,7 +22,7 @@ Installation
 
 Documentation
 -------------
-Documentation is available at http://rlee287.github.io/pyautoupdate.
+Documentation is available at https://rlee287.github.io/pyautoupdate.
 
 Dependencies
 ------------
@@ -39,6 +41,10 @@ Optional Development Dependencies
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 -  ``pylint`` for local code style checks
 -  ``sphinx`` for building documentation
+
+Contributing
+------------
+Please see `this page <https://rlee287.github.io/pyautoupdate/contributing.html>`__ for contributing guidelines.
 
 License
 -------
