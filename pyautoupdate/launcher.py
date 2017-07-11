@@ -421,7 +421,7 @@ class Launcher(object):
            When the server contains an invalid version specification, this
            returns ``false``.
 
-           .. versionchanged 1.0.0::
+           .. versionchanged:: 1.0.0
               Previously, an invalid server version would cause an exception.
         """
         self.log.info("Checking for updates")
