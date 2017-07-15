@@ -483,7 +483,7 @@ class Launcher(object):
                 # If version is invalid, upgrade cannot succeed
                 warnings.warn("Invalid Server version!",CorruptedFileWarning)
 
-        # Will always return not new if new version is invalid
+        # newver_obj will be proper version by this point
         has_new = (newver_obj > parse_version(oldver))
         # Add entry to the logfile and update version.txt
         if has_new:
