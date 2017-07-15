@@ -186,7 +186,7 @@ html_theme_options = {
     'show_powered_by': True,
     'logo': 'images/pyautoupdate_logo_square.png',
     'logo_name': True,
-    'description': "A module that allows code to automatically update"
+    'description': "An auto-update API for Python programs"
 }
 
 html_sidebars = {
