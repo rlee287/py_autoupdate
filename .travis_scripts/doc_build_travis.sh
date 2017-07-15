@@ -121,7 +121,6 @@ git checkout -- .gitignore
 # This step is necessary on Windows Cygwin
 # Or other systems that do not handle executable bits properly
 git config --local core.fileMode true
-git diff --stat
 # Running on Travis CI Server
 git config --local user.name TravisCIDocBuild
 git config --local user.email travis_build@nonexistent.email
@@ -137,5 +136,5 @@ git diff --staged --stat
 git commit -F commitmessage
 rm commitmessage
 echo "Pushing to gh-pages"
-git push
+git push origin gh-pages
 ctrl_c
