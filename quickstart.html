@@ -5,13 +5,13 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>Quickstart &#8212; pyautoupdate 1.0.0.post1+af8d839 documentation</title>
+    <title>Quickstart &#8212; pyautoupdate 1.0.0.post1+0fb782a documentation</title>
     <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    './',
-        VERSION:     '1.0.0.post1+af8d839',
+        VERSION:     '1.0.0.post1+0fb782a',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -50,7 +50,7 @@
 </ul>
 <p>To set up an initial version, you will need the following files:</p>
 <ul class="simple">
-<li>Code file that creates launcher (referred to below as <code class="docutils literal"><span class="pre">entry_point.py</span></code>)</li>
+<li>Code file that creates launcher</li>
 <li>Auxilliary code files passed into launcher</li>
 <li><code class="docutils literal"><span class="pre">version.txt</span></code> contains the version number.</li>
 <li><code class="docutils literal"><span class="pre">filelist.txt</span></code> contains a list of paths of the code and resource files.</li>
@@ -60,12 +60,18 @@ This is the initial version on the end user’s computer.</p>
 <p>To create new versions, copy the code files into a directory
 and compress the directory into a
 <code class="docutils literal"><span class="pre">.zip</span></code>, <code class="docutils literal"><span class="pre">.tar.gz</span></code>, or a <code class="docutils literal"><span class="pre">.tar.bz2</span></code> archive.</p>
-<p>Upload the archive to the server and place a <code class="docutils literal"><span class="pre">version.txt</span></code>
+<p>Upload the archive to the server and place a file named <code class="docutils literal"><span class="pre">version.txt</span></code>
 containing the version number in the same directory as the archive.
-Pyautoupdate will then download the new version when performing updates
+The server directory should now look like this:</p>
+<div class="highlight-text"><div class="highlight"><pre><span></span>server-directory-pointed-to-by-url
+├── project.zip
+└── version.txt
+</pre></div>
+</div>
+<p>Pyautoupdate will then download the new version when performing updates
 and replace the old code files with the new ones.</p>
 <p>More details about the required files can be found in <a class="reference internal" href="project.html"><span class="doc">Project Structure</span></a>.</p>
-<p>This is a sample <code class="docutils literal"><span class="pre">entry_point.py</span></code> file.py, including an update check
+<p>This is a sample application initialization file, including an update check
 before code execution.</p>
 <div class="highlight-python"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">sys</span>
 <span class="kn">from</span> <span class="nn">pyautoupdate.launcher</span> <span class="kn">import</span> <span class="n">Launcher</span>
@@ -78,7 +84,7 @@ before code execution.</p>
 <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="n">launch</span><span class="o">.</span><span class="n">run</span><span class="p">())</span>
 </pre></div>
 </div>
-<p>Replace the <code class="docutils literal"><span class="pre">https://update-url</span></code> with the actual url of the folder on the server.</p>
+<p>Replace <code class="docutils literal"><span class="pre">https://update-url</span></code> with the actual url of the folder on the server.</p>
 </div>
 
 
