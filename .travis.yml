@@ -16,7 +16,7 @@ matrix:
     - python: '3.5'
       env: PYLINT=true
       os: linux
-    - python: 'pypy3-5.5.0'
+    - python: 'pypy3.3-5.5'
       os: linux
     - python: 'pypy-5.4'
       env: FIX_REQUESTS_PLEASE=true
