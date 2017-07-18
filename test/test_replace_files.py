@@ -23,23 +23,27 @@ def fixture_update_setup(request):
         if os.path.isdir(Launcher.updatedir):
             shutil.rmtree(Launcher.updatedir)
     request.addfinalizer(teardown)
+    # Write old version file
     with open(Launcher.version_doc, mode='w') as version_file:
         version_file.write("0.0.1")
+    # Write new version file
     with open(Launcher.queue_update, mode='w') as new_version:
         new_version.write("0.1.0")
+    # Create old files
     os.mkdir("extradir")
     os.makedirs(os.path.join(Launcher.updatedir, "extradir"))
-    extradir_blah=os.path.join("extradir", "blah.py")
-    extradir_dummy=os.path.join("extradir", "dummy.txt")
-    downloads_extradir_blah=os.path.join(Launcher.updatedir, "extradir",
-                                         "blah.py")
+    extradir_blah = os.path.join("extradir", "blah.py")
+    extradir_dummy = os.path.join("extradir", "dummy.txt")
+    downloads_extradir_blah = os.path.join(Launcher.updatedir, "extradir",
+                                           "blah.py")
     with open(extradir_blah, mode='w') as code:
         code.write("print('This is the old version')")
     with open(extradir_dummy, mode='w') as extra_file:
         extra_file.write("1984: 2+2=5")
     with open(downloads_extradir_blah, mode='w') as new_code:
         new_code.write("print('This is the new version')")
-    list_files=[extradir_blah+"\n", extradir_dummy+"\n", "shine/johnny.txt\n"]
+    # Create old filelist
+    list_files = [extradir_blah+"\n", extradir_dummy+"\n", "shine/johnny.txt\n"]
     with open(Launcher.file_list, mode='w') as filelist:
         filelist.writelines(list_files)
     return fixture_update_setup
