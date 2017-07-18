@@ -86,17 +86,13 @@ def fixture_corrupt_vers(request):
 
 def test_check_corrupted_log(fixture_corrupt_log):
     """Test that checks for corrupted log error"""
-    with pytest.raises(CorruptedFileWarning):
-        with warnings.catch_warnings():
-            warnings.simplefilter("error", category=CorruptedFileWarning)
-            Launcher("123", "456")
+    with pytest.warns(CorruptedFileWarning):
+        Launcher("123", "456")
 
 def test_check_corrupted_vers(fixture_corrupt_vers):
     """Test that checks for corrupted version error"""
-    with pytest.raises(CorruptedFileWarning):
-        with warnings.catch_warnings():
-            warnings.simplefilter("error", category=CorruptedFileWarning)
-            Launcher("123", "456")
+    with pytest.warns(CorruptedFileWarning):
+        Launcher("123", "456")
 
 def test_invalid_multdir_forwardslash_newfiles(fixture_rm_log):
     """Test that checks for invalid newfiles with multiple directories"""
