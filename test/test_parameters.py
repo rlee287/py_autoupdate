@@ -65,7 +65,8 @@ def fixture_corrupt_log(request):
     """Fixture that creates corrupted log"""
     with open(Launcher.version_check_log, "w") as log:
         log.write("invalid!gibberish")
-    open(Launcher.version_doc, "w").close()
+    with open(Launcher.version_doc, "w") as version_file:
+        version_file.write("v0.0.1")
     def teardown():
         os.remove(Launcher.version_check_log)
         os.remove(Launcher.version_doc)
