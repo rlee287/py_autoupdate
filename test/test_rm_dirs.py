@@ -28,11 +28,11 @@ def create_update_dir(request):
         with open(each_file, mode='w') as new_file:
             new_file.write('')
     def teardown():
+        # Cleanup of populated directories should already have been done
+        # Most of these lines should be uncovered
         for file_path in filedir:
             if os.path.isfile(file_path):
                 os.unlink(file_path)
-                # Perhaps move into main test?
-                raise AssertionError # fail test if files exist
         os.rmdir(Launcher.updatedir)
         os.remove(Launcher.version_check_log)
         if os.path.isfile("project.zip"):
