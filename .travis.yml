@@ -43,7 +43,7 @@ install:
 - if [ ! -z "$FIX_REQUESTS_PLEASE" ]; then source .travis_scripts/fix_requests.sh; fi
 - pip install coverage
 - python -m pytest --version
-- pip install --upgrade pytest
+- source .travis_scripts/upgrade_pytest.sh
 - python -m pytest --version
 # Handled inside lint_travis script
 # - pip install pylint
