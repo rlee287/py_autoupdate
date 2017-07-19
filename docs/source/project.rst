@@ -31,27 +31,27 @@ The code starts from an entry point file that initializes the
    The entry point file can be updated via renaming
    while in use. This is in development but is known to be possible.
 
-``filelist.txt``
-****************
+filelist.txt
+************
 This file has the list of files for the project.
 It is used during the update process to remove the old files.
 
-``project.zip`` (or equivalent)
-*******************************
+project.zip (or equivalent)
+***************************
 This is the downloaded archive containing the new files.
 
-``.pyautodownloads/``
-*********************
+.pyautodownloads/
+*****************
 This directory temporarily contains the downloaded new files.
 
-``version.txt``
-***************
+version.txt
+***********
 This file contains a version number for the code.
 The local copy is compared with the server version to check if an update is
 necessary.
 
-``version_history.log``
-***********************
+version_history.log
+*******************
 This file records when the code checked for an update.
 Each line is formatted as one of the following::
 
