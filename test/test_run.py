@@ -88,7 +88,7 @@ class TestRunProgram(object):
         can_terminate = launch.process_terminate()
         assert not can_terminate
 
-    def test_run_fail(self,create_test_file):
+    def test_run_fail(self, create_test_file):
         """Test that runs errored code and checks exit status"""
         filecode = 'test_run_base_fail.py'
         launch = Launcher(filecode, 'URL')
@@ -168,6 +168,7 @@ class TestRunProgram(object):
         launch.process_join(timeout=5)
         # Really takes up to 5 seconds for windows to kill process
         assert not launch.process_is_alive
+        assert launch.process_exitcode == 0
 
     def test_run_twice(self):
         """Test that runs code in the background twice.
@@ -190,5 +191,7 @@ class TestRunProgram(object):
         with pytest.raises(ProcessRunningException):
             launch.run(True)
         launch.process_join()
+        assert launch.process_exitcode == 0
         #Process is dead now, can run again
         launch.run()
+        assert launch.process_exitcode == 0
