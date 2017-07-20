@@ -25,13 +25,13 @@ def test_check_urlslash(fixture_rm_log):
     assert launch.url == launch2.url
 
 def test_check_url_schema(fixture_rm_log):
-    """Test that checks that leading slash is properly added to URL"""
+    """Test that checks that invalid URL schemas raise ValueError"""
     with pytest.raises(ValueError):
         Launcher('not here',
                  r'sftp://rlee287.github.io/pyautoupdate/testing/')
 
 def test_check_url_noschema(fixture_rm_log):
-    """Test that checks that leading slash is properly added to URL"""
+    """Test that checks that schema is properly added to URL"""
     launch = Launcher('not here',
                       r'rlee287.github.io/pyautoupdate/testing/')
     assert launch.url == 'https://rlee287.github.io/pyautoupdate/testing/'
@@ -95,17 +95,17 @@ def test_check_corrupted_vers(fixture_corrupt_vers):
         Launcher("123", "456")
 
 def test_invalid_multdir_forwardslash_newfiles(fixture_rm_log):
-    """Test that checks for invalid newfiles with multiple directories"""
+    """Test that checks for invalid newfiles with multiple directories forward slash"""
     with pytest.raises(ValueError):
         Launcher("123", "456", newfiles="project.zip/hahaha")
 
 def test_invalid_multdir_backslash_newfiles(fixture_rm_log):
-    """Test that checks for invalid newfiles with multiple directories"""
+    """Test that checks for invalid newfiles with multiple directories backslash"""
     with pytest.raises(ValueError):
         Launcher("123", "456", newfiles="project.zip\\slash_without_damage?")
 
 def test_invalid_multdir_bothslash_newfiles(fixture_rm_log):
-    """Test that checks for invalid newfiles with multiple directories"""
+    """Test that checks for invalid newfiles with multiple directories forward slash and backslash"""
     with pytest.raises(ValueError):
         Launcher("123", "456", newfiles="\\X//K\\C//D\\1//6\\3//8")
 
