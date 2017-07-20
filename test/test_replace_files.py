@@ -74,7 +74,9 @@ def test_replace_files(fixture_update_setup):
     assert not os.path.isfile(Launcher.queue_update)
 
 def test_replace_files_extraneous(fixture_update_setup):
-    """Checks the ability of program to replace the code"""
+    """Checks the ability of program to replace the code
+       with an extraneous file listed in the old filelist
+    """
     package = fixture_update_setup(True)
     assert os.path.isfile(Launcher.file_list)
     launch = Launcher('extradir/blah.py',
