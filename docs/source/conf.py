@@ -73,36 +73,40 @@ if not version_number:
 
 # Get git hash without relying on the command line or on tools like gitpython
 if os.path.isdir("../../.git"):
-    assert os.path.isfile("../../.git/HEAD")
-    # Examine HEAD
-    with open("../../.git/HEAD", 'r') as fd:
-        commit_hash = fd.read()
-        try: # Detached head means HEAD is already hexadecimal
-            # This will throw an error if HEAD is not detached
-            int(commit_hash, 16)
-            # 40 41 42 depending on \n or \r\n
-            if len(commit_hash) not in [40,41,42]:
-                raise ValueError
-        except ValueError: # is "ref: refs/heads/*""
-            commit_hash = commit_hash.split()
-            assert len(commit_hash) == 2
-            commit_hash = commit_hash[1]
-            # Dereference branch pointer
-            head_ref = os.path.join("../../.git", commit_hash)
-            assert os.path.isfile(head_ref)
-            with open(head_ref,'r') as fd2:
-                commit_hash = fd2.read()
-                try:
-                    # This will throw an error if HEAD is not detached
-                    int(commit_hash,16)
-                    # 40 41 42 depending on \n or \r\n
-                    if len(commit_hash) not in [40,41,42]:
-                        raise ValueError
-                except ValueError:
-                    # Raise more appropriate error
-                    warnings.warn("Unable to get current commit hash",
-                                  RuntimeWarning)
-                    commit_hash=""
+    try:
+        assert os.path.isfile("../../.git/HEAD")
+        # Examine HEAD
+        with open("../../.git/HEAD", 'r') as fd:
+            commit_hash = fd.read()
+            try: # Detached head means HEAD is already hexadecimal
+                # This will throw an error if HEAD is not detached
+                int(commit_hash, 16)
+                # 40 41 42 depending on \n or \r\n
+                if len(commit_hash) not in [40,41,42]:
+                    raise ValueError
+            except ValueError: # is "ref: refs/heads/*""
+                commit_hash = commit_hash.split()
+                assert len(commit_hash) == 2
+                commit_hash = commit_hash[1]
+                # Dereference branch pointer
+                head_ref = os.path.join("../../.git", commit_hash)
+                assert os.path.isfile(head_ref)
+                with open(head_ref,'r') as fd2:
+                    commit_hash = fd2.read()
+                    try:
+                        # This will throw an error if HEAD is not detached
+                        int(commit_hash,16)
+                        # 40 41 42 depending on \n or \r\n
+                        if len(commit_hash) not in [40,41,42]:
+                            raise ValueError
+                    except ValueError:
+                        # Raise more appropriate error
+                        warnings.warn("Unable to get current commit hash",
+                                      RuntimeWarning)
+                        commit_hash=""
+    except AssertionError:
+        # Partially broken git repo -> act as if no git directory
+        commit_hash=""
 else: # Not in git repo
     commit_hash=""
 if commit_hash:
