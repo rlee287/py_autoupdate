@@ -1,3 +1,5 @@
+"""Various utilities for globbing and manipulating files"""
+
 import glob
 import shutil
 import os

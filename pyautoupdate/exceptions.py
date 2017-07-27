@@ -1,3 +1,5 @@
+"""Exceptions and warnings for Pyautoupdate."""
+
 class PyautoupdateBaseException(Exception):
     """Base exception for all pyautoupdate errors"""
 
