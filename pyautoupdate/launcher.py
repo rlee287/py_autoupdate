@@ -147,7 +147,7 @@ class Launcher(object):
         if schemaobj.scheme not in ["", "https", "http"]:
             raise ValueError("Url must be http or https")
         if schemaobj.scheme == "":
-            self.url = "https://"+self.url
+            self.url = "https://" + self.url
             schemaobj = urlparse(self.url)
         # Intended behavior is to remove parameters, query, and fragment
         self.url = urlunparse(("https", schemaobj.netloc, schemaobj.path,
@@ -158,7 +158,7 @@ class Launcher(object):
 
         # Check for valid newfiles
         # Split along both types of path seperators
-        if len(re.split(r"\\|\/",os.path.normpath(newfiles))) > 1:
+        if len(re.split(r"\\|\/", os.path.normpath(newfiles))) > 1:
             raise ValueError("newfiles should be a single archive name")
         elif not newfiles.endswith((".zip", ".tar.gz", ".tar.bz2")):
             raise ValueError("newfiles must be a zip, gzip, or bzip file")
@@ -333,8 +333,8 @@ class Launcher(object):
         localvar["args"] = args
         localvar["kwargs"] = kwargs
         localvar["log"] = local_log
-        local_log.debug("Starting process with"
-                        " the following local variables:\n"+
+        local_log.debug("Starting process with "
+                        "the following local variables:\n" +
                         pprint.pformat(localvar))
         # Execute code in file
         local_log.info("Starting code from file")
@@ -435,7 +435,7 @@ class Launcher(object):
             newver = newver.rstrip("\n")
             return isinstance(newver_obj, SetuptoolsVersion)
         else:
-            versionurl = self.url+self.version_doc
+            versionurl = self.url + self.version_doc
             # Get new files
             self.log.debug("Retrieving new version from {0}"
                            .format(versionurl))
@@ -518,7 +518,7 @@ class Launcher(object):
     def _get_new(self, allow_redirects=True, chunk_size=512):
         """Retrieves the new archive and extracts it to self.updatedir."""
         self.log.info("Retrieving new version")
-        newurl = self.url+self.newfiles
+        newurl = self.url + self.newfiles
         # Get new files
         http_get = requests.get(newurl, stream=True,
                                 allow_redirects=allow_redirects)
@@ -536,7 +536,7 @@ class Launcher(object):
                            "Please contact the software authors.\n"
                            "Please include the invalid archive "
                            "in a bug report.")
-            os.rename(self.newfiles, self.newfiles+".dump")
+            os.rename(self.newfiles, self.newfiles + ".dump")
         else:
             # Remove archive only if unpack operation succeeded
             self.log.info("Removing archive after extraction")
@@ -570,9 +570,9 @@ class Launcher(object):
             # if the update operation errors out in the middle
             self.log.debug("Writing new version into {0}"
                            .format(self.version_doc))
-            os.rename(self.version_doc, self.version_doc+".bak")
+            os.rename(self.version_doc, self.version_doc + ".bak")
             os.rename(self.queue_update, self.version_doc)
-            os.remove(self.version_doc+".bak")
+            os.remove(self.version_doc + ".bak")
             self.log.info("Replacing files")
             # Read in files from filelist and move to tempdir
             tempdir = tempfile.mkdtemp()
@@ -641,8 +641,10 @@ class Launcher(object):
                     filepath = os.path.relpath(filepath, start=relpath_start)
                     filepath += "\n"
                     filelist_new.append(filepath)
-            self.log.debug("New filelist is:\n"+pprint.pformat(filelist_new))
-            self.log.info("Writing new filelist to {0}".format(self.file_list))
+            self.log.debug("New filelist is:\n" +
+                           pprint.pformat(filelist_new))
+            self.log.info("Writing new filelist to {0}"
+                          .format(self.file_list))
             with open(self.file_list, "w") as file_handle:
                 file_handle.writelines(filelist_new)
             self.log.info("Copying downloaded contents to current directory")

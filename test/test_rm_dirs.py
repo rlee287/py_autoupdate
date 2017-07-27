@@ -15,7 +15,7 @@ def create_update_dir(request):
     files = ['tesfeo', 'fjfesf', 'fihghg']
     filedir = [os.path.join(Launcher.updatedir, fi) for fi in files]
     os.mkdir(os.path.join(Launcher.updatedir, 'subfolder'))
-    filedir.append(os.path.join(Launcher.updatedir, 'subfolder', 'oweigjoewig'))
+    filedir.append(os.path.join(Launcher.updatedir, 'subfolder', 'nonrand'))
     if sys.version_info[0] == 2:
         empty_zip_data = ('PK\x05\x06\x00\x00\x00\x00\x00\x00\x00\x00\x00'
                           '\x00\x00\x00\x00\x00\x00\x00\x00\x00')

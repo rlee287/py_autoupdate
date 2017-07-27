@@ -46,7 +46,7 @@ def fixture_update_setup(request):
         with open(downloads_extradir_blah, mode='w') as new_code:
             new_code.write("print('This is the new version')")
         # Create old filelist
-        list_files = [extradir_blah+"\n", extradir_dummy+"\n"]
+        list_files = [extradir_blah + "\n", extradir_dummy + "\n"]
         if add_extraneous:
             list_files.append("shine/johnny.txt\n")
         with open(Launcher.file_list, mode='w') as filelist:

@@ -23,7 +23,7 @@ class TestRunProgram(object):
         codebasic = (
                      'import pprint\n'
                      'pprint.pprint(locals())\n'
-                     'with open("'+filetext+'", mode="w") as number_file:\n'
+                     'with open("' + filetext + '", "w") as number_file:\n'
                      '    l=[i**2 for i in range(20)]\n'
                      '    number_file.write(str(l))\n')
         codepid = (
@@ -62,8 +62,8 @@ class TestRunProgram(object):
     def test_run(self, create_test_file):
         """Basic test that confirms that code will run"""
         filebase = 'test_run_base'
-        filecode = filebase+'.py'
-        filetext = filebase+'.txt'
+        filecode = filebase + '.py'
+        filetext = filebase + '.txt'
         launch = Launcher(filecode, 'Must', 'project.zip', DEBUG,
                           "extra_args", extra="extra_kwargs")
         excode = launch.run()
