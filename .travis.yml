@@ -54,8 +54,13 @@ after_failure:
 - pip install pylint
 - cd ..; pylint -E -f colorized pyautoupdate; cd pyautoupdate
 after_script:
-- pip install codecov
+- wget -b -O codecov_upload "https://codecov.io/bash"
+- jobs
 - python -c 'import sys;print(str(sys.version_info[0])+"."+str(sys.version_info[1]))'
   > version.txt
-- cat version.txt | xargs codecov --env
+- jobs
+- sleep 1
+- jobs
+- chmod +x codecov_upload
+- cat version.txt | xargs ./codecov_upload -e
 - rm version.txt
