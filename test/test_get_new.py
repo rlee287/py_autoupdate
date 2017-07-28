@@ -27,8 +27,8 @@ def test_check_get_invalid_archive(fixture_update_dir):
     launch = Launcher('what file? hahahaha',
                       r'http://rlee287.github.io/pyautoupdate/'
                       '_static/testing2/',
-                      newfiles="project.tar.gz")
+                      newfiles="corrupted.tar.gz")
     launch._get_new()
-    assert os.path.isfile("project.tar.gz.dump")
+    assert os.path.isfile("corrupted.tar.gz.dump")
     assert not os.path.isdir(Launcher.updatedir)
-    os.remove("project.tar.gz.dump")
+    os.remove("corrupted.tar.gz.dump")
