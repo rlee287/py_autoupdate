@@ -1,12 +1,18 @@
 Quickstart
 ==========
 
+Installing Dependencies
+-----------------------
+
 The core dependencies are
 
 -  ``requests`` for retrieving updated versions
 -  ``setuptools`` for archive manipulation and version comparison
 
-To set up an initial version, you will need the following files:
+Distributing the Application
+----------------------------
+
+To set up the installer, you will need the following files:
 
 -  Code file that creates launcher
 -  Auxilliary code files passed into launcher
@@ -16,11 +22,14 @@ To set up an initial version, you will need the following files:
 Package these files into your application installer.
 This is the initial version on the end user's computer.
 
+Pushing updates to a server
+---------------------------
+
 To create new versions, copy the code files into a directory
 and compress the directory into a
 ``.zip``, ``.tar.gz``, or a ``.tar.bz2`` archive.
 
-Upload the archive to the server and place a file named ``version.txt``
+Upload the archive to the update server and place a file named ``version.txt``
 containing the version number in the same directory as the archive.
 The server directory should now look like this:
 
@@ -51,3 +60,9 @@ before code execution.
    sys.exit(launch.run())
 
 Replace ``https://update-url`` with the actual url of the folder on the server.
+
+.. note::
+
+   You can call OS detection routines in the initialization file and use this
+   to have different update URLs for different operating systems. This is
+   useful for packaging OS dependent files.
