@@ -1,12 +1,18 @@
 Quickstart
 ==========
 
+Installing Dependencies
+-----------------------
+
 The core dependencies are
 
 -  ``requests`` for retrieving updated versions
 -  ``setuptools`` for archive manipulation and version comparison
 
-To set up an initial version, you will need the following files:
+Distributing the Application
+----------------------------
+
+To set up the installer, you will need the following files:
 
 -  Code file that creates launcher
 -  Auxilliary code files passed into launcher
