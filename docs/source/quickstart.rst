@@ -19,10 +19,12 @@ To set up the installer, you will need the following files:
 -  ``version.txt`` contains the version number.
 -  ``filelist.txt`` contains a list of paths of the code and resource files.
 
+See :doc:`project` for a directory tree.
+
 Package these files into your application installer.
 This is the initial version on the end user's computer.
 
-Pushing updates to a server
+Pushing Updates to a Server
 ---------------------------
 
 To create new versions, copy the code files into a directory
@@ -42,8 +44,6 @@ The server directory should now look like this:
 Pyautoupdate will then download the new version when performing updates
 and replace the old code files with the new ones.
 
-More details about the required files can be found in :doc:`project`.
-
 This is a sample application initialization file, including an update check
 before code execution.
 
@@ -52,11 +52,21 @@ before code execution.
    import sys
    from pyautoupdate.launcher import Launcher
 
-   # Update files before running
-   launch.update()
-
    # Run code and return with exit code of launched code
    launch=Launcher("code_1.py","https://update-url")
+
+   # Check for update before running
+   need_update = launch.check_new()
+   if need_update:
+       # Prompt user for upgrade
+       response = ""
+       while response not in "yn":
+           response=input("An update is available."
+                          "Would you like to update? (y/n)")
+       if response == "y":
+           # Update code
+           launch.update()
+   # Run code
    sys.exit(launch.run())
 
 Replace ``https://update-url`` with the actual url of the folder on the server.
