@@ -1,6 +1,9 @@
 Project Structure
 =================
 
+Overall Structure
+-----------------
+
 The files in the directory tree below are labeled as follows:
 
 +------+-----------------------------+
@@ -30,6 +33,9 @@ The code starts from an entry point file that initializes the
 .. note ::
    The entry point file can be updated via renaming
    while in use. This is in development but is known to be possible.
+
+Special Files
+-------------
 
 filelist.txt
 ************
