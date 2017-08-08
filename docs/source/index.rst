@@ -6,10 +6,12 @@
 Welcome to Pyautoupdate's documentation!
 ========================================
 
-Pyautoupdate is an auto-update API for Python programs.
-Developers can focus on developing their application and use
-Pyautoupdate to easily ensure that the copy of the code on the end
-user's computer remains updated.
+Pyautoupdate is an API library that provides autoupdate functionality
+for Python programmers.
+
+Pyautoupdate allows end users to easily update their copy of the software
+when the developers release a new version. Developers only need to upload
+the new version of the application to their server when it is ready.
 
 Example code using Pyautoupdate can be found in :doc:`quickstart`.
 

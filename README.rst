@@ -1,6 +1,7 @@
 |pyautoupdate_logo|
 
-Pyautoupdate is an auto-update API for Python programs.
+Pyautoupdate is an an API library that provides autoupdate functionality
+for Python programmers.
 
 |Build_Status| |Codecov_Status| |LandscapeIO_Status| |Gitter_Badge|
 
@@ -8,7 +9,7 @@ Advantages
 ----------
 
 -  Pyautoupdate secures its downloads through HTTPS.
--  Pyautoupdate is written in pure python. **No C compiler is necessary for installation, simplifying installation for Windows.**
+-  Pyautoupdate is written in pure Python. **No C compiler is necessary for installation, simplifying installation for Windows.**
 -  Python 2 and 3 are both supported
 -  Pyautoupdate also works with pypy and pypy3
 
