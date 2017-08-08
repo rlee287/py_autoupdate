@@ -2,7 +2,7 @@
 
 Pyautoupdate is an auto-update API for Python programs.
 
-|Build_Status| |Codecov_Status| |QuantifiedCode_Status| |LandscapeIO_Status| |Gitter_Badge|
+|Build_Status| |Codecov_Status| |LandscapeIO_Status| |Gitter_Badge|
 
 Advantages
 ----------
@@ -58,9 +58,6 @@ Pyautoupdate is licensed under the `LGPL 2.1 <https://www.gnu.org/licenses/old-l
 .. |Codecov_Status| image:: http://codecov.io/github/rlee287/pyautoupdate/coverage.svg?branch=develop
    :target: http://codecov.io/github/rlee287/pyautoupdate?branch=develop
    :alt: Codecov Coverage measurements
-.. |QuantifiedCode_Status| image:: https://www.quantifiedcode.com/api/v1/project/e70a21e3928a4cce87655a17fd853765/badge.svg
-  :target: https://www.quantifiedcode.com/app/project/e70a21e3928a4cce87655a17fd853765
-  :alt: QuantifiedCode issues
 .. |LandscapeIO_Status| image:: https://landscape.io/github/rlee287/pyautoupdate/develop/landscape.svg?style=flat
    :target: https://landscape.io/github/rlee287/pyautoupdate/develop
    :alt: Code Health
