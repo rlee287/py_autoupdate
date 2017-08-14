@@ -9,7 +9,10 @@ Advantages
 ----------
 
 -  Pyautoupdate secures its downloads through HTTPS.
--  Pyautoupdate is written in pure Python. **No C compiler is necessary for installation, simplifying installation for Windows.**
+-  Updates can be performed
+   either upon prompting or automatically in the background.
+-  Pyautoupdate is written in pure Python.
+   **No C compiler is necessary for installation, simplifying installation for Windows.**
 -  Python 2 and 3 are both supported
 -  Pyautoupdate also works with pypy and pypy3
 
