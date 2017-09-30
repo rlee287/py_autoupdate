@@ -5,13 +5,13 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>pyautoupdate.launcher &#8212; pyautoupdate 1.0.0.post1+0510c62 documentation</title>
+    <title>pyautoupdate.launcher &#8212; pyautoupdate 1.0.0.post1+af677f7 documentation</title>
     <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../',
-        VERSION:     '1.0.0.post1+0510c62',
+        VERSION:     '1.0.0.post1+af677f7',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -523,7 +523,7 @@
                     <span class="n">newver_dump</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
                 <span class="c1"># Throw warning after logging</span>
                 <span class="c1"># If version is invalid, upgrade cannot succeed</span>
-                <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;Invalid Server version!&quot;</span><span class="p">,</span><span class="n">CorruptedFileWarning</span><span class="p">)</span>
+                <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;Invalid Server version!&quot;</span><span class="p">,</span> <span class="n">CorruptedFileWarning</span><span class="p">)</span>
 
         <span class="c1"># newver_obj will be proper version by this point</span>
         <span class="n">has_new</span> <span class="o">=</span> <span class="p">(</span><span class="n">newver_obj</span> <span class="o">&gt;</span> <span class="n">parse_version</span><span class="p">(</span><span class="n">oldver</span><span class="p">))</span>
@@ -591,11 +591,10 @@
 <span class="sd">           :rtype: bool</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># Only replace if update and replacement are queued</span>
-        <span class="n">has_new</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">queue_update</span><span class="p">)</span>
         <span class="n">is_downloaded</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">updatedir</span><span class="p">)</span> <span class="ow">and</span> \
                         <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">updatedir</span><span class="p">)</span>
 
-        <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">has_new</span> <span class="ow">and</span> <span class="n">is_downloaded</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">queue_update</span><span class="p">)</span> <span class="ow">and</span> <span class="n">is_downloaded</span><span class="p">):</span>
             <span class="k">return</span> <span class="kc">False</span>
         <span class="c1"># Attempt to acquire code lock here and exit if unable to</span>
         <span class="c1"># The finally block runs after the &quot;return&quot; statement</span>
@@ -617,6 +616,8 @@
             <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">version_doc</span> <span class="o">+</span> <span class="s2">&quot;.bak&quot;</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Replacing files&quot;</span><span class="p">)</span>
             <span class="c1"># Read in files from filelist and move to tempdir</span>
+            <span class="c1"># If update fails, it is important to leave tempdir for diagnostics</span>
+            <span class="c1"># Not cleaned up in a finally statement by design</span>
             <span class="n">tempdir</span> <span class="o">=</span> <span class="n">tempfile</span><span class="o">.</span><span class="n">mkdtemp</span><span class="p">()</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Created tempdir at </span><span class="si">{0}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tempdir</span><span class="p">))</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Backing up current filelist&quot;</span><span class="p">)</span>
@@ -808,7 +809,7 @@
       &copy;2017 by Ryan Lee.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.3</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.4</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
       
     </div>
