@@ -481,7 +481,7 @@ class Launcher(object):
                     newver_dump.close()
                 # Throw warning after logging
                 # If version is invalid, upgrade cannot succeed
-                warnings.warn("Invalid Server version!",CorruptedFileWarning)
+                warnings.warn("Invalid Server version!", CorruptedFileWarning)
 
         # newver_obj will be proper version by this point
         has_new = (newver_obj > parse_version(oldver))
@@ -549,11 +549,10 @@ class Launcher(object):
            :rtype: bool
         """
         # Only replace if update and replacement are queued
-        has_new = os.path.isfile(self.queue_update)
         is_downloaded = os.path.isdir(self.updatedir) and \
                         os.listdir(self.updatedir)
 
-        if not (has_new and is_downloaded):
+        if not (os.path.isfile(self.queue_update) and is_downloaded):
             return False
         # Attempt to acquire code lock here and exit if unable to
         # The finally block runs after the "return" statement
@@ -575,6 +574,8 @@ class Launcher(object):
             os.remove(self.version_doc + ".bak")
             self.log.info("Replacing files")
             # Read in files from filelist and move to tempdir
+            # If update fails, it is important to leave tempdir for diagnostics
+            # Not cleaned up in a finally statement by design
             tempdir = tempfile.mkdtemp()
             self.log.debug("Created tempdir at {0}".format(tempdir))
             self.log.info("Backing up current filelist")
