@@ -82,7 +82,7 @@ if os.path.isdir("../../.git"):
                 # This will throw an error if HEAD is not detached
                 int(commit_hash, 16)
                 # 40 41 42 depending on \n or \r\n
-                if len(commit_hash) not in [40,41,42]:
+                if len(commit_hash) not in [40, 41, 42]:
                     raise ValueError
             except ValueError: # is "ref: refs/heads/*""
                 commit_hash = commit_hash.split()
@@ -91,11 +91,11 @@ if os.path.isdir("../../.git"):
                 # Dereference branch pointer
                 head_ref = os.path.join("../../.git", commit_hash)
                 assert os.path.isfile(head_ref)
-                with open(head_ref,'r') as fd2:
+                with open(head_ref, 'r') as fd2:
                     commit_hash = fd2.read()
                     try:
                         # This will throw an error if HEAD is not detached
-                        int(commit_hash,16)
+                        int(commit_hash, 16)
                         # 40 41 42 depending on \n or \r\n
                         if len(commit_hash) not in [40,41,42]:
                             raise ValueError
@@ -103,18 +103,18 @@ if os.path.isdir("../../.git"):
                         # Raise more appropriate error
                         warnings.warn("Unable to get current commit hash",
                                       RuntimeWarning)
-                        commit_hash=""
+                        commit_hash = ""
     except AssertionError:
         # Partially broken git repo -> act as if no git directory
-        commit_hash=""
+        commit_hash = ""
 else: # Not in git repo
-    commit_hash=""
+    commit_hash = ""
 if commit_hash:
-    commit_hash_short=commit_hash[:7]
+    commit_hash_short = commit_hash[:7]
 else:
-    commit_hash_short=""
+    commit_hash_short = ""
 
-rst_epilog='.. |commit_hash_short| replace:: {}'.format(commit_hash_short)
+rst_epilog = '.. |commit_hash_short| replace:: {}'.format(commit_hash_short)
 
 # The short X.Y version.
 version = version_number
@@ -140,7 +140,7 @@ language = None
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
 # This patterns also effect to html_static_path and html_extra_path
-exclude_patterns = ['_static/testing','_static/testing2']
+exclude_patterns = ['_static/testing', '_static/testing2']
 
 # The reST default role (used for this markup: `text`) to use for all
 # documents.
@@ -374,4 +374,4 @@ texinfo_documents = [
 #texinfo_no_detailmenu = False
 
 # Additional options
-text_newlines='native'
+text_newlines = 'native'
