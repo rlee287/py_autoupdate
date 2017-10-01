@@ -226,7 +226,8 @@ class Launcher(object):
         """Property indicating whether the process is alive
 
            To see if user code is running, please use
-           ``Launcher.process_code_running``."""
+           :meth:`Launcher.process_code_running`.
+        """
         return self.__process.is_alive()
 
     @property
@@ -234,8 +235,8 @@ class Launcher(object):
         """Property indicating whether the user code is alive
 
            .. note::
-              This is diferent from ``Launcher.process_is_alive`` because the
-              process takes time to start up before running the user code.
+              This is different from :meth:`Launcher.process_is_alive` because
+              the process takes time to start up before running the user code.
         """
         return self.__process_alive.is_set()
 
