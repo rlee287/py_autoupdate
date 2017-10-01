@@ -661,6 +661,7 @@ class Launcher(object):
             self.log.exception("An error occured during the update process.")
             self.log.error("The temporary directory used is left behind at {}."
                            .format(tempdir))
+            raise
         finally:
             self.log.debug("Releasing lock after updating files")
             self.update.release()
