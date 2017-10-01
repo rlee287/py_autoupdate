@@ -5,13 +5,13 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>pyautoupdate.launcher &#8212; pyautoupdate 1.0.0.post1+13b4710 documentation</title>
+    <title>pyautoupdate.launcher &#8212; pyautoupdate 1.0.0.post1+e3ed901 documentation</title>
     <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../',
-        VERSION:     '1.0.0.post1+13b4710',
+        VERSION:     '1.0.0.post1+e3ed901',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -102,6 +102,8 @@
 <span class="sd">    +-------------+-------------------------------------------------+</span>
 <span class="sd">    |``url``      |Base url to check and download new versions      |</span>
 <span class="sd">    +-------------+-------------------------------------------------+</span>
+<span class="sd">    |``newfiles`` |Name of the archive to download from the server  |</span>
+<span class="sd">    +-------------+-------------------------------------------------+</span>
 <span class="sd">    |``check_new``|Method to check for updated code                 |</span>
 <span class="sd">    +-------------+-------------------------------------------------+</span>
 <span class="sd">    |``pid``      |PID of parent process that spawns the code       |</span>
@@ -118,9 +120,10 @@
 <span class="sd">       The :class:`Launcher` uses :class:`multiprocessing.Process`</span>
 <span class="sd">       to run the code.</span>
 
-<span class="sd">       Please ensure that all ``args`` and ``kwargs`` can be pickled.</span>
-<span class="sd">       Non-pickleable arguments cannot be passed to the child process on</span>
-<span class="sd">       Windows, and an error will be raised when attempting to run user code.</span>
+<span class="sd">       Please ensure that all arguments passed in as ``args`` and ``kwargs``</span>
+<span class="sd">       can be pickled. Non-pickleable arguments cannot be passed to the child</span>
+<span class="sd">       process on Windows, and an error will be raised when attempting to run</span>
+<span class="sd">       user code.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">version_doc</span> <span class="o">=</span> <span class="s2">&quot;version.txt&quot;</span>
