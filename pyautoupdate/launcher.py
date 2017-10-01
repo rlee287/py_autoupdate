@@ -60,6 +60,8 @@ class Launcher(object):
     +-------------+-------------------------------------------------+
     |``url``      |Base url to check and download new versions      |
     +-------------+-------------------------------------------------+
+    |``newfiles`` |Name of the archive to download from the server  |
+    +-------------+-------------------------------------------------+
     |``check_new``|Method to check for updated code                 |
     +-------------+-------------------------------------------------+
     |``pid``      |PID of parent process that spawns the code       |
@@ -76,9 +78,10 @@ class Launcher(object):
        The :class:`Launcher` uses :class:`multiprocessing.Process`
        to run the code.
 
-       Please ensure that all ``args`` and ``kwargs`` can be pickled.
-       Non-pickleable arguments cannot be passed to the child process on
-       Windows, and an error will be raised when attempting to run user code.
+       Please ensure that all arguments passed in as ``args`` and ``kwargs``
+       can be pickled. Non-pickleable arguments cannot be passed to the child
+       process on Windows, and an error will be raised when attempting to run
+       user code.
     """
 
     version_doc = "version.txt"
