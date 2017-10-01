@@ -25,6 +25,7 @@ Contents:
    quickstart
    pyautoupdate
    project
+   internal
    contributing
 
 This documentation was built from commit |release| on |today|.
