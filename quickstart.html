@@ -5,13 +5,13 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>Quickstart &#8212; pyautoupdate 1.0.0.post1+af677f7 documentation</title>
+    <title>Quickstart &#8212; pyautoupdate 1.0.0.post1+7eddb83 documentation</title>
     <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    './',
-        VERSION:     '1.0.0.post1+af677f7',
+        VERSION:     '1.0.0.post1+7eddb83',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -78,7 +78,12 @@ The server directory should now look like this:</p>
 </pre></div>
 </div>
 <p>Pyautoupdate will then download the new version when performing updates
-and replace the old code files with the new ones.</p>
+and replace the old code files with the new ones. It will modify the URL
+as follows:</p>
+<div class="highlight-text"><div class="highlight"><pre><span></span>https://a_sample_website.com/ -&gt; https://a_sample_website.com/project.zip
+                              -&gt; https://a_sample_website.com/version.txt
+</pre></div>
+</div>
 <p>This is a sample application initialization file, including an update check
 before code execution.</p>
 <div class="highlight-python"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">sys</span>

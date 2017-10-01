@@ -42,7 +42,13 @@ The server directory should now look like this:
   └── version.txt
 
 Pyautoupdate will then download the new version when performing updates
-and replace the old code files with the new ones.
+and replace the old code files with the new ones. It will modify the URL
+as follows:
+
+.. code-block:: text
+
+  https://a_sample_website.com/ -> https://a_sample_website.com/project.zip
+                                -> https://a_sample_website.com/version.txt
 
 This is a sample application initialization file, including an update check
 before code execution.
