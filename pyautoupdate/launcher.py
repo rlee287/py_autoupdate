@@ -433,7 +433,6 @@ class Launcher(object):
             with open(self.queue_update, 'r') as new_version:
                 newver = new_version.read()
             newver_obj = parse_version(newver)
-            newver = newver.rstrip("\n")
             return isinstance(newver_obj, SetuptoolsVersion)
         else:
             versionurl = self.url + self.version_doc
@@ -443,7 +442,6 @@ class Launcher(object):
             get_new = requests.get(versionurl, allow_redirects=True)
             get_new.raise_for_status()
             newver = get_new.text
-            newver = newver.rstrip("\n")
             newver_obj = parse_version(newver)
         # Read in old version
         with open(self.version_doc, 'r') as old_version:
