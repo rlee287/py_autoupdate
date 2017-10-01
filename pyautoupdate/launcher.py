@@ -84,10 +84,15 @@ class Launcher(object):
        user code.
     """
 
+    # The name of the file containing version numbers
     version_doc = "version.txt"
+    # A log file that records the results of checking for updates
     version_check_log = "version_check.log"
+    # The file with the paths of the code and resources in an application
     file_list = "filelist.txt"
+    # The directory into which the newer versions are unpacked
     updatedir = ".pyautodownloads"
+    # A marker file used to indicate that a new version is available
     queue_update = ".queue"
 
     def __init__(self, filepath, url,
@@ -235,7 +240,7 @@ class Launcher(object):
 
     @property
     def process_code_running(self):
-        """Property indicating whether the user code is alive
+        """Property indicating whether the user code is running
 
            .. note::
               This is different from :meth:`Launcher.process_is_alive` because
@@ -259,7 +264,10 @@ class Launcher(object):
             return self.__process.exitcode
 
     def process_join(self, timeout=None):
-        """Joins the process"""
+        """Joins the process
+
+           .. seealso:: :meth:`multiprocessing.Process.join`
+        """
         self.log.info("Joining process")
         self.__process.join(timeout)
 
