@@ -13,13 +13,13 @@ matrix:
     - python: '2.7'
       env: PYLINT=true
       os: linux
-    - python: '3.5'
-      env: PYLINT=true
-      os: linux
     - python: 'pypy3.3-5.5-alpha'
       os: linux
     - python: 'pypy-5.4'
       env: FIX_REQUESTS_PLEASE=true
+      os: linux
+    - python: '3.5'
+      env: PYLINT=true
       os: linux
     - python: '3.4'
       os: linux
