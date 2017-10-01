@@ -563,8 +563,7 @@ class Launcher(object):
         # Acquiring the lock here prevents this from happening
         else:
             self.log.debug("Acquiring code log to update files")
-            has_lock = self.update.acquire(False)
-            if not has_lock:
+            if not self.update.acquire(False):
                 self.log.warning("Could not acquire lock to update files")
                 return False
         try:
@@ -658,10 +657,14 @@ class Launcher(object):
             self.log.info("Removing tempdir")
             shutil.rmtree(tempdir)
             self._reset_update_files()
+        except Exception:
+            self.log.exception("An error occured during the update process.")
+            self.log.error("The temporary directory used is left behind at {}."
+                           .format(tempdir))
         finally:
             self.log.debug("Releasing lock after updating files")
             self.update.release()
-        return has_lock
+        return True
 
     def update_code(self):
         """Updates the code if necessary.
