@@ -35,7 +35,7 @@ files with the new files from the server.
 
 This method first acquires a lock to ensure that it does not blindly update
 files that may be in use by the developer program. Then, it moves the code files
-listed in ``filelist.txt`` into a temporary directory. It then copies the files
+listed in ``filelist.txt`` into a temporary directory. It copies the files
 from ``.pyautodownloads`` into the existing directory and creates a new
 ``filelist.txt`` based on the new files. Finally, it removes the backups in the
 temporary directory and releases the lock.

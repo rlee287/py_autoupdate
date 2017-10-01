@@ -5,13 +5,13 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>Internal Update Procedure &#8212; pyautoupdate 1.0.0.post1+4fa4ffd documentation</title>
+    <title>Internal Update Procedure &#8212; pyautoupdate 1.0.0.post1+13b4710 documentation</title>
     <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    './',
-        VERSION:     '1.0.0.post1+4fa4ffd',
+        VERSION:     '1.0.0.post1+13b4710',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -70,7 +70,7 @@ new archive. It then unpacks the archive into the download directory
 files with the new files from the server.</p>
 <p>This method first acquires a lock to ensure that it does not blindly update
 files that may be in use by the developer program. Then, it moves the code files
-listed in <code class="docutils literal"><span class="pre">filelist.txt</span></code> into a temporary directory. It then copies the files
+listed in <code class="docutils literal"><span class="pre">filelist.txt</span></code> into a temporary directory. It copies the files
 from <code class="docutils literal"><span class="pre">.pyautodownloads</span></code> into the existing directory and creates a new
 <code class="docutils literal"><span class="pre">filelist.txt</span></code> based on the new files. Finally, it removes the backups in the
 temporary directory and releases the lock.</p>
