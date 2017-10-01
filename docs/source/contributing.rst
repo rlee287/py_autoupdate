@@ -44,8 +44,8 @@ please ensure that the problem is not with the application that uses
 Pyautoupdate.
 
 If you believe there is a genuine problem with Pyautoupdate
-that has not been already reported, please file a bug report
-including:
+that has not been already reported, please file a bug report at
+https://github.com/rlee287/pyautoupdate/issues including:
 
 -  Python version
 -  Operating System
@@ -75,6 +75,8 @@ if you would like to implement features or fix bugs.
 Pull Requests
 -------------
 
+Pull requests can be filed at https://github.com/rlee287/pyautoupdate/pulls.
+
 The Pyautoupdate project uses `PullApprove <https://pullapprove.com/>`__
 to approve pull requests.
 
@@ -86,11 +88,13 @@ contribution satisfies the
 a copy of which has been included in ``DeveloperCertificateOrigin.txt``.
 
 All tests on `Travis CI <https://travis-ci.org/>`__ must pass.
-Please explain any new xfailed tests in the Pull Request description.
+If you need to mark some of the tests as ``xfail``, please explain the reason
+in the Pull Request description.
 In addition, all code must be simultaneously compatible with both
 Python 2 and 3. The Travis CI build will help to ensure this.
 
-Moreover, please make sure that new code is covered by new tests. Coverage for the project is tracked on `CodeCov <https://codecov.io/>`__.
+Moreover, please make sure that new features are covered by new tests.
+Coverage for the project is tracked on `CodeCov <https://codecov.io/>`__.
 When creating a Pull Request, please include the following:
 
 -  An issue number that this Pull Request addresses **OR**

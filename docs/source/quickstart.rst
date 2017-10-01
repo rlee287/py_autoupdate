@@ -16,8 +16,8 @@ To set up the installer, you will need the following files:
 
 -  Code file that creates launcher
 -  Auxilliary code files passed into launcher
--  ``version.txt`` contains the version number.
--  ``filelist.txt`` contains a list of paths of the code and resource files.
+-  ``version.txt`` that contains a :pep:`440` compliant version number
+-  ``filelist.txt`` with a list of paths to the code and resource files
 
 See :doc:`project` for a directory tree.
 
