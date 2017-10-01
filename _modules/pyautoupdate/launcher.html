@@ -5,13 +5,13 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>pyautoupdate.launcher &#8212; pyautoupdate 1.0.0.post1+e3ed901 documentation</title>
+    <title>pyautoupdate.launcher &#8212; pyautoupdate 1.0.0.post1+4db432a documentation</title>
     <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../',
-        VERSION:     '1.0.0.post1+e3ed901',
+        VERSION:     '1.0.0.post1+4db432a',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -126,10 +126,15 @@
 <span class="sd">       user code.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
+    <span class="c1"># The name of the file containing version numbers</span>
     <span class="n">version_doc</span> <span class="o">=</span> <span class="s2">&quot;version.txt&quot;</span>
+    <span class="c1"># A log file that records the results of checking for updates</span>
     <span class="n">version_check_log</span> <span class="o">=</span> <span class="s2">&quot;version_check.log&quot;</span>
+    <span class="c1"># The file with the paths of the code and resources in an application</span>
     <span class="n">file_list</span> <span class="o">=</span> <span class="s2">&quot;filelist.txt&quot;</span>
+    <span class="c1"># The directory into which the newer versions are unpacked</span>
     <span class="n">updatedir</span> <span class="o">=</span> <span class="s2">&quot;.pyautodownloads&quot;</span>
+    <span class="c1"># A marker file used to indicate that a new version is available</span>
     <span class="n">queue_update</span> <span class="o">=</span> <span class="s2">&quot;.queue&quot;</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filepath</span><span class="p">,</span> <span class="n">url</span><span class="p">,</span>
@@ -277,7 +282,7 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">process_code_running</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Property indicating whether the user code is alive</span>
+        <span class="sd">&quot;&quot;&quot;Property indicating whether the user code is running</span>
 
 <span class="sd">           .. note::</span>
 <span class="sd">              This is different from :meth:`Launcher.process_is_alive` because</span>
@@ -301,7 +306,10 @@
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__process</span><span class="o">.</span><span class="n">exitcode</span>
 
 <div class="viewcode-block" id="Launcher.process_join"><a class="viewcode-back" href="../../pyautoupdate.html#pyautoupdate.Launcher.process_join">[docs]</a>    <span class="k">def</span> <span class="nf">process_join</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Joins the process&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Joins the process</span>
+
+<span class="sd">           .. seealso:: :meth:`multiprocessing.Process.join`</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Joining process&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">__process</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">timeout</span><span class="p">)</span></div>
 

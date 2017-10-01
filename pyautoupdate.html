@@ -5,13 +5,13 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>Pyautoupdate API &#8212; pyautoupdate 1.0.0.post1+e3ed901 documentation</title>
+    <title>Pyautoupdate API &#8212; pyautoupdate 1.0.0.post1+4db432a documentation</title>
     <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    './',
-        VERSION:     '1.0.0.post1+e3ed901',
+        VERSION:     '1.0.0.post1+4db432a',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -232,7 +232,7 @@ returns <code class="docutils literal"><span class="pre">false</span></code>.</p
 <dl class="attribute">
 <dt id="pyautoupdate.Launcher.process_code_running">
 <code class="descname">process_code_running</code><a class="headerlink" href="#pyautoupdate.Launcher.process_code_running" title="Permalink to this definition">¶</a></dt>
-<dd><p>Property indicating whether the user code is alive</p>
+<dd><p>Property indicating whether the user code is running</p>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
 <p class="last">This is different from <a class="reference internal" href="#pyautoupdate.Launcher.process_is_alive" title="pyautoupdate.Launcher.process_is_alive"><code class="xref py py-meth docutils literal"><span class="pre">Launcher.process_is_alive()</span></code></a> because
@@ -258,6 +258,10 @@ the process takes time to start up before running the user code.</p>
 <dt id="pyautoupdate.Launcher.process_join">
 <code class="descname">process_join</code><span class="sig-paren">(</span><em>timeout=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyautoupdate/launcher.html#Launcher.process_join"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyautoupdate.Launcher.process_join" title="Permalink to this definition">¶</a></dt>
 <dd><p>Joins the process</p>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference external" href="https://docs.python.org/3/library/multiprocessing.html#multiprocessing.Process.join" title="(in Python v3.6)"><code class="xref py py-meth docutils literal"><span class="pre">multiprocessing.Process.join()</span></code></a></p>
+</div>
 </dd></dl>
 
 <dl class="attribute">
