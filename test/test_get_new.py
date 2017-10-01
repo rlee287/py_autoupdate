@@ -6,8 +6,20 @@ from .pytest_makevers import fixture_update_dir, create_update_dir
 
 import os
 
+import pytest
+
+@pytest.fixture(scope="function")
+def setup_queue_update(request):
+    """Fixture that sets up and removes Launcher.queue_update"""
+    def teardown():
+        os.remove(Launcher.queue_update)
+    request.addfinalizer(teardown)
+    with open(Launcher.queue_update, "w") as fileobj:
+        fileobj.write("v123456789")
+
 @needinternet
-def test_check_get_new(fixture_update_dir, create_update_dir):
+def test_check_get_new(fixture_update_dir, create_update_dir,
+                       setup_queue_update):
     """Test that gets new version from internet"""
     package = fixture_update_dir("0.0.1")
     launch = Launcher('filling up the boring replacements',
@@ -20,8 +32,21 @@ def test_check_get_new(fixture_update_dir, create_update_dir):
     assert "new version" in file_text
     assert os.path.isdir(Launcher.updatedir)
 
+#@needinternet
+def test_check_no_queue_no_get_new(fixture_update_dir):
+    """Test that lacks Launcher.queue_update and does not get new version"""
+    package = fixture_update_dir("0.0.1")
+    launch = Launcher('filling up the boring replacements',
+                      r'http://rlee287.github.io/pyautoupdate/'
+                      '_static/testing/')
+    if os.path.isfile(Launcher.version_check_log):
+        os.remove(Launcher.version_check_log)
+    launch._get_new()
+    assert not os.path.isdir(Launcher.updatedir)
+    assert not os.path.isfile(Launcher.version_check_log)
+
 @needinternet
-def test_check_get_invalid_archive(fixture_update_dir):
+def test_check_get_invalid_archive(fixture_update_dir, setup_queue_update):
     """Test that gets new version from internet"""
     package = fixture_update_dir("0.0.1")
     launch = Launcher('what file? hahahaha',

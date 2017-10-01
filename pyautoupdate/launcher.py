@@ -516,6 +516,10 @@ class Launcher(object):
 
     def _get_new(self, allow_redirects=True, chunk_size=512):
         """Retrieves the new archive and extracts it to self.updatedir."""
+        if not os.path.isfile(self.queue_update):
+            self.log.info("No need to retrieve new version as "
+                          "existing one is up to date")
+            return
         self.log.info("Retrieving new version")
         newurl = self.url + self.newfiles
         # Get new files
