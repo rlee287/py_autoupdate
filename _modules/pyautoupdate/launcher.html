@@ -5,13 +5,13 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>pyautoupdate.launcher &#8212; pyautoupdate 1.0.0.post1+d405c45 documentation</title>
+    <title>pyautoupdate.launcher &#8212; pyautoupdate 1.0.0.post1+aa0af0a documentation</title>
     <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../',
-        VERSION:     '1.0.0.post1+d405c45',
+        VERSION:     '1.0.0.post1+aa0af0a',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -558,6 +558,10 @@
 
 <div class="viewcode-block" id="Launcher._get_new"><a class="viewcode-back" href="../../pyautoupdate.html#pyautoupdate.Launcher._get_new">[docs]</a>    <span class="k">def</span> <span class="nf">_get_new</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">allow_redirects</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">chunk_size</span><span class="o">=</span><span class="mi">512</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Retrieves the new archive and extracts it to self.updatedir.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">queue_update</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;No need to retrieve new version as &quot;</span>
+                          <span class="s2">&quot;existing one is up to date&quot;</span><span class="p">)</span>
+            <span class="k">return</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Retrieving new version&quot;</span><span class="p">)</span>
         <span class="n">newurl</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">url</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">newfiles</span>
         <span class="c1"># Get new files</span>
