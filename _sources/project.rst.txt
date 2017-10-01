@@ -25,7 +25,7 @@ The files in the directory tree below are labeled as follows:
   ├── filelist.txt **RF**
   ├── project.zip (can be changed) **R**
   ├── version.txt **RE**
-  └── version_history.log **R**
+  └── version_check.log **R**
 
 The code starts from an entry point file that initializes the
 :class:`Launcher` object.
@@ -56,8 +56,8 @@ This file contains a version number for the code.
 The local copy is compared with the server version to check if an update is
 necessary.
 
-version_history.log
-*******************
+version_check.log
+*****************
 This file records when the code checked for an update.
 Each line is formatted as one of the following::
 

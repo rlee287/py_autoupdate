@@ -5,13 +5,13 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>pyautoupdate.launcher &#8212; pyautoupdate 1.0.0.post1+7eddb83 documentation</title>
+    <title>pyautoupdate.launcher &#8212; pyautoupdate 1.0.0.post1+d405c45 documentation</title>
     <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../',
-        VERSION:     '1.0.0.post1+7eddb83',
+        VERSION:     '1.0.0.post1+d405c45',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -475,7 +475,6 @@
             <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">queue_update</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">new_version</span><span class="p">:</span>
                 <span class="n">newver</span> <span class="o">=</span> <span class="n">new_version</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
             <span class="n">newver_obj</span> <span class="o">=</span> <span class="n">parse_version</span><span class="p">(</span><span class="n">newver</span><span class="p">)</span>
-            <span class="n">newver</span> <span class="o">=</span> <span class="n">newver</span><span class="o">.</span><span class="n">rstrip</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
             <span class="k">return</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">newver_obj</span><span class="p">,</span> <span class="n">SetuptoolsVersion</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">versionurl</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">url</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">version_doc</span>
@@ -485,7 +484,6 @@
             <span class="n">get_new</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">versionurl</span><span class="p">,</span> <span class="n">allow_redirects</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
             <span class="n">get_new</span><span class="o">.</span><span class="n">raise_for_status</span><span class="p">()</span>
             <span class="n">newver</span> <span class="o">=</span> <span class="n">get_new</span><span class="o">.</span><span class="n">text</span>
-            <span class="n">newver</span> <span class="o">=</span> <span class="n">newver</span><span class="o">.</span><span class="n">rstrip</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
             <span class="n">newver_obj</span> <span class="o">=</span> <span class="n">parse_version</span><span class="p">(</span><span class="n">newver</span><span class="p">)</span>
         <span class="c1"># Read in old version</span>
         <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">version_doc</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">old_version</span><span class="p">:</span>
