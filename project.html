@@ -5,13 +5,13 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>Project Structure &#8212; pyautoupdate 1.0.0.post1+4db432a documentation</title>
+    <title>Project Structure &#8212; pyautoupdate 1.0.0.post1+8d79705 documentation</title>
     <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    './',
-        VERSION:     '1.0.0.post1+4db432a',
+        VERSION:     '1.0.0.post1+8d79705',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -71,7 +71,7 @@
 <div class="highlight-text"><div class="highlight"><pre><span></span>Root directory of project
 ├── &lt;general code files&gt;
 ├── .pyautodownloads/ **R**
-├── &lt;an entry point file that creates the launcher&gt;
+├── &lt;an entry point file that creates the launcher object&gt;
 ├── filelist.txt **RF**
 ├── project.zip (can be changed) **R**
 ├── version.txt **RE**
@@ -82,16 +82,16 @@
 <code class="xref py py-class docutils literal"><span class="pre">Launcher</span></code> object.</p>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
-<p class="last">The entry point file can be updated via renaming
-while in use. This is in development but is known to be possible.</p>
+<p class="last">The entry point file currently cannot be replaced by the update process.
+While this functionality may be added in a future version, please try to
+avoid making changes that would require updating the entry point file.</p>
 </div>
 </div>
 <div class="section" id="special-files">
 <h2>Special Files<a class="headerlink" href="#special-files" title="Permalink to this headline">¶</a></h2>
 <div class="section" id="filelist-txt">
 <h3>filelist.txt<a class="headerlink" href="#filelist-txt" title="Permalink to this headline">¶</a></h3>
-<p>This file has the list of files for the project.
-It is used during the update process to remove the old files.</p>
+<p>This file contains the list of files to be removed after the update process.</p>
 </div>
 <div class="section" id="project-zip-or-equivalent">
 <h3>project.zip (or equivalent)<a class="headerlink" href="#project-zip-or-equivalent" title="Permalink to this headline">¶</a></h3>
@@ -99,18 +99,19 @@ It is used during the update process to remove the old files.</p>
 </div>
 <div class="section" id="pyautodownloads">
 <h3>.pyautodownloads/<a class="headerlink" href="#pyautodownloads" title="Permalink to this headline">¶</a></h3>
-<p>This directory temporarily contains the downloaded new files.</p>
+<p>This temporary directory contains the downloaded new files. The directory will
+be emptied after the update.</p>
 </div>
 <div class="section" id="version-txt">
 <h3>version.txt<a class="headerlink" href="#version-txt" title="Permalink to this headline">¶</a></h3>
-<p>This file contains a version number for the code.
+<p>This file contains a <span class="target" id="index-0"></span><a class="pep reference external" href="https://www.python.org/dev/peps/pep-0440"><strong>PEP 440</strong></a> version number for the code.
 The local copy is compared with the server version to check if an update is
 necessary.</p>
 </div>
 <div class="section" id="version-check-log">
 <h3>version_check.log<a class="headerlink" href="#version-check-log" title="Permalink to this headline">¶</a></h3>
-<p>This file records when the code checked for an update.
-Each line is formatted as one of the following:</p>
+<p>This file records when the server was contacted to check for updates.
+Each line has one of the following formats:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="o">|</span><span class="n">Old</span> <span class="o">&lt;</span><span class="n">old</span> <span class="n">version</span> <span class="n">number</span><span class="o">&gt;|</span><span class="n">New</span> <span class="o">&lt;</span><span class="n">new</span> <span class="n">version</span> <span class="n">number</span><span class="o">&gt;|</span><span class="n">Time</span> <span class="o">&lt;</span><span class="n">timestamp</span><span class="o">&gt;</span>
 <span class="o">|</span><span class="n">Old</span> <span class="o">&lt;</span><span class="n">old</span> <span class="n">version</span> <span class="n">number</span><span class="o">&gt;|</span><span class="n">Up</span> <span class="n">to</span> <span class="n">date</span><span class="o">|</span><span class="n">Time</span> <span class="o">&lt;</span><span class="n">timestamp</span><span class="o">&gt;</span>
 <span class="o">|</span><span class="n">Old</span> <span class="o">&lt;</span><span class="n">old</span> <span class="n">version</span> <span class="n">number</span><span class="o">&gt;|</span><span class="n">Server</span> <span class="n">Invalid</span><span class="o">|</span><span class="n">Time</span> <span class="o">&lt;</span><span class="n">timestamp</span><span class="o">&gt;</span>

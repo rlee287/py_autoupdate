@@ -5,13 +5,13 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>Pyautoupdate API &#8212; pyautoupdate 1.0.0.post1+4db432a documentation</title>
+    <title>Pyautoupdate API &#8212; pyautoupdate 1.0.0.post1+8d79705 documentation</title>
     <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    './',
-        VERSION:     '1.0.0.post1+4db432a',
+        VERSION:     '1.0.0.post1+8d79705',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -64,28 +64,17 @@ functionality of the Pyautoupdate module.</p>
 </table>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
-<p>This must be an HTTPS url. HTTP urls are silently changed into HTTPS.</p>
+<p>This must be an HTTPS url. HTTP urls are silently changed into HTTPS.
+<strong>Use of HTTPS is strictly enforced.</strong></p>
 <p class="last">Parameters, queries, and fragments will be stripped from the URL.</p>
 </div>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>newfiles</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.6)"><em>str</em></a>) – Name of archive with new versions to download from
-site</td>
-</tr>
-</tbody>
-</table>
-<div class="admonition note">
-<p class="first admonition-title">Note</p>
-<p class="last">The supported archive formats are <code class="docutils literal"><span class="pre">.zip</span></code>, <code class="docutils literal"><span class="pre">.tar.gz</span></code>,
-and <code class="docutils literal"><span class="pre">.tar.bz2</span></code>.</p>
-</div>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>newfiles</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.6)"><em>str</em></a>) – Name of <code class="docutils literal"><span class="pre">.zip</span></code>, <code class="docutils literal"><span class="pre">tar.gz</span></code> or <code class="docutils literal"><span class="pre">.tar.bz2</span></code> archive
+with new versions to download from site</li>
 <li><strong>log_level</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.6)"><em>int</em></a>) – Logging level for the built in logger</li>
 <li><strong>args</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.6)"><em>tuple</em></a>) – <code class="docutils literal"><span class="pre">args</span></code> passed to the launched code</li>
 <li><strong>kwargs</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.6)"><em>dict</em></a>) – <code class="docutils literal"><span class="pre">kwargs</span></code> passed to the launched code</li>
@@ -94,8 +83,7 @@ and <code class="docutils literal"><span class="pre">.tar.bz2</span></code>.</p>
 </tr>
 </tbody>
 </table>
-<p>When the code is launched, certain variables are already defined as
-follows:</p>
+<p>When the code is launched, the following variables are already defined:</p>
 <table border="1" class="docutils">
 <colgroup>
 <col width="21%" />
@@ -215,7 +203,7 @@ if it doesn’t exist.</p>
 <p class="first admonition-title">Note</p>
 <p>This function internally uses setuptool’s <code class="docutils literal"><span class="pre">parse_version</span></code>
 to compare versions.</p>
-<p class="last">Any versioning scheme described in <span class="target" id="index-0"></span><a class="pep reference external" href="https://www.python.org/dev/peps/pep-0440"><strong>PEP 440</strong></a> can be used.</p>
+<p class="last">Any versioning scheme conforming to <span class="target" id="index-0"></span><a class="pep reference external" href="https://www.python.org/dev/peps/pep-0440"><strong>PEP 440</strong></a> can be used.</p>
 </div>
 <p>When the server contains an invalid version specification, this
 returns <code class="docutils literal"><span class="pre">false</span></code>.</p>
@@ -233,11 +221,9 @@ returns <code class="docutils literal"><span class="pre">false</span></code>.</p
 <dt id="pyautoupdate.Launcher.process_code_running">
 <code class="descname">process_code_running</code><a class="headerlink" href="#pyautoupdate.Launcher.process_code_running" title="Permalink to this definition">¶</a></dt>
 <dd><p>Property indicating whether the user code is running</p>
-<div class="admonition note">
-<p class="first admonition-title">Note</p>
-<p class="last">This is different from <a class="reference internal" href="#pyautoupdate.Launcher.process_is_alive" title="pyautoupdate.Launcher.process_is_alive"><code class="xref py py-meth docutils literal"><span class="pre">Launcher.process_is_alive()</span></code></a> because
-the process takes time to start up before running the user code.</p>
-</div>
+<p>To see if the process has started, please use
+<a class="reference internal" href="#pyautoupdate.Launcher.process_is_alive" title="pyautoupdate.Launcher.process_is_alive"><code class="xref py py-meth docutils literal"><span class="pre">Launcher.process_is_alive()</span></code></a>. Note that the process needs
+to initialize itself before it can run user code.</p>
 </dd></dl>
 
 <dl class="attribute">
@@ -251,7 +237,8 @@ the process takes time to start up before running the user code.</p>
 <code class="descname">process_is_alive</code><a class="headerlink" href="#pyautoupdate.Launcher.process_is_alive" title="Permalink to this definition">¶</a></dt>
 <dd><p>Property indicating whether the process is alive</p>
 <p>To see if user code is running, please use
-<a class="reference internal" href="#pyautoupdate.Launcher.process_code_running" title="pyautoupdate.Launcher.process_code_running"><code class="xref py py-meth docutils literal"><span class="pre">Launcher.process_code_running()</span></code></a>.</p>
+<a class="reference internal" href="#pyautoupdate.Launcher.process_code_running" title="pyautoupdate.Launcher.process_code_running"><code class="xref py py-meth docutils literal"><span class="pre">Launcher.process_code_running()</span></code></a>. Note that the process needs
+to initialize itself before it can run user code.</p>
 </dd></dl>
 
 <dl class="method">

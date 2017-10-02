@@ -5,13 +5,13 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>pyautoupdate.launcher &#8212; pyautoupdate 1.0.0.post1+4db432a documentation</title>
+    <title>pyautoupdate.launcher &#8212; pyautoupdate 1.0.0.post1+8d79705 documentation</title>
     <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../',
-        VERSION:     '1.0.0.post1+4db432a',
+        VERSION:     '1.0.0.post1+8d79705',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -77,23 +77,17 @@
 
 <span class="sd">    .. note::</span>
 <span class="sd">       This must be an HTTPS url. HTTP urls are silently changed into HTTPS.</span>
+<span class="sd">       **Use of HTTPS is strictly enforced.**</span>
 
 <span class="sd">       Parameters, queries, and fragments will be stripped from the URL.</span>
 
-<span class="sd">    :param str newfiles: Name of archive with new versions to download from</span>
-<span class="sd">     site</span>
-
-<span class="sd">    .. note::</span>
-
-<span class="sd">       The supported archive formats are ``.zip``, ``.tar.gz``,</span>
-<span class="sd">       and ``.tar.bz2``.</span>
-
+<span class="sd">    :param str newfiles: Name of ``.zip``, ``tar.gz`` or ``.tar.bz2`` archive</span>
+<span class="sd">     with new versions to download from site</span>
 <span class="sd">    :param int log_level: Logging level for the built in logger</span>
 <span class="sd">    :param tuple args: ``args`` passed to the launched code</span>
 <span class="sd">    :param dict kwargs: ``kwargs`` passed to the launched code</span>
 
-<span class="sd">    When the code is launched, certain variables are already defined as</span>
-<span class="sd">    follows:</span>
+<span class="sd">    When the code is launched, the following variables are already defined:</span>
 
 <span class="sd">    +-------------+-------------------------------------------------+</span>
 <span class="sd">    |Variable Name|Value Description                                |</span>
@@ -276,7 +270,8 @@
         <span class="sd">&quot;&quot;&quot;Property indicating whether the process is alive</span>
 
 <span class="sd">           To see if user code is running, please use</span>
-<span class="sd">           :meth:`Launcher.process_code_running`.</span>
+<span class="sd">           :meth:`Launcher.process_code_running`. Note that the process needs</span>
+<span class="sd">           to initialize itself before it can run user code.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__process</span><span class="o">.</span><span class="n">is_alive</span><span class="p">()</span>
 
@@ -284,9 +279,9 @@
     <span class="k">def</span> <span class="nf">process_code_running</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Property indicating whether the user code is running</span>
 
-<span class="sd">           .. note::</span>
-<span class="sd">              This is different from :meth:`Launcher.process_is_alive` because</span>
-<span class="sd">              the process takes time to start up before running the user code.</span>
+<span class="sd">           To see if the process has started, please use</span>
+<span class="sd">           :meth:`Launcher.process_is_alive`. Note that the process needs</span>
+<span class="sd">           to initialize itself before it can run user code.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__process_alive</span><span class="o">.</span><span class="n">is_set</span><span class="p">()</span>
 
@@ -470,7 +465,7 @@
 <span class="sd">              This function internally uses setuptool&#39;s ``parse_version``</span>
 <span class="sd">              to compare versions.</span>
 
-<span class="sd">              Any versioning scheme described in :pep:`440` can be used.</span>
+<span class="sd">              Any versioning scheme conforming to :pep:`440` can be used.</span>
 
 <span class="sd">           When the server contains an invalid version specification, this</span>
 <span class="sd">           returns ``false``.</span>
