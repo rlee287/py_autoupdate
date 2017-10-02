@@ -97,8 +97,11 @@ Moreover, please make sure that new features are covered by new tests.
 Coverage for the project is tracked on `CodeCov <https://codecov.io/>`__.
 When creating a Pull Request, please include the following:
 
--  An issue number that this Pull Request addresses **OR**
--  A short description of the problem the Pull Request addresses
+-  One of the following to identify the purpose of the Pull Request:
+
+   -  An issue number that this Pull Request addresses
+   -  A short description of the problem the Pull Request addresses
+
 -  A description of the implementation of the bug fix/feature
 
 If you are fixing a new large issue in your Pull Request, please file an issue
