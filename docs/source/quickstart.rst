@@ -9,10 +9,10 @@ The core dependencies are
 -  ``requests`` for retrieving updated versions
 -  ``setuptools`` for archive manipulation and version comparison
 
-Distributing the Application
-----------------------------
+Distributing your Application
+-----------------------------
 
-To set up the installer, you will need the following files:
+In the installer for your program, you need to include the following files:
 
 -  Code file that creates launcher
 -  Auxilliary code files passed into launcher
@@ -22,7 +22,6 @@ To set up the installer, you will need the following files:
 See :doc:`project` for a directory tree.
 
 Package these files into your application installer.
-This is the initial version on the end user's computer.
 
 Pushing Updates to a Server
 ---------------------------
@@ -32,7 +31,7 @@ and compress the directory into a
 ``.zip``, ``.tar.gz``, or a ``.tar.bz2`` archive.
 
 Upload the archive to the update server and place a file named ``version.txt``
-containing the version number in the same directory as the archive.
+containing a :pep:`440` version number in the same directory as the archive.
 The server directory should now look like this:
 
 .. code-block:: text
@@ -42,8 +41,9 @@ The server directory should now look like this:
   └── version.txt
 
 Pyautoupdate will then download the new version when performing updates
-and replace the old code files with the new ones. It will modify the URL
-as follows:
+and replace the old code files with the new ones. It will modify the URL of the
+update server to include the compressed archive name and the ``version.txt``
+version number, as shown below:
 
 .. code-block:: text
 
@@ -72,13 +72,13 @@ before code execution.
        if response == "y":
            # Update code
            launch.update()
-   # Run code
+   # Run developer code here
    sys.exit(launch.run())
 
 Replace ``https://update-url`` with the actual url of the folder on the server.
 
 .. note::
 
-   You can call OS detection routines in the initialization file and use this
-   to have different update URLs for different operating systems. This is
-   useful for packaging OS dependent files.
+   You can create OS dependent URLs by calling OS detection routines in the
+   initialization file and creating different update URLs for different
+   operating systems. This is useful for packaging OS dependent files.
