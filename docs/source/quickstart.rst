@@ -71,7 +71,7 @@ before code execution.
                           "Would you like to update? (y/n)")
        if response == "y":
            # Update code
-           launch.update()
+           launch.update_code()
    # Run developer code here
    sys.exit(launch.run())
 
