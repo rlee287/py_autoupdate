@@ -35,23 +35,17 @@ class Launcher(object):
 
     .. note::
        This must be an HTTPS url. HTTP urls are silently changed into HTTPS.
+       **Use of HTTPS is strictly enforced.**
 
        Parameters, queries, and fragments will be stripped from the URL.
 
-    :param str newfiles: Name of archive with new versions to download from
-     site
-
-    .. note::
-
-       The supported archive formats are ``.zip``, ``.tar.gz``,
-       and ``.tar.bz2``.
-
+    :param str newfiles: Name of ``.zip``, ``tar.gz`` or ``.tar.bz2`` archive
+     with new versions to download from site
     :param int log_level: Logging level for the built in logger
     :param tuple args: ``args`` passed to the launched code
     :param dict kwargs: ``kwargs`` passed to the launched code
 
-    When the code is launched, certain variables are already defined as
-    follows:
+    When the code is launched, the following variables are already defined:
 
     +-------------+-------------------------------------------------+
     |Variable Name|Value Description                                |
@@ -234,7 +228,8 @@ class Launcher(object):
         """Property indicating whether the process is alive
 
            To see if user code is running, please use
-           :meth:`Launcher.process_code_running`.
+           :meth:`Launcher.process_code_running`. Note that the process needs
+           to initialize itself before it can run user code.
         """
         return self.__process.is_alive()
 
@@ -242,9 +237,9 @@ class Launcher(object):
     def process_code_running(self):
         """Property indicating whether the user code is running
 
-           .. note::
-              This is different from :meth:`Launcher.process_is_alive` because
-              the process takes time to start up before running the user code.
+           To see if the process has started, please use
+           :meth:`Launcher.process_is_alive`. Note that the process needs
+           to initialize itself before it can run user code.
         """
         return self.__process_alive.is_set()
 
@@ -428,7 +423,7 @@ class Launcher(object):
               This function internally uses setuptool's ``parse_version``
               to compare versions.
 
-              Any versioning scheme described in :pep:`440` can be used.
+              Any versioning scheme conforming to :pep:`440` can be used.
 
            When the server contains an invalid version specification, this
            returns ``false``.
