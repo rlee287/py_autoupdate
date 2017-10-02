@@ -12,8 +12,8 @@ The method :meth:`pyautoupdate.Launcher.check_new` checks to see if an update
 is available.
 
 To check for new updates, the program sends a HTTP GET request for
-``version.txt`` from the server. This file contains a version number formatted
-as described in :pep:`440` and is compared with a locally stored version number.
+``version.txt`` to the server. This file contains a version number formatted
+according to :pep:`440` and is compared with a locally stored version number.
 The new version is saved into the file ``.queue``, and the request is logged
 into ``version_check.log`` as described in :doc:`project`.
 
