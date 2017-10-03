@@ -25,6 +25,8 @@ def fixture_update_setup(request):
                 os.remove(Launcher.file_list)
             if os.path.isdir(Launcher.updatedir):
                 shutil.rmtree(Launcher.updatedir)
+            if os.path.isfile("should_be_in_filelist.py"):
+                os.remove("should_be_in_filelist.py")
         request.addfinalizer(teardown)
         # Write old version file
         with open(Launcher.version_doc, mode='w') as version_file:
@@ -35,10 +37,14 @@ def fixture_update_setup(request):
         # Create old files
         os.mkdir("extradir")
         os.makedirs(os.path.join(Launcher.updatedir, "extradir"))
+        without_extradir = os.path.join(Launcher.updatedir,
+                                        "should_be_in_filelist.py")
         extradir_blah = os.path.join("extradir", "blah.py")
         extradir_dummy = os.path.join("extradir", "dummy.txt")
         downloads_extradir_blah = os.path.join(Launcher.updatedir, "extradir",
                                                "blah.py")
+        with open(without_extradir, mode='w') as code:
+            code.write("This should be included in the new version")
         with open(extradir_blah, mode='w') as code:
             code.write("print('This is the old version')")
         with open(extradir_dummy, mode='w') as extra_file:
@@ -66,6 +72,7 @@ def test_replace_files(fixture_update_setup):
         # Should not be a warning here
         can_replace = launch._replace_files()
     assert can_replace
+    assert os.path.isfile("should_be_in_filelist.py")
     assert os.path.isfile("extradir/blah.py")
     with open(os.path.abspath("extradir/blah.py"), "r") as file_code:
         file_text = file_code.read()
