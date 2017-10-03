@@ -40,7 +40,37 @@ Special Files
 
 filelist.txt
 ************
-This file contains the list of files to be removed after the update process.
+This file contains the list of file paths to be removed after the update
+process. For example, for a directory structure such as
+
+.. code-block:: text
+
+  directory-of-program
+  ├── res
+  │   └── logo.png
+  ├── src
+  │   ├── module.py
+  │   └── ui.py
+  ├── test
+  │   └── unit_test.py
+  ├── filelist.txt
+  ├── init.py
+  └── README.txt
+
+The contents of ``filelist.txt`` would be
+
+.. code-block:: text
+
+  res/logo.png
+  src/module.py
+  src/ui.py
+  test/unit_test.py
+  init.py
+  README.txt
+
+The developer must include this file with the initial installer.
+The update process will automatically generate a new ``filelist.txt`` during
+the update process.
 
 project.zip (or equivalent)
 ***************************

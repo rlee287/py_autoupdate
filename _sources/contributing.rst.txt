@@ -39,9 +39,8 @@ Filing an Issue
 Reporting Bugs
 ~~~~~~~~~~~~~~
 
-If you have run into issues with Pyautoupdate,
-please ensure that the problem is not with the application that uses
-Pyautoupdate.
+If you run into issues with Pyautoupdate, please ensure that the problem
+is not with the application that uses Pyautoupdate.
 
 If you believe there is a genuine problem with Pyautoupdate
 that has not been already reported, please file a bug report at
