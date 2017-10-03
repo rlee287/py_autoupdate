@@ -5,6 +5,12 @@ for Python programmers.
 
 |Build_Status| |Codecov_Status| |LandscapeIO_Status| |Gitter_Badge|
 
+Pyautoupdate allows end users to easily update their software when the
+developers release a new version. Developers only need to upload the new
+version of the application to their server when it is ready.
+Pyautoupdate provides the functionality to check for updates and automatically
+download and apply them.
+
 Advantages
 ----------
 
