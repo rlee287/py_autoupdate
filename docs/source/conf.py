@@ -190,7 +190,8 @@ html_theme_options = {
     'show_powered_by': True,
     'logo': 'images/pyautoupdate_logo_square.png',
     'logo_name': True,
-    'description': "An auto-update API for Python programs"
+    'description': "An auto-update API for Python programs",
+    'analytics_id': "UA-107730714-1"
 }
 
 html_sidebars = {
