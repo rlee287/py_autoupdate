@@ -17,11 +17,7 @@ if version_info[0] == 2: # pragma: no branch
 else:
     from urllib.parse import urlparse, urlunparse
 
-from pkg_resources import parse_version, PEP440Warning
-try:
-    from packaging.version import Version
-except ImportError:
-    from pkg_resources.extern.packaging.version import Version
+from pkg_resources import parse_version, SetuptoolsVersion, PEP440Warning
 from setuptools.archive_util import unpack_archive, UnrecognizedFormat
 
 import requests
@@ -202,7 +198,7 @@ class Launcher(object):
                     # Empty version cannot be valid
                     vers = version_check.read()
                     vers_obj = parse_version(vers)
-                    if not isinstance(vers_obj, Version):
+                    if not isinstance(vers_obj, SetuptoolsVersion):
                         raise PEP440Warning
             except PEP440Warning: # Thrown if file has invalid version
                 version_valid = False
@@ -443,7 +439,7 @@ class Launcher(object):
             with open(self.queue_update, 'r') as new_version:
                 newver = new_version.read()
             newver_obj = parse_version(newver)
-            return isinstance(newver_obj, Version)
+            return isinstance(newver_obj, SetuptoolsVersion)
         else:
             versionurl = self.url + self.version_doc
             # Get new files
@@ -458,7 +454,7 @@ class Launcher(object):
             oldver = old_version.read()
         oldver = oldver.rstrip("\n")
         # Compare old version with new version
-        invalid = not isinstance(newver_obj, Version)
+        invalid = not isinstance(newver_obj, SetuptoolsVersion)
         # Check if new version is valid
         if invalid:
             self.log.error("Retrieved version number is invalid!\n"
