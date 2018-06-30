@@ -10,3 +10,4 @@ def test_mk_dirs(create_update_dir):
     launch = Launcher('MUST_HAVE_SOMETHING', 'urlurlurl')
     launch._reset_update_files()
     assert os.path.isdir(Launcher.updatedir)
+    os.rmdir(Launcher.updatedir)
