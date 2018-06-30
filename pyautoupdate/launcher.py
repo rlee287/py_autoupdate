@@ -19,7 +19,10 @@ else:
 
 from pkg_resources import parse_version, PEP440Warning
 try:
-    from packaging.version import Version
+    from pkg_resources import SetuptoolsVersion as Version
+    #from packaging.version import Version
+    # Behaves differently than the packaging.version
+    # Causing test failures
 except ImportError:
     from pkg_resources.extern.packaging.version import Version
 from setuptools.archive_util import unpack_archive, UnrecognizedFormat
