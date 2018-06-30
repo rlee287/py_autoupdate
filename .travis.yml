@@ -23,9 +23,6 @@ matrix:
       os: linux
     - python: '3.4'
       os: linux
-    - python: '2.6'
-      env: FIX_REQUESTS_PLEASE=true
-      os: linux
     - python: '3.3'
       os: linux
 cache:
