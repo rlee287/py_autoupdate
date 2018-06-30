@@ -20,8 +20,8 @@ if [ "$DOCBUILD" != true ]; then
   ctrl_c
   exit 0
 else
-  if [ "$TRAVIS_BRANCH" != "develop" ]; then
-    echo "Not currently on branch develop"
+  if [ "$TRAVIS_BRANCH" != "develop" && "$TRAVIS_BRANCH" != "master" ]; then
+    echo "Not currently on branch develop or master"
     echo "Only verification will be performed."
   fi
 fi
@@ -72,7 +72,7 @@ fi
 
 SHA=$(git rev-parse --short --verify HEAD)
 
-if [ "$TRAVIS_BRANCH" != "develop" ]; then
+if [ "$TRAVIS_BRANCH" != "develop"  && "$TRAVIS_BRANCH" != "master" ]; then
   echo "Exiting after doc verification"
   ctrl_c
   exit 0
