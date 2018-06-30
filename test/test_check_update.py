@@ -11,8 +11,27 @@ import os
 import pytest
 from requests import HTTPError
 
+@pytest.fixture(scope="function")
+def remove_dump(request):
+    """Fixture to remove error dump"""
+    def teardown():
+        glob_list = glob.glob("newverdump*")
+        assert len(glob_list) == 1
+        for glob_file in glob_list:
+            os.remove(glob_file)
+    request.addfinalizer(teardown)
+    return remove_dump
+
+@pytest.fixture(scope="function")
+def remove_queue(request):
+    """Fixture to remove the queue_update file"""
+    def teardown():
+        os.remove(Launcher.queue_update)
+    request.addfinalizer(teardown)
+    return remove_queue
+
 @needinternet
-def test_check_update_needed(fixture_update_dir):
+def test_check_update_needed(fixture_update_dir, remove_queue):
     """Test that ensures that updates occur when needed"""
     package = fixture_update_dir("0.0.1")
     launch = Launcher('blah',
@@ -23,7 +42,6 @@ def test_check_update_needed(fixture_update_dir):
     assert os.path.isfile(Launcher.version_doc)
     assert os.path.isfile(Launcher.version_check_log)
     assert os.path.isfile(Launcher.queue_update)
-    os.remove(Launcher.queue_update)
     with open(Launcher.version_check_log, "r") as log_handle:
         log = log_handle.read()
     assert "New" in log
@@ -39,6 +57,7 @@ def test_check_update_notneeded(fixture_update_dir):
     assert not isnew
     assert os.path.isfile(Launcher.version_doc)
     assert os.path.isfile(Launcher.version_check_log)
+    assert not os.path.isfile(Launcher.queue_update)
     with open(Launcher.version_check_log, "r") as log_handle:
         log = log_handle.read()
     assert "Up to date" in log
@@ -53,17 +72,6 @@ def test_check_update_nourl(fixture_update_dir):
                           r'http://rlee287.github.io/pyautoupdate/')
         launch.check_new()
 
-@pytest.fixture(scope="function")
-def remove_dump(request):
-    """Fixture to remove error dump"""
-    def teardown():
-        glob_list = glob.glob("newverdump*")
-        assert len(glob_list) == 1
-        for glob_file in glob_list:
-            os.remove(glob_file)
-    request.addfinalizer(teardown)
-    return remove_dump
-
 @needinternet
 def test_check_update_invalidvers(fixture_update_dir, remove_dump):
     """Test that ensures that updates occur when needed"""
@@ -74,6 +82,7 @@ def test_check_update_invalidvers(fixture_update_dir, remove_dump):
     assert not launch.check_new()
     assert os.path.isfile(Launcher.version_doc)
     assert os.path.isfile(Launcher.version_check_log)
+    assert not os.path.isfile(Launcher.queue_update)
     with open(Launcher.version_check_log, "r") as log_handle:
         log = log_handle.read()
     assert "Server Invalid" in log
