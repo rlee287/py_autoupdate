@@ -9,7 +9,7 @@ ctrl_c ()
     if [ "$pushdired" = true ]; then
         popd > /dev/null
     fi
-    if [ "$DOCBUILD" = true ] && [ "$TRAVIS" = true ] && [ ! -z $SSH_AGENT_PID ]; then
+    if [ "$DOCBUILD" = true ] && [ "$TRAVIS" = true ] && [ ! -z "$SSH_AGENT_PID" ]; then
       eval $(ssh-agent -k) > /dev/null
     fi
 }
@@ -20,7 +20,7 @@ if [ "$DOCBUILD" != true ]; then
   ctrl_c
   exit 0
 else
-  if [ "$TRAVIS_BRANCH" != "develop" && "$TRAVIS_BRANCH" != "master" ]; then
+  if [ "$TRAVIS_BRANCH" != "develop" ] && [ "$TRAVIS_BRANCH" != "master" ]; then
     echo "Not currently on branch develop or master"
     echo "Only verification will be performed."
   fi
@@ -34,7 +34,7 @@ if [ $? -eq 0 ]; then
 fi
 # .rst sources are in docs and in pyautoupdate (via autodoc extension)
 # Also include .travis_scripts in case the scripts themsevles change
-git diff $TRAVIS_COMMIT_RANGE --quiet docs pyautoupdate .travis_scripts
+git diff "$TRAVIS_COMMIT_RANGE" --quiet docs pyautoupdate .travis_scripts
 hasdiff=$?
 if [ $hasdiff -eq 0 ] && [ $merge_indicator -eq 0 ]; then
     echo "Documentation has not changed"
@@ -72,7 +72,7 @@ fi
 
 SHA=$(git rev-parse --short --verify HEAD)
 
-if [ "$TRAVIS_BRANCH" != "develop"  && "$TRAVIS_BRANCH" != "master" ]; then
+if [ "$TRAVIS_BRANCH" != "develop" ] && [ "$TRAVIS_BRANCH" != "master" ]; then
   echo "Exiting after doc verification"
   ctrl_c
   exit 0
@@ -93,7 +93,7 @@ if [ $? -ne 0 ]; then
 fi
 pushdired=true
 echo "Decrypting SSH key"
-openssl aes-256-cbc -K $encrypted_17ecf7cd0287_key -iv $encrypted_17ecf7cd0287_iv -in $builtdocs/../../../sphinx_travis_deploy.enc -out sphinx_travis_deploy -d
+openssl aes-256-cbc -K "$encrypted_17ecf7cd0287_key" -iv "$encrypted_17ecf7cd0287_iv" -in "$builtdocs"/../../../sphinx_travis_deploy.enc -out sphinx_travis_deploy -d
   if [ -f sphinx_travis_deploy ] && [ -s sphinx_travis_deploy ]; then
     chmod 600 sphinx_travis_deploy
     eval $(ssh-agent -s) > /dev/null
@@ -113,8 +113,8 @@ fi
 cd pyautoupdate
 git ls-files | xargs rm
 shopt -u | grep -q dotglob && changed=true && shopt -s dotglob
-cp --no-preserve=mode --no-preserve=ownership -r $builtdocs/* .
-[ $changed ] && shopt -u dotglob; unset changed
+cp --no-preserve=mode --no-preserve=ownership -r "$builtdocs"/* .
+[ -n "$changed" ] && shopt -u dotglob; unset changed
 # Keep some of the existing indicator files
 git checkout -- .nojekyll
 git checkout -- .gitignore
