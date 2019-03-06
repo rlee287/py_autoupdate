@@ -21,6 +21,7 @@ setup(
     description='Auto-update API for Python programs',
     long_description=text,
     url='https://github.com/rlee287/pyautoupdate',
+    options={'bdist_wheel':{'universal':'1'}},
     classifiers=(
         'Intended Audience :: Developers',
         'Development Status :: 4 - Beta',
