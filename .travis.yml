@@ -26,8 +26,6 @@ matrix:
       os: linux
     - python: '3.4'
       os: linux
-    - python: '3.3'
-      os: linux
 cache:
   pip: true
 notifications:
